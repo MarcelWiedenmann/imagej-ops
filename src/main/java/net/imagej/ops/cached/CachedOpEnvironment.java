@@ -7,13 +7,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -53,27 +53,24 @@ import org.scijava.util.GenericUtils;
 
 /**
  * Creates {@link CachedFunctionOp}s which know how to cache their outputs.
- * 
+ *
  * @author Christian Dietz (University of Konstanz)
  */
 public class CachedOpEnvironment extends CustomOpEnvironment {
 
 	@Parameter
 	private CacheService cs;
-	private Collection<Class<?>> ignoredOps;
+	private final Collection<Class<?>> ignoredOps;
 
 	public CachedOpEnvironment(final OpEnvironment parent) {
 		this(parent, null, new ArrayList<>());
 	}
 
-	public CachedOpEnvironment(final OpEnvironment parent,
-		final Collection<? extends OpInfo> prioritizedInfos)
-	{
+	public CachedOpEnvironment(final OpEnvironment parent, final Collection<? extends OpInfo> prioritizedInfos) {
 		this(parent, prioritizedInfos, new ArrayList<>());
 	}
 
-	public CachedOpEnvironment(final OpEnvironment parent,
-		final Collection<? extends OpInfo> prioritizedInfos,
+	public CachedOpEnvironment(final OpEnvironment parent, final Collection<? extends OpInfo> prioritizedInfos,
 		final Collection<Class<?>> ignoredOps)
 	{
 		super(parent, prioritizedInfos);
@@ -114,21 +111,16 @@ public class CachedOpEnvironment extends CustomOpEnvironment {
 
 	// -- Helper methods --
 
-	private <I, O> CachedFunctionOp<I, O> wrapUnaryFunction(
-		final UnaryFunctionOp<I, O> op)
-	{
+	private <I, O> CachedFunctionOp<I, O> wrapUnaryFunction(final UnaryFunctionOp<I, O> op) {
 		return new CachedFunctionOp<>(op, otherArgs(op, 1));
 	}
 
-	private <I, O> CachedHybridOp<I, O> wrapUnaryHybrid(
-		final UnaryHybridCF<I, O> op)
-	{
+	private <I, O> CachedHybridOp<I, O> wrapUnaryHybrid(final UnaryHybridCF<I, O> op) {
 		return new CachedHybridOp<>(op, otherArgs(op, 2));
 	}
 
 	/**
-	 * Gets the given {@link Op} instance's argument value, starting at the
-	 * specified offset.
+	 * Gets the given {@link Op} instance's argument value, starting at the specified offset.
 	 */
 	private Object[] otherArgs(final Op op, final int offset) {
 		final CommandInfo cInfo = info(op).cInfo();
@@ -144,16 +136,13 @@ public class CachedOpEnvironment extends CustomOpEnvironment {
 	// -- Helper classes --
 
 	/**
-	 * Wraps a {@link UnaryFunctionOp} and caches the results. New inputs will
-	 * result in re-computation of the result.
-	 * 
+	 * Wraps a {@link UnaryFunctionOp} and caches the results. New inputs will result in re-computation of the result.
+	 *
 	 * @author Christian Dietz (University of Konstanz)
 	 * @param <I>
 	 * @param <O>
 	 */
-	class CachedFunctionOp<I, O> extends AbstractOp implements
-		UnaryFunctionOp<I, O>
-	{
+	public class CachedFunctionOp<I, O> extends AbstractOp implements UnaryFunctionOp<I, O> {
 
 		@Parameter
 		private CacheService cache;
@@ -162,9 +151,7 @@ public class CachedOpEnvironment extends CustomOpEnvironment {
 
 		private final Object[] args;
 
-		public CachedFunctionOp(final UnaryFunctionOp<I, O> delegate,
-			final Object[] args)
-		{
+		public CachedFunctionOp(final UnaryFunctionOp<I, O> delegate, final Object[] args) {
 			this.delegate = delegate;
 			this.args = args;
 		}
@@ -195,7 +182,7 @@ public class CachedOpEnvironment extends CustomOpEnvironment {
 		}
 
 		@Override
-		public void setInput(I input) {
+		public void setInput(final I input) {
 			delegate.setInput(input);
 		}
 
@@ -209,6 +196,10 @@ public class CachedOpEnvironment extends CustomOpEnvironment {
 			delegate.initialize();
 		}
 
+		public UnaryFunctionOp<I, O> getDelegate() {
+			return delegate;
+		}
+
 		@Override
 		public CachedFunctionOp<I, O> getIndependentInstance() {
 			return this;
@@ -217,17 +208,14 @@ public class CachedOpEnvironment extends CustomOpEnvironment {
 	}
 
 	/**
-	 * Wraps a {@link UnaryHybridCF} and caches the results. New inputs will
-	 * result in re-computation if {@link UnaryHybridCF} is used as
-	 * {@link UnaryFunctionOp}.
-	 * 
+	 * Wraps a {@link UnaryHybridCF} and caches the results. New inputs will result in re-computation if
+	 * {@link UnaryHybridCF} is used as {@link UnaryFunctionOp}.
+	 *
 	 * @author Christian Dietz (University of Konstanz)
 	 * @param <I>
 	 * @param <O>
 	 */
-	class CachedHybridOp<I, O> extends CachedFunctionOp<I, O> implements
-		UnaryHybridCF<I, O>
-	{
+	public class CachedHybridOp<I, O> extends CachedFunctionOp<I, O> implements UnaryHybridCF<I, O> {
 
 		@Parameter
 		private CacheService cache;
@@ -236,9 +224,7 @@ public class CachedOpEnvironment extends CustomOpEnvironment {
 
 		private final Object[] args;
 
-		public CachedHybridOp(final UnaryHybridCF<I, O> delegate,
-			final Object[] args)
-		{
+		public CachedHybridOp(final UnaryHybridCF<I, O> delegate, final Object[] args) {
 			super(delegate, args);
 			this.delegate = delegate;
 			this.args = args;
@@ -260,7 +246,7 @@ public class CachedOpEnvironment extends CustomOpEnvironment {
 		}
 
 		@Override
-		public O createOutput(I input) {
+		public O createOutput(final I input) {
 			return delegate.createOutput(input);
 		}
 
@@ -275,14 +261,18 @@ public class CachedOpEnvironment extends CustomOpEnvironment {
 		}
 
 		@Override
+		public UnaryHybridCF<I, O> getDelegate() {
+			return delegate;
+		}
+
+		@Override
 		public CachedHybridOp<I, O> getIndependentInstance() {
 			return this;
 		}
 	}
 
 	/**
-	 * Simple utility class to wrap two objects and an array of objects in a
-	 * single object which combines their hashes.
+	 * Simple utility class to wrap two objects and an array of objects in a single object which combines their hashes.
 	 */
 	private class Hash {
 
