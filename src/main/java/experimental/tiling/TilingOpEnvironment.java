@@ -4,8 +4,6 @@ package experimental.tiling;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 import net.imagej.ops.Op;
 import net.imagej.ops.OpEnvironment;
@@ -77,45 +75,42 @@ public class TilingOpEnvironment extends CachedOpEnvironment {
 
 	@Override
 	public Op op(final OpRef ref) {
-		return op(Collections.singletonList(ref));
-	}
+		// return op(Collections.singletonList(ref));
 
-	@Override
-	public Op op(final List<OpRef> refs) {
-		for (final OpRef ref : refs) {
-			// NB: We have to copy the collection returned by ref.getTypes() since some ops (e.g. SpecialOps) will
-			// return an immutable Collections.SingletonSet.
-			final Collection<Type> originalTypes = ref.getTypes();
-			ArrayList<Type> types;
-			if (originalTypes != null) {
-				types = new ArrayList<>(originalTypes.size() + 1);
-				types.addAll(originalTypes);
-			}
-			else {
-				types = new ArrayList<>(1);
-			}
-			types.add(TilableOp.class);
-			final OpRef tilingOpRef = new OpRef(ref.getName(), types, ref.getOutTypes(), ref.getArgs());
-			Op op = null;
-			try {
-				op = super.op(tilingOpRef);
-			}
-			// Fallback to regular op if there is no tiling implementation.
-			catch (final Exception ex) {
-				op = super.op(ref);
-			}
-			finally {
-				if (op != null) {
-					final LogService log = context().getService(LogService.class);
-					if (log != null) {
-						final String msg = "No tiling op available. Selected regular op: " + op.toString();
-						if (log.isDebug()) log.debug(msg);
-						else log.warn(msg);
-					}
-					return op;
+		// for (final OpRef ref : refs) {
+		// NB: We have to copy the collection returned by ref.getTypes() since some ops (e.g. SpecialOps) will
+		// return an immutable Collections.SingletonSet.
+		final Collection<Type> originalTypes = ref.getTypes();
+		ArrayList<Type> types;
+		if (originalTypes != null) {
+			types = new ArrayList<>(originalTypes.size() + 1);
+			types.addAll(originalTypes);
+		}
+		else {
+			types = new ArrayList<>(1);
+		}
+		types.add(TilableOp.class);
+		final OpRef tilingOpRef = new OpRef(ref.getName(), types, ref.getOutTypes(), ref.getArgs());
+		Op op = null;
+		try {
+			op = super.op(tilingOpRef);
+		}
+		// Fallback to regular op if there is no tiling implementation.
+		catch (final Exception ex) {
+			op = super.op(ref);
+		}
+		finally {
+			if (op != null) {
+				final LogService log = context().getService(LogService.class);
+				if (log != null) {
+					final String msg = "No tiling op available. Selected regular op: " + op.toString();
+					if (log.isDebug()) log.debug(msg);
+					else log.warn(msg);
 				}
+				return op;
 			}
 		}
+		// }
 		throw new IllegalArgumentException("No matching op - neither tiling nor regular - was found.");
 	}
 }

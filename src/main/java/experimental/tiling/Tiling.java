@@ -1,6 +1,7 @@
 
 package experimental.tiling;
 
+import net.imagej.ops.Op;
 import net.imglib2.Dimensions;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
@@ -22,7 +23,7 @@ public class Tiling<I, O> {
 		this.numTiles = numTiles;
 		this.tilesPerDim = tilesPerDim;
 		this.tileSize = tileSize;
-		this.strategy = strategy;
+		this.strategy = strategy.copy(this, new Op[] {}); // FIXME!
 	}
 
 	protected Tiling(final Tiling<I, O> tiling) {
