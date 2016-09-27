@@ -6,13 +6,13 @@ import net.imglib2.RandomAccessibleInterval;
 
 import experimental.tiling.Tiling;
 
-public class ImageAsTilingView<T> extends
-	TilesView<T, RandomAccessibleInterval<T>, RandomAccessibleInterval<T>>
+public class TilingView<T> extends
+	TiledView<T, RandomAccessibleInterval<T>, RandomAccessibleInterval<T>>
 {
 
 	protected final Tiling description;
 
-	public ImageAsTilingView(final RandomAccessibleInterval<T> source, final Tiling description) {
+	public TilingView(final RandomAccessibleInterval<T> source, final Tiling description) {
 		super(source, description.getTilesPerDim());
 		this.description = description;
 
@@ -24,6 +24,6 @@ public class ImageAsTilingView<T> extends
 
 	@Override
 	public RandomAccess<RandomAccessibleInterval<T>> randomAccess() {
-		return new ImageAsTilingRandomAccess<>(this, source, description);
+		return new TilingRandomAccess<>(this, source, description);
 	}
 }

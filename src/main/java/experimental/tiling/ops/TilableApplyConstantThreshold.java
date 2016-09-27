@@ -15,10 +15,12 @@ import net.imglib2.type.numeric.RealType;
 import org.scijava.Priority;
 import org.scijava.plugin.Plugin;
 
+import experimental.tiling.ops.interfaces.TilableOp;
+
 @Plugin(type = Ops.Threshold.Apply.class, priority = Priority.LAST_PRIORITY)
 public class TilableApplyConstantThreshold<T extends RealType<T>> extends
 	AbstractBinaryHybridCF<RandomAccessibleInterval<T>, T, RandomAccessibleInterval<BitType>> implements
-	Ops.Threshold.Apply, TilablePixelOp
+	Ops.Threshold.Apply, TilableOp
 {
 
 	private BinaryComputerOp<T, T, BitType> applyThreshold;
@@ -26,10 +28,13 @@ public class TilableApplyConstantThreshold<T extends RealType<T>> extends
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void compute2(RandomAccessibleInterval<T> input1, T input2, RandomAccessibleInterval<BitType> output) {
+	public void compute2(final RandomAccessibleInterval<T> input1, final T input2,
+		final RandomAccessibleInterval<BitType> output)
+	{
 		applyThreshold = Computers.binary(ops(), ApplyThresholdComparable.class, BitType.class, in2(), in2());
 
-		mapper = (UnaryComputerOp) Computers.unary(ops(), Ops.Map.class, out() == null ? RandomAccessibleInterval.class
+		mapper = (UnaryComputerOp) Computers.unary(ops(), Ops.Map.class, out() == null
+			? RandomAccessibleInterval.class
 			: out(), in1(), applyThreshold);
 
 		applyThreshold.setInput2(input2);
@@ -37,8 +42,8 @@ public class TilableApplyConstantThreshold<T extends RealType<T>> extends
 	}
 
 	@Override
-	public RandomAccessibleInterval<BitType> createOutput(RandomAccessibleInterval<T> input1, T input2) {
-		long[] inputDims = new long[input1.numDimensions()];
+	public RandomAccessibleInterval<BitType> createOutput(final RandomAccessibleInterval<T> input1, final T input2) {
+		final long[] inputDims = new long[input1.numDimensions()];
 		input1.dimensions(inputDims);
 
 		return ops().create().img(FinalDimensions.wrap(inputDims), new BitType());

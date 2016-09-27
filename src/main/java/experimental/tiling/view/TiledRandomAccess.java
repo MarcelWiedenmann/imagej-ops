@@ -9,15 +9,15 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Sampler;
 import net.imglib2.view.Views;
 
-public class TilesRandomAccess<T, I extends RandomAccessibleInterval<T>, O extends RandomAccessibleInterval<T>>
+public class TiledRandomAccess<T, I extends RandomAccessibleInterval<T>, O extends RandomAccessibleInterval<T>>
 	extends Point implements RandomAccess<O>
 {
 
-	protected final TilesView<T, I, O> view;
+	protected final TiledView<T, I, O> view;
 	protected final I source;
 	protected final Dimensions tileSize;
 
-	public TilesRandomAccess(final TilesView<T, I, O> view, final I source, final Dimensions tileSize) {
+	public TiledRandomAccess(final TiledView<T, I, O> view, final I source, final Dimensions tileSize) {
 		super(source.numDimensions());
 
 		assert tileSize.numDimensions() == n;
@@ -27,7 +27,7 @@ public class TilesRandomAccess<T, I extends RandomAccessibleInterval<T>, O exten
 		this.tileSize = tileSize;
 	}
 
-	protected TilesRandomAccess(final TilesRandomAccess<T, I, O> randomAccess) {
+	protected TiledRandomAccess(final TiledRandomAccess<T, I, O> randomAccess) {
 		super(randomAccess.position, true);
 		view = randomAccess.view;
 		source = randomAccess.source;
@@ -52,6 +52,6 @@ public class TilesRandomAccess<T, I extends RandomAccessibleInterval<T>, O exten
 
 	@Override
 	public RandomAccess<O> copyRandomAccess() {
-		return new TilesRandomAccess<>(this);
+		return new TiledRandomAccess<>(this);
 	}
 }

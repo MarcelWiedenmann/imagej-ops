@@ -12,15 +12,16 @@ import net.imglib2.type.numeric.RealType;
 import org.scijava.Priority;
 import org.scijava.plugin.Plugin;
 
+import experimental.tiling.ops.interfaces.TilableOp;
+
 /**
- * Code mainly stolen from net.imagej.ops.image.invert.InvertII by Martin Horn,
- * University of Konstanz. For the sake of easy demonstration of tiled
- * operations w/o any own effort :D
+ * Code mainly stolen from net.imagej.ops.image.invert.InvertII by Martin Horn, University of Konstanz. For the sake of
+ * easy demonstration of tiled operations w/o any own effort :D
  */
 @Plugin(type = Ops.Image.Invert.class, priority = Priority.LAST_PRIORITY)
 public class TilableInverter<T extends RealType<T>> extends
 	AbstractUnaryHybridCF<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>> implements Ops.Image.Invert,
-	TilablePixelOp
+	TilableOp
 {
 
 	private UnaryComputerOp<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>> mapper;
@@ -44,8 +45,9 @@ public class TilableInverter<T extends RealType<T>> extends
 	public void compute1(final RandomAccessibleInterval<T> input, final RandomAccessibleInterval<T> output) {
 		final T inType = input.randomAccess().get();
 		final double minVal = inType.getMinValue();
-		final UnaryComputerOp<T, T> invert = minVal < 0 ? new SignedRealInvert<>() : new UnsignedRealInvert<>(inType
-			.getMaxValue());
+		final UnaryComputerOp<T, T> invert = minVal < 0
+			? new SignedRealInvert<>()
+			: new UnsignedRealInvert<>(inType.getMaxValue());
 		mapper = Computers.unary(ops(), Ops.Map.class, output, input, invert);
 
 		mapper.compute1(input, output);

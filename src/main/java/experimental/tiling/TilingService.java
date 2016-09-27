@@ -1,13 +1,10 @@
 
-package experimental.tiling.ops;
+package experimental.tiling;
 
 import net.imagej.ops.cached.CachedOpEnvironment.CachedFunctionOp;
 import net.imglib2.RandomAccessibleInterval;
 
 import org.scijava.service.SciJavaService;
-
-import experimental.tiling.Tiling;
-import experimental.tiling.TilingConfiguration;
 
 public interface TilingService extends SciJavaService {
 

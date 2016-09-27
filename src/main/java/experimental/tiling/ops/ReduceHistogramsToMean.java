@@ -9,9 +9,11 @@ import net.imglib2.histogram.Histogram1d;
 
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = bachelorprojekt.ops.ReduceHistogramsToMean.class)
+import experimental.tiling.ops.interfaces.TilableReduceOp;
+
+@Plugin(type = ReduceHistogramsToMean.class)
 public class ReduceHistogramsToMean<T> extends AbstractUnaryFunctionOp<Iterable<Histogram1d<T>>, T> implements
-	ReduceOp
+	TilableReduceOp
 {
 
 	@Override

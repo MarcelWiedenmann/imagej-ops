@@ -1,7 +1,6 @@
 
 package experimental.tiling;
 
-import net.imagej.ops.Op;
 import net.imglib2.Dimensions;
 import net.imglib2.FinalDimensions;
 import net.imglib2.RandomAccessibleInterval;
@@ -15,7 +14,6 @@ public class TilingConfiguration {
 	private final Dimensions dimensions;
 	private TilingType type = TilingType.FixedTileSize;
 	private TilingStrategy strategy = new DefaultTilingStrategy();
-	private Op[] ops;
 
 	public TilingConfiguration(final Dimensions dimensions) {
 		this.dimensions = dimensions;

@@ -7,20 +7,20 @@ import net.imglib2.view.Views;
 
 import experimental.tiling.Tiling;
 
-public class ImageAsTilingRandomAccess<T> extends
-	TilesRandomAccess<T, RandomAccessibleInterval<T>, RandomAccessibleInterval<T>>
+public class TilingRandomAccess<T> extends
+	TiledRandomAccess<T, RandomAccessibleInterval<T>, RandomAccessibleInterval<T>>
 {
 
 	protected final Tiling description;
 
-	public ImageAsTilingRandomAccess(final ImageAsTilingView<T> view, final RandomAccessibleInterval<T> source,
+	public TilingRandomAccess(final TilingView<T> view, final RandomAccessibleInterval<T> source,
 		final Tiling description)
 	{
 		super(view, source, description.getDefaultTileSize());
 		this.description = description;
 	}
 
-	protected ImageAsTilingRandomAccess(final ImageAsTilingRandomAccess<T> randomAccess) {
+	protected TilingRandomAccess(final TilingRandomAccess<T> randomAccess) {
 		super(randomAccess);
 		this.description = randomAccess.description;
 	}

@@ -5,7 +5,7 @@ import net.imglib2.Dimensions;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 
-import experimental.tiling.view.ImageAsTilingView;
+import experimental.tiling.view.TilingView;
 
 public class Tiling<I, O> {
 
@@ -15,8 +15,6 @@ public class Tiling<I, O> {
 	private final Dimensions tileSize;
 	private final TilingStrategy strategy;
 
-	private LazyTile<I, O> root;
-
 	public Tiling(final RandomAccessibleInterval<I> in, final long numTiles, final Dimensions tilesPerDim,
 		final Dimensions tileSize, final TilingStrategy strategy)
 	{
@@ -24,7 +22,7 @@ public class Tiling<I, O> {
 		this.numTiles = numTiles;
 		this.tilesPerDim = tilesPerDim;
 		this.tileSize = tileSize;
-		this.strategy = strategy.copy(this);
+		this.strategy = strategy;
 	}
 
 	protected Tiling(final Tiling<I, O> tiling) {
@@ -43,12 +41,12 @@ public class Tiling<I, O> {
 		return in;
 	}
 
-	public Dimensions getTilesPerDim() {
-		return tilesPerDim;
-	}
-
 	public long getNumTiles() {
 		return numTiles;
+	}
+
+	public Dimensions getTilesPerDim() {
+		return tilesPerDim;
 	}
 
 	public Dimensions getDefaultTileSize() {
@@ -59,7 +57,8 @@ public class Tiling<I, O> {
 		return strategy;
 	}
 
-	public ImageAsTilingView view() {
-
+	public TilingView<I> view() {
+		final TilingView<I> view = new TilingView<>(in, this);
+		return view;
 	}
 }

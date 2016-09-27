@@ -15,7 +15,7 @@ import net.imglib2.view.RandomAccessibleIntervalCursor;
 
 import experimental.tiling.misc.Util;
 
-public class TilesView<T, I extends RandomAccessibleInterval<T>, O extends RandomAccessibleInterval<T>> extends
+public class TiledView<T, I extends RandomAccessibleInterval<T>, O extends RandomAccessibleInterval<T>> extends
 	AbstractInterval implements RandomAccessibleInterval<O>, IterableInterval<O>, View
 {
 
@@ -25,11 +25,11 @@ public class TilesView<T, I extends RandomAccessibleInterval<T>, O extends Rando
 	protected final Dimensions tileSize;
 	private RandomAccessibleIntervalCursor<O> cursor;
 
-	public TilesView(final I source, final long[] tilesPerDim) {
+	public TiledView(final I source, final long[] tilesPerDim) {
 		this(source, new FinalDimensions(tilesPerDim));
 	}
 
-	public TilesView(final I source, final Dimensions tilesPerDim) {
+	public TiledView(final I source, final Dimensions tilesPerDim) {
 		super(tilesPerDim);
 
 		assert source.numDimensions() == n;
@@ -51,7 +51,7 @@ public class TilesView<T, I extends RandomAccessibleInterval<T>, O extends Rando
 
 	@Override
 	public RandomAccess<O> randomAccess() {
-		return new TilesRandomAccess<>(this, source, tileSize);
+		return new TiledRandomAccess<>(this, source, tileSize);
 	}
 
 	@Override

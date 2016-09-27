@@ -13,9 +13,10 @@ import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 import experimental.tiling.misc.Util;
-import experimental.tiling.ops.TilableOp;
+import experimental.tiling.ops.interfaces.TilableOp;
 import experimental.tiling.view.TileIndexMapper;
 
+// TODO: Convert TilinStrategy to op (and use as 1st and last in op chain)?
 public class TilingStrategy {
 
 	private Dimensions overlap = Util.ZeroDimensions;
@@ -43,9 +44,9 @@ public class TilingStrategy {
 	}
 
 	public void transform(final long[] min, final long[] max, final long[] index, final int d) {
-		assert overlap != null : "Strategy needs to be adjusted and stateful.";
-		assert tiling != null : "Strategy needs to be adjusted and stateful.";
+		assert overlap != null && tiling != null;
 
+		// Only transform inner boundaries.
 		if (index[d] > 0) {
 			min[d] -= overlap.dimension(d);
 		}
@@ -88,16 +89,17 @@ public class TilingStrategy {
 	}
 
 	public <I, O> TilingStrategy copy(final Tiling<I, O> tiling, final Op... ops) {
-		int numDimensions = tiling.numDimensions();
+		int maxNumDimensions = tiling.numDimensions();
 		final ArrayList<Dimensions> opOverlaps = new ArrayList<Dimensions>(ops.length);
 		for (final Op op : ops) {
 			if (op instanceof TilableOp) {
 				final Dimensions opOverlap = ((TilableOp) op).getOverlap();
 				opOverlaps.add(opOverlap);
-				if (opOverlap.numDimensions() > numDimensions) numDimensions = opOverlap.numDimensions();
+				if (opOverlap.numDimensions() > maxNumDimensions) maxNumDimensions = opOverlap.numDimensions();
 			}
 		}
-		final long[] combinedOverlap = new long[numDimensions];
+		// Default: Add up overlaps to enable image filtering or other neighborhood-dependent operations.
+		final long[] combinedOverlap = new long[maxNumDimensions];
 		for (final Dimensions overlap : opOverlaps) {
 			for (int d = 0; d < overlap.numDimensions(); d++) {
 				combinedOverlap[d] += overlap.dimension(d);

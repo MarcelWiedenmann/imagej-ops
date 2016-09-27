@@ -1,5 +1,5 @@
 
-package experimental.tiling.ops;
+package experimental.tiling.ops.interfaces;
 
 import net.imagej.ops.Op;
 import net.imglib2.Dimensions;

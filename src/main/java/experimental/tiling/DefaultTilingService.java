@@ -1,5 +1,5 @@
 
-package experimental.tiling.ops;
+package experimental.tiling;
 
 import net.imagej.ops.OpService;
 import net.imagej.ops.cached.CachedOpEnvironment.CachedFunctionOp;
@@ -9,9 +9,6 @@ import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.service.AbstractService;
 import org.scijava.service.Service;
-
-import experimental.tiling.Tiling;
-import experimental.tiling.TilingConfiguration;
 
 @Plugin(type = Service.class)
 public class DefaultTilingService extends AbstractService implements TilingService {
@@ -34,7 +31,6 @@ public class DefaultTilingService extends AbstractService implements TilingServi
 
 	// -- TilingService --
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <I, O> Tiling<I, O> create(final RandomAccessibleInterval<I> in, final TilingConfiguration config) {
 
