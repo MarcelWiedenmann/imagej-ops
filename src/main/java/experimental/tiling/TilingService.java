@@ -8,9 +8,11 @@ import org.scijava.service.SciJavaService;
 
 public interface TilingService extends SciJavaService {
 
-	<I, O> Tiling<I, O> create(RandomAccessibleInterval<I> in, TilingConfiguration config);
+	public TilingOpEnvironment ops();
 
-	<I, IO, O> Tiling<I, O> concat(Tiling<I, IO> tiling, CachedFunctionOp<IO, O> function);
+	public <I, O> Tiling<I, O> create(RandomAccessibleInterval<I> in, TilingConfiguration config);
 
-	<I, O> O run(Tiling<I, O> tiling);
+	public <I, IO, O> Tiling<I, O> concat(Tiling<I, IO> tiling, CachedFunctionOp<IO, O> function);
+
+	public <I, O> O run(Tiling<I, O> tiling);
 }

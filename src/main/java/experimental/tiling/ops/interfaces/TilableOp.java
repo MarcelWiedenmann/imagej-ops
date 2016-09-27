@@ -8,7 +8,7 @@ import experimental.tiling.misc.Util;
 
 public interface TilableOp extends Op {
 
-	default Dimensions getOverlap() {
+	public default Dimensions getOverlap() {
 		return Util.ZeroDimensions;
 	}
 }
