@@ -23,15 +23,6 @@ public class TilingOpEnvironment extends CachedOpEnvironment {
 		super(parent);
 	}
 
-	public <T> Tiling<T, ?> tiling(final RandomAccessibleInterval<T> in, final Dimensions dims, final TilingType type,
-		final TilingStrategy strategy, final Op... ops)
-	{
-		final TilingConfiguration config = new TilingConfiguration(dims);
-		config.setTilingType(type);
-		config.setStrategy(strategy);
-		return config.generateTiling(in);
-	}
-
 	public <T> Object run(final RandomAccessibleInterval<T> in, final Dimensions dims, final TilingType type,
 		final TilingStrategy strategy, final Op... ops)
 	{

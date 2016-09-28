@@ -15,6 +15,10 @@ public class TilingConfiguration {
 	private TilingType type = TilingType.FixedTileSize;
 	private TilingStrategy strategy = new DefaultTilingStrategy();
 
+	public TilingConfiguration(final long... dimensions) {
+		this(new FinalDimensions(dimensions));
+	}
+
 	public TilingConfiguration(final Dimensions dimensions) {
 		this.dimensions = dimensions;
 	}
@@ -39,11 +43,10 @@ public class TilingConfiguration {
 		this.strategy = strategy;
 	}
 
-	public <I, O> Tiling<I, O> generateTiling(final RandomAccessibleInterval<I> in) {
+	public <I> TilingSchema<I> generateSchema(final RandomAccessibleInterval<I> in) {
 		long numTiles;
 		Dimensions tilesPerDim;
 		Dimensions tileSize;
-
 		if (type == TilingType.FixedTileSize) {
 			tileSize = dimensions;
 			numTiles = 1;
@@ -67,7 +70,6 @@ public class TilingConfiguration {
 			tileSize = FinalDimensions.wrap(tSize);
 		}
 		else throw new RuntimeException("Tiling type not supported.");
-
-		return new Tiling<I, O>(in, numTiles, tilesPerDim, tileSize, strategy);
+		return new TilingSchema<I>(in, numTiles, tilesPerDim, tileSize, strategy);
 	}
 }

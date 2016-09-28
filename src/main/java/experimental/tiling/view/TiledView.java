@@ -29,6 +29,7 @@ public class TiledView<T, I extends RandomAccessibleInterval<T>, O extends Rando
 		this(source, new FinalDimensions(tilesPerDim));
 	}
 
+	// TODO: Let user choose between "tilesPerDim" and "tileSize"
 	public TiledView(final I source, final Dimensions tilesPerDim) {
 		super(tilesPerDim);
 

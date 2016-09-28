@@ -5,24 +5,24 @@ import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.view.Views;
 
-import experimental.tiling.Tiling;
+import experimental.tiling.TilingSchema;
 
 public class TilingRandomAccess<T> extends
 	TiledRandomAccess<T, RandomAccessibleInterval<T>, RandomAccessibleInterval<T>>
 {
 
-	protected final Tiling description;
+	protected final TilingSchema<T> schema;
 
 	public TilingRandomAccess(final TilingView<T> view, final RandomAccessibleInterval<T> source,
-		final Tiling description)
+		final TilingSchema<T> schema)
 	{
-		super(view, source, description.getDefaultTileSize());
-		this.description = description;
+		super(view, source, schema.getDefaultTileSize());
+		this.schema = schema;
 	}
 
 	protected TilingRandomAccess(final TilingRandomAccess<T> randomAccess) {
 		super(randomAccess);
-		this.description = randomAccess.description;
+		this.schema = randomAccess.schema;
 	}
 
 	// -- --
@@ -33,7 +33,7 @@ public class TilingRandomAccess<T> extends
 		for (int d = 0; d < n; d++) {
 			min[d] = position[d] * tileSize.dimension(d);
 			max[d] = min[d] + tileSize.dimension(d) - 1;
-			description.getStrategy().transform(min, max, position, d);
+			schema.getStrategy().transform(min, max, position, d);
 		}
 		return Views.interval(source, new FinalInterval(min, max));
 	}

@@ -4,26 +4,24 @@ package experimental.tiling.view;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 
-import experimental.tiling.Tiling;
+import experimental.tiling.TilingSchema;
 
-public class TilingView<T> extends
-	TiledView<T, RandomAccessibleInterval<T>, RandomAccessibleInterval<T>>
-{
+public class TilingView<T> extends TiledView<T, RandomAccessibleInterval<T>, RandomAccessibleInterval<T>> {
 
-	protected final Tiling description;
+	protected final TilingSchema<T> schema;
 
-	public TilingView(final RandomAccessibleInterval<T> source, final Tiling description) {
-		super(source, description.getTilesPerDim());
-		this.description = description;
+	public TilingView(final RandomAccessibleInterval<T> source, final TilingSchema<T> schema) {
+		super(source, schema.getTilesPerDim());
+		this.schema = schema;
 
-		assert size == description.getNumTiles();
-		assert experimental.tiling.misc.Util.equals(tileSize, description.getDefaultTileSize());
+		assert size == schema.getNumTiles();
+		assert experimental.tiling.misc.Util.equals(tileSize, schema.getDefaultTileSize());
 	}
 
 	// -- --
 
 	@Override
 	public RandomAccess<RandomAccessibleInterval<T>> randomAccess() {
-		return new TilingRandomAccess<>(this, source, description);
+		return new TilingRandomAccess<>(this, source, schema);
 	}
 }

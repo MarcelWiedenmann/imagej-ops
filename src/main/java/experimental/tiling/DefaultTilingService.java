@@ -18,6 +18,7 @@ public class DefaultTilingService extends AbstractService implements TilingServi
 
 	private TilingOpEnvironment ops;
 
+	@Override
 	public TilingOpEnvironment ops() {
 		return ops;
 	}
@@ -32,21 +33,23 @@ public class DefaultTilingService extends AbstractService implements TilingServi
 	// -- TilingService --
 
 	@Override
-	public <I, O> Tiling<I, O> create(final RandomAccessibleInterval<I> in, final TilingConfiguration config) {
+	public <I> TilingSchema<I> createSchema(final RandomAccessibleInterval<I> in, final TilingConfiguration config) {
+		final TilingSchema<I> schema = config.generateSchema(in);
+		return schema;
+	}
 
-		final Tiling<I, O> tiling = config.generateTiling(in);
-		return tiling;
+	@Override
+	public <I, O> Tiling<I, O> createTiling(final TilingSchema<I> schema, final CachedFunctionOp<I, O> function) {
+		return new Tiling<I, O>(schema, function);
 	}
 
 	@Override
 	public <I, IO, O> Tiling<I, O> concat(final Tiling<I, IO> tiling, final CachedFunctionOp<IO, O> function) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Tiling<I, O>(tiling, function);
 	}
 
 	@Override
 	public <I, O> O run(final Tiling<I, O> tiling) {
-		// TODO Auto-generated method stub
-		return null;
+		return tiling.run();
 	}
 }

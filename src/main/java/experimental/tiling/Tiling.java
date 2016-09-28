@@ -1,65 +1,58 @@
 
 package experimental.tiling;
 
+import java.util.Iterator;
+
 import net.imagej.ops.Op;
-import net.imglib2.Dimensions;
-import net.imglib2.Interval;
+import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 
+import experimental.tiling.execution.LazyExecutionBranch;
 import experimental.tiling.view.TilingView;
 
 public class Tiling<I, O> {
 
-	private final RandomAccessibleInterval<I> in;
-	private final long numTiles;
-	private final Dimensions tilesPerDim;
-	private final Dimensions tileSize;
-	private final TilingStrategy strategy;
+	private final TilingSchema<I> schema;
+	private final LazyExecutionBranch<I, O> branch;
 
-	public Tiling(final RandomAccessibleInterval<I> in, final long numTiles, final Dimensions tilesPerDim,
-		final Dimensions tileSize, final TilingStrategy strategy)
-	{
-		this.in = in;
-		this.numTiles = numTiles;
-		this.tilesPerDim = tilesPerDim;
-		this.tileSize = tileSize;
-		this.strategy = strategy.copy(this, new Op[] {}); // FIXME!
+	public Tiling(final TilingSchema<I> schema, final LazyExecutionBranch<I, O> branch) {
+		this.schema = schema;
+		this.branch = branch;
 	}
 
-	protected Tiling(final Tiling<I, O> tiling) {
-		in = tiling.in;
-		numTiles = tiling.numTiles;
-		tilesPerDim = tiling.tilesPerDim;
-		tileSize = tiling.tileSize;
-		strategy = tiling.strategy;
+	public TilingSchema<I> getSchema() {
+		return schema;
 	}
 
-	public int numDimensions() {
-		return in.numDimensions();
+	public LazyExecutionBranch<I, O> getBranch() {
+		return branch;
 	}
 
-	public Interval getInput() {
-		return in;
+	public Iterator<Op> opIterator() {
+		// FIXME
+		throw new RuntimeException("Not yet implemented");
 	}
 
-	public long getNumTiles() {
-		return numTiles;
+	public Cursor<CachedRandomAccessibleInterval<I, O>> cursor() {
+		// NB: This kind of cursor conversion only works for simple tile-to-tile transformations (will be harder for
+		// reductions etc.).
+		// Also we assume that O is a CachedRandomAccessibleInterval which only holds for tile-to-tile transformations.
+		final TilingView<I> view = new TilingView<>(schema.getInput(), schema);
+		final Cursor<RandomAccessibleInterval<I>> c = view.cursor();
+		return new TilingCursor<I, O>(c, branch);
 	}
 
-	public Dimensions getTilesPerDim() {
-		return tilesPerDim;
-	}
-
-	public Dimensions getDefaultTileSize() {
-		return tileSize;
-	}
-
-	public TilingStrategy getStrategy() {
-		return strategy;
-	}
-
-	public TilingView<I> view() {
-		final TilingView<I> view = new TilingView<>(in, this);
-		return view;
+	public O run() {
+//		final TilingView<T1> view = new TilingView<T1>(tiling.getSchema().getInput(), tiling.getSchema());
+//		final Cursor<RandomAccessibleInterval<T1>> c = view.cursor();
+//		final ArrayList<(RandomAccessibleInterval<T2>)> outputs = new ArrayList<>((int) tiling.getSchema().getNumTiles());
+//		while (c.hasNext()) {
+//			final I tile = (I) c.next();
+//			tiling.getRoot().setParent(new LazyRootTile<I>(tile));
+//			outputs.add(tiling.getLeaf().get());
+//		}
+//
+//		final CombinedView<T2> combined = new CombinedView<T2>(outputs, null);
+		throw new RuntimeException("Not yet implemented");
 	}
 }
