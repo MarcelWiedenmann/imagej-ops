@@ -16,6 +16,7 @@ public class Tiling<I, O> {
 	private final LazyExecutionBranch<I, O> branch;
 
 	public Tiling(final TilingSchema<I> schema, final LazyExecutionBranch<I, O> branch) {
+		// TODO/FIXME: We need to configure the schema's strategy according to the ops within the branch.
 		this.schema = schema;
 		this.branch = branch;
 	}
