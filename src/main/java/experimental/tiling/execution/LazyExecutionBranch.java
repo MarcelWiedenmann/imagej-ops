@@ -6,26 +6,24 @@ import net.imagej.ops.special.function.UnaryFunctionOp;
 // NB: Full trees could be modeled using junctions of branches (provided a BinaryFunctionOp).
 public class LazyExecutionBranch<I, O> implements LazyExecutionNode<I, O> {
 
-	private final LazyExecutionStep<I, ?> root;
-	private final LazyExecutionStep<?, O> leaf;
+	private final LazyExecutionStage<I, ?> root;
+	private final LazyExecutionStage<?, O> leaf;
 
 	public LazyExecutionBranch(final UnaryFunctionOp<I, O> op) {
-		final LazyExecutionStep<I, O> tile = new LazyExecutionStep<I, O>(null, op);
+		final LazyExecutionStage<I, O> tile = new LazyExecutionStage<I, O>(null, op);
 		root = tile;
 		leaf = tile;
 	}
 
-	@SuppressWarnings("unchecked")
 	private LazyExecutionBranch(final LazyExecutionBranch<I, O> branch) {
 		leaf = branch.leaf.copy();
-		root = (LazyExecutionStep<I, ?>) leaf.getRoot();
+		root = (LazyExecutionStage<I, ?>) leaf.getRoot();
 	}
 
-	@SuppressWarnings("unchecked")
 	private <IO> LazyExecutionBranch(final LazyExecutionBranch<I, IO> branch, final UnaryFunctionOp<IO, O> op) {
-		final LazyExecutionStep<?, IO> leafCopy = branch.leaf.copy();
-		leaf = new LazyExecutionStep<>(leafCopy, op);
-		root = (LazyExecutionStep<I, ?>) leafCopy.getRoot();
+		final LazyExecutionStage<?, IO> leafCopy = branch.leaf.copy();
+		leaf = new LazyExecutionStage<>(leafCopy, op);
+		root = (LazyExecutionStage<I, ?>) leafCopy.getRoot();
 	}
 
 	public LazyExecutionBranch<I, O> appendRoot(final I input) {

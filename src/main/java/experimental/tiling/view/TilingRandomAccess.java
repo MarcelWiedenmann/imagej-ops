@@ -7,14 +7,12 @@ import net.imglib2.view.Views;
 
 import experimental.tiling.TilingSchema;
 
-public class TilingRandomAccess<T> extends
-	TiledRandomAccess<T, RandomAccessibleInterval<T>, RandomAccessibleInterval<T>>
-{
+public class TilingRandomAccess<T> extends TiledRandomAccess<T> {
 
-	protected final TilingSchema<T> schema;
+	protected final TilingSchema<RandomAccessibleInterval<T>> schema;
 
 	public TilingRandomAccess(final TilingView<T> view, final RandomAccessibleInterval<T> source,
-		final TilingSchema<T> schema)
+		final TilingSchema<RandomAccessibleInterval<T>> schema)
 	{
 		super(view, source, schema.getDefaultTileSize());
 		this.schema = schema;
@@ -26,6 +24,7 @@ public class TilingRandomAccess<T> extends
 	}
 
 	// -- --
+
 	@Override
 	public RandomAccessibleInterval<T> get() {
 		final long[] min = new long[n];

@@ -9,15 +9,15 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Sampler;
 import net.imglib2.view.Views;
 
-public class TiledRandomAccess<T, I extends RandomAccessibleInterval<T>, O extends RandomAccessibleInterval<T>>
-	extends Point implements RandomAccess<O>
-{
+public class TiledRandomAccess<T> extends Point implements RandomAccess<RandomAccessibleInterval<T>> {
 
-	protected final TiledView<T, I, O> view;
-	protected final I source;
+	protected final TiledView<T> view;
+	protected final RandomAccessibleInterval<T> source;
 	protected final Dimensions tileSize;
 
-	public TiledRandomAccess(final TiledView<T, I, O> view, final I source, final Dimensions tileSize) {
+	public TiledRandomAccess(final TiledView<T> view, final RandomAccessibleInterval<T> source,
+		final Dimensions tileSize)
+	{
 		super(source.numDimensions());
 
 		assert tileSize.numDimensions() == n;
@@ -27,7 +27,7 @@ public class TiledRandomAccess<T, I extends RandomAccessibleInterval<T>, O exten
 		this.tileSize = tileSize;
 	}
 
-	protected TiledRandomAccess(final TiledRandomAccess<T, I, O> randomAccess) {
+	protected TiledRandomAccess(final TiledRandomAccess<T> randomAccess) {
 		super(randomAccess.position, true);
 		view = randomAccess.view;
 		source = randomAccess.source;
@@ -35,23 +35,23 @@ public class TiledRandomAccess<T, I extends RandomAccessibleInterval<T>, O exten
 	}
 
 	@Override
-	public O get() {
+	public RandomAccessibleInterval<T> get() {
 		final long[] min = new long[n];
 		final long[] max = new long[n];
 		for (int d = 0; d < n; d++) {
 			min[d] = position[d] * tileSize.dimension(d);
 			max[d] = min[d] + tileSize.dimension(d) - 1;
 		}
-		return (O) Views.interval(source, new FinalInterval(min, max));
+		return Views.interval(source, new FinalInterval(min, max));
 	}
 
 	@Override
-	public Sampler<O> copy() {
+	public Sampler<RandomAccessibleInterval<T>> copy() {
 		return copyRandomAccess();
 	}
 
 	@Override
-	public RandomAccess<O> copyRandomAccess() {
+	public RandomAccess<RandomAccessibleInterval<T>> copyRandomAccess() {
 		return new TiledRandomAccess<>(this);
 	}
 }

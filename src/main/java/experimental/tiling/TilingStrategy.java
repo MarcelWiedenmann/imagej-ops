@@ -91,8 +91,8 @@ public class TilingStrategy {
 		return transformedTiles;
 	}
 
-	public <I extends RandomAccessibleInterval<?>, O> TilingStrategy copy(final Tiling<I, O> tiling) {
-		final TilingSchema<I> schema = tiling.getSchema();
+	public <T, O> TilingStrategy copy(final Tiling<T, O> tiling) {
+		final TilingSchema<RandomAccessibleInterval<T>> schema = tiling.getSchema();
 		final Iterator<Op> i = tiling.opIterator();
 		int maxNumDimensions = schema.numDimensions();
 		final ArrayList<Dimensions> opOverlaps = new ArrayList<Dimensions>();

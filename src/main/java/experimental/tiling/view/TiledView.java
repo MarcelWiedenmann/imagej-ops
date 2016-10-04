@@ -15,22 +15,22 @@ import net.imglib2.view.RandomAccessibleIntervalCursor;
 
 import experimental.tiling.misc.Util;
 
-public class TiledView<T, I extends RandomAccessibleInterval<T>, O extends RandomAccessibleInterval<T>> extends
-	AbstractInterval implements RandomAccessibleInterval<O>, IterableInterval<O>, View
+public class TiledView<T> extends AbstractInterval implements RandomAccessibleInterval<RandomAccessibleInterval<T>>,
+	IterableInterval<RandomAccessibleInterval<T>>, View
 {
 
-	protected final I source;
+	protected final RandomAccessibleInterval<T> source;
 	protected final Dimensions tilesPerDim;
 	protected final long size;
 	protected final Dimensions tileSize;
-	private RandomAccessibleIntervalCursor<O> cursor;
+	private RandomAccessibleIntervalCursor<RandomAccessibleInterval<T>> cursor;
 
-	public TiledView(final I source, final long[] tilesPerDim) {
+	public TiledView(final RandomAccessibleInterval<T> source, final long[] tilesPerDim) {
 		this(source, new FinalDimensions(tilesPerDim));
 	}
 
-	// TODO: Let user choose between "tilesPerDim" and "tileSize"
-	public TiledView(final I source, final Dimensions tilesPerDim) {
+	// TODO: tilesPerDim" or "tileSize" as user input? (NB: TiledRandomAccess needs tileSize)
+	public TiledView(final RandomAccessibleInterval<T> source, final Dimensions tilesPerDim) {
 		super(tilesPerDim);
 
 		assert source.numDimensions() == n;
@@ -51,12 +51,12 @@ public class TiledView<T, I extends RandomAccessibleInterval<T>, O extends Rando
 	// -- RandomAccessibleInterval --
 
 	@Override
-	public RandomAccess<O> randomAccess() {
+	public RandomAccess<RandomAccessibleInterval<T>> randomAccess() {
 		return new TiledRandomAccess<>(this, source, tileSize);
 	}
 
 	@Override
-	public RandomAccess<O> randomAccess(final Interval interval) {
+	public RandomAccess<RandomAccessibleInterval<T>> randomAccess(final Interval interval) {
 		return randomAccess();
 	}
 
@@ -68,7 +68,7 @@ public class TiledView<T, I extends RandomAccessibleInterval<T>, O extends Rando
 	}
 
 	@Override
-	public O firstElement() {
+	public RandomAccessibleInterval<T> firstElement() {
 		if (cursor == null) {
 			cursor = new RandomAccessibleIntervalCursor<>(this);
 		}
@@ -84,17 +84,17 @@ public class TiledView<T, I extends RandomAccessibleInterval<T>, O extends Rando
 	}
 
 	@Override
-	public Cursor<O> iterator() {
+	public Cursor<RandomAccessibleInterval<T>> iterator() {
 		return cursor();
 	}
 
 	@Override
-	public Cursor<O> cursor() {
+	public Cursor<RandomAccessibleInterval<T>> cursor() {
 		return new RandomAccessibleIntervalCursor<>(this);
 	}
 
 	@Override
-	public Cursor<O> localizingCursor() {
+	public Cursor<RandomAccessibleInterval<T>> localizingCursor() {
 		return cursor();
 	}
 }

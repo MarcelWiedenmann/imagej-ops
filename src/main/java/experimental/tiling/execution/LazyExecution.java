@@ -7,7 +7,7 @@ package experimental.tiling.execution;
 // However, parent-dependent construction is not yet implemented.
 public class LazyExecution<I, O> implements LazyExecutionNode<I, O> {
 
-	private final LazyExecutionBranch<I, O> branch;
+	protected final LazyExecutionBranch<I, O> branch;
 
 	public LazyExecution(final I input, final LazyExecutionBranch<I, O> branch) {
 		this.branch = branch.appendRoot(input);
