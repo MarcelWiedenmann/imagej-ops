@@ -17,13 +17,13 @@ public class LazyExecution<I, O> implements LazyExecutionNode<I, O> {
 
 	@Override
 	public LazyExecutionNode<?, I> getParent() {
-		// NB: We have a fixed input, thus no more nodes are allowed in root-direction.
+		// NB: We have a fixed input, no more nodes are allowed in root-direction.
 		return null;
 	}
 
 	@Override
 	public void setParent(final LazyExecutionNode<?, I> parent) {
-		// NB: We have a fixed input, thus no more nodes are allowed in root-direction.
+		// NB: We have a fixed input, no more nodes are allowed in root-direction.
 		throw new UnsupportedOperationException("Source nodes do not have parents.");
 	}
 

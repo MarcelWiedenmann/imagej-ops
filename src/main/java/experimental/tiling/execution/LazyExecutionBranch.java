@@ -27,8 +27,7 @@ public class LazyExecutionBranch<I, O> implements LazyExecutionNode<I, O> {
 		catch (final UnsupportedOperationException ex) {
 			// NB: If n2.getRoot() is a source node, assigning a new parent is not allowed. Currently, we just let the
 			// execution fail in such situations. However, we could also replace the old source with the new node.
-			// Manipulating our branches from the root side is a costly operation due to the single-linked nature of the
-			// graph.
+			// Manipulating our branches from the root side is cumbersome due to the single-linked nature of the graph.
 			// TODO: Change to double-linked graphs?
 			throw ex;
 		}
