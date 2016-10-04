@@ -2,13 +2,15 @@
 package experimental.tiling;
 
 import net.imagej.ops.OpService;
-import net.imagej.ops.cached.CachedOpEnvironment.CachedFunctionOp;
+import net.imagej.ops.special.function.UnaryFunctionOp;
 import net.imglib2.RandomAccessibleInterval;
 
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.service.AbstractService;
 import org.scijava.service.Service;
+
+import experimental.tiling.execution.LazyExecutionBranch;
 
 @Plugin(type = Service.class)
 public class DefaultTilingService extends AbstractService implements TilingService {
@@ -33,18 +35,15 @@ public class DefaultTilingService extends AbstractService implements TilingServi
 	// -- TilingService --
 
 	@Override
-	public <I> TilingSchema<I> createSchema(final RandomAccessibleInterval<I> in, final TilingConfiguration config) {
+	public <I extends RandomAccessibleInterval<?>, O> Tiling<I, O> create(final I in, final TilingConfiguration config) {
 		final TilingSchema<I> schema = config.generateSchema(in);
-		return schema;
+		// TODO: Allow "Null-LazyExecutionBranch".
+		return new Tiling<I, O>(schema, LazyExecutionBranch.Null);
 	}
 
 	@Override
-	public <I, O> Tiling<I, O> createTiling(final TilingSchema<I> schema, final CachedFunctionOp<I, O> function) {
-		return new Tiling<I, O>(schema, function);
-	}
-
-	@Override
-	public <I, IO, O> Tiling<I, O> concat(final Tiling<I, IO> tiling, final CachedFunctionOp<IO, O> function) {
+	public <I, IO, O> Tiling<I, O> concat(final Tiling<I, IO> tiling, final UnaryFunctionOp<IO, O> function) {
+		// TODO: Wrap function in CachedFunctionOp.
 		return new Tiling<I, O>(tiling, function);
 	}
 

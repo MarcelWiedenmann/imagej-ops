@@ -17,16 +17,18 @@ import experimental.tiling.misc.Util;
 import experimental.tiling.ops.interfaces.TilableOp;
 import experimental.tiling.view.TileIndexMapper;
 
-// TODO: Convert TilinStrategy to op (and use as 1st and last in op chain)?
+// TODO: Tiling vs lazy execution?! -- Convert TilingStrategy to op (and use as 1st and last in op chain)?
+// Get needed "tile meta information" (index etc.) from "enriched input" (i.e. TileRAI)
 public class TilingStrategy {
 
 	private Dimensions overlap = Util.ZeroDimensions;
-	@SuppressWarnings("rawtypes")
 	private TilingSchema schema = null;
 
 	public TilingStrategy() {}
 
-	private <I> TilingStrategy(final Dimensions overlap, final TilingSchema<I> schema) {
+	private <I extends RandomAccessibleInterval<?>> TilingStrategy(final Dimensions overlap,
+		final TilingSchema<I> schema)
+	{
 		assert overlap.numDimensions() >= schema.numDimensions();
 
 		// FIXME: What if the overlap of e.g. the 2nd tile is bigger than the neighboring 1st tile? --> Out of image bounds!
@@ -89,7 +91,7 @@ public class TilingStrategy {
 		return transformedTiles;
 	}
 
-	public <I, O> TilingStrategy copy(final Tiling<I, O> tiling) {
+	public <I extends RandomAccessibleInterval<?>, O> TilingStrategy copy(final Tiling<I, O> tiling) {
 		final TilingSchema<I> schema = tiling.getSchema();
 		final Iterator<Op> i = tiling.opIterator();
 		int maxNumDimensions = schema.numDimensions();

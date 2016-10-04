@@ -29,7 +29,6 @@ import experimental.tiling.ops.interfaces.TilableOp;
  * Code mainly stolen from net.imagej.ops.filter.gauss.DefaultGaussRAI by Christian Dietz, University of Konstanz. For
  * the sake of easy demonstration of tiled operations w/o any own effort :D
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
 @Plugin(type = Ops.Filter.Gauss.class, priority = Priority.LAST_PRIORITY)
 public class TilableGaussRAI<T extends RealType<T> & NativeType<T>> extends
 	AbstractUnaryHybridCF<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>> implements Ops.Filter.Gauss,

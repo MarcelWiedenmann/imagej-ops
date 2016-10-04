@@ -43,7 +43,7 @@ public class TilingConfiguration {
 		this.strategy = strategy;
 	}
 
-	public <I> TilingSchema<I> generateSchema(final RandomAccessibleInterval<I> in) {
+	public <I extends RandomAccessibleInterval<?>> TilingSchema<I> generateSchema(final I in) {
 		long numTiles;
 		Dimensions tilesPerDim;
 		Dimensions tileSize;

@@ -4,22 +4,22 @@ package experimental.tiling;
 import net.imglib2.Dimensions;
 import net.imglib2.RandomAccessibleInterval;
 
-public class TilingSchema<I> {
+public class TilingSchema<I extends RandomAccessibleInterval<?>> {
 
-	private final RandomAccessibleInterval<I> in;
+	private final I in;
 	private final long numTiles;
 	private final Dimensions tilesPerDim;
 	private final Dimensions tileSize;
 	private final TilingStrategy strategy;
 
-	public TilingSchema(final RandomAccessibleInterval<I> in, final long numTiles, final Dimensions tilesPerDim,
-		final Dimensions tileSize, final TilingStrategy strategy)
+	public TilingSchema(final I in, final long numTiles, final Dimensions tilesPerDim, final Dimensions tileSize,
+		final TilingStrategy strategy)
 	{
 		this.in = in;
 		this.numTiles = numTiles;
 		this.tilesPerDim = tilesPerDim;
 		this.tileSize = tileSize;
-		this.strategy = strategy; // FIXME!
+		this.strategy = strategy;
 	}
 
 	protected TilingSchema(final TilingSchema<I> tiling) {
@@ -30,7 +30,7 @@ public class TilingSchema<I> {
 		strategy = tiling.strategy;
 	}
 
-	public RandomAccessibleInterval<I> getInput() {
+	public I getInput() {
 		return in;
 	}
 

@@ -5,10 +5,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.imagej.ops.CustomOpEnvironment;
 import net.imagej.ops.Op;
 import net.imagej.ops.OpEnvironment;
 import net.imagej.ops.OpRef;
-import net.imagej.ops.cached.CachedOpEnvironment;
 import net.imglib2.Dimensions;
 import net.imglib2.RandomAccessibleInterval;
 
@@ -17,7 +17,7 @@ import org.scijava.log.LogService;
 import experimental.tiling.TilingConfiguration.TilingType;
 import experimental.tiling.ops.interfaces.TilableOp;
 
-public class TilingOpEnvironment extends CachedOpEnvironment {
+public class TilingOpEnvironment extends CustomOpEnvironment /* extends CachedOpEnvironment*/ {
 
 	public TilingOpEnvironment(final OpEnvironment parent) {
 		super(parent);
@@ -57,12 +57,10 @@ public class TilingOpEnvironment extends CachedOpEnvironment {
 		return op(opRef);
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public <OP extends Op> OP op(final Class<OP> type, final Object... args) {
-		final OpRef opRef = OpRef.create(type, args);
-		return (OP) op(opRef);
-	}
+//	public CachedFunctionOp<?, ?> cachedOp(final Class<?> type, final Object... args) {
+//		final OpRef opRef = OpRef.create(type, args);
+//		return (CachedFunctionOp<?, ?>) op(opRef);
+//	}
 
 	@Override
 	public Op op(final OpRef ref) {

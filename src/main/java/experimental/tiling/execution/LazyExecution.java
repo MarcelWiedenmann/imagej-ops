@@ -9,7 +9,6 @@ public class LazyExecution<I, O> implements LazyExecutionNode<I, O> {
 
 	private final LazyExecutionBranch<I, O> branch;
 
-	@SuppressWarnings("unchecked")
 	public LazyExecution(final I input, final LazyExecutionBranch<I, O> branch) {
 		this.branch = branch.appendRoot(input);
 	}
@@ -34,7 +33,7 @@ public class LazyExecution<I, O> implements LazyExecutionNode<I, O> {
 
 	@Override
 	public O get() {
-		return branch.getLeaf().get();
+		return branch.get();
 	}
 
 	@Override

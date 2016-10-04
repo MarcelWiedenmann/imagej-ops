@@ -26,7 +26,6 @@ public class TilableApplyConstantThreshold<T extends RealType<T>> extends
 	private BinaryComputerOp<T, T, BitType> applyThreshold;
 	private UnaryComputerOp<RandomAccessibleInterval<T>, RandomAccessibleInterval<BitType>> mapper;
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void compute2(final RandomAccessibleInterval<T> input1, final T input2,
 		final RandomAccessibleInterval<BitType> output)
