@@ -13,11 +13,16 @@ public class LazyExecutionSource<I> implements LazyExecutionNode<I, I> {
 		this.source = node.source;
 	}
 
-	// -- --
+	// -- LazyExecutionNode --
 
 	@Override
 	public LazyExecutionNode<?, I> getParent() {
 		return null;
+	}
+
+	@Override
+	public void setParent(final LazyExecutionNode<?, I> parent) {
+		throw new UnsupportedOperationException("Source nodes do not have parents.");
 	}
 
 	@Override

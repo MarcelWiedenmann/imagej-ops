@@ -1,10 +1,6 @@
 
 package experimental.tiling.execution;
 
-// NB: We can insert the entire execution into other execution branches as it implements LazyExecutionNode.
-// This might be useful for merging branches or building sub-branches/trees.
-// (Just make sure to keep graphs acyclic.)
-// However, parent-dependent construction is not yet implemented.
 public class LazyExecution<I, O> implements LazyExecutionNode<I, O> {
 
 	protected final LazyExecutionBranch<I, O> branch;
@@ -17,17 +13,23 @@ public class LazyExecution<I, O> implements LazyExecutionNode<I, O> {
 		this.branch = node.branch.copy();
 	}
 
-	// -- --
+	// -- LazyExecutionNode --
 
 	@Override
 	public LazyExecutionNode<?, I> getParent() {
-		// NB: We consider the entire execution (i.e. the wrapped branch) as a single node.
+		// NB: We have a fixed input, thus no more nodes are allowed in root-direction.
 		return null;
 	}
 
 	@Override
+	public void setParent(final LazyExecutionNode<?, I> parent) {
+		// NB: We have a fixed input, thus no more nodes are allowed in root-direction.
+		throw new UnsupportedOperationException("Source nodes do not have parents.");
+	}
+
+	@Override
 	public LazyExecutionNode<?, ?> getRoot() {
-		// NB: We consider the entire execution (i.e. the wrapped branch) as a single node.
+		// NB: We consider the entire execution a single node.
 		return this;
 	}
 

@@ -6,7 +6,7 @@ import net.imglib2.converter.AbstractConvertedCursor;
 
 public class LazyCursor<I, O> extends AbstractConvertedCursor<I, LazyExecution<I, O>> {
 
-	protected LazyExecutionBranch<I, O> branch;
+	protected final LazyExecutionBranch<I, O> branch;
 
 	public LazyCursor(final Cursor<I> source, final LazyExecutionBranch<I, O> branch) {
 		super(source);

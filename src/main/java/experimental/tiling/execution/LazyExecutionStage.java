@@ -3,11 +3,10 @@ package experimental.tiling.execution;
 
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
-// NB: Method calls are done in parent (within a tree: leaf-to-root) direction.
-// Thus, supporting multiple parents (N:1) should be easy, (1:N) is not! Here, we need or "junction of branches"-approach.
+// TODO: We will introduce binary stages to allow fork-join workflows (i.e. junctions of LazyExecutionBranch objects).
 public class LazyExecutionStage<I, O> implements LazyExecutionNode<I, O> {
 
-	private final LazyExecutionNode<?, I> parent;
+	private LazyExecutionNode<?, I> parent;
 	private final UnaryFunctionOp<I, O> op;
 
 	public LazyExecutionStage(final LazyExecutionNode<?, I> parent, final UnaryFunctionOp<I, O> op) {
@@ -20,11 +19,16 @@ public class LazyExecutionStage<I, O> implements LazyExecutionNode<I, O> {
 		op = node.op;
 	}
 
-	// -- --
+	// -- LazyExecutionNode --
 
 	@Override
 	public LazyExecutionNode<?, I> getParent() {
 		return parent;
+	}
+
+	@Override
+	public void setParent(final LazyExecutionNode<?, I> parent) {
+		this.parent = parent;
 	}
 
 	@Override
