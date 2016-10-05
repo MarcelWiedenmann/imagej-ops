@@ -7,8 +7,6 @@ import net.imglib2.Interval;
 
 public final class Util {
 
-	public static Dimensions ZeroDimensions = new FinalDimensions(0);
-
 	public static FinalDimensions copyDimensions(final Dimensions dims) {
 		return FinalDimensions.wrap(Util.dimensionsToArray(dims));
 	}

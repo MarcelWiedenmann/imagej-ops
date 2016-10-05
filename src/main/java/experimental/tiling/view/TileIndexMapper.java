@@ -9,11 +9,11 @@ import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 
-// Note: Derivatives of this class must NOT maintain a current position, i.e. should stay "state-less".
+// NB: Derivatives of this class must not maintain a current position, i.e. should stay "state-less".
 // This is because they can and will be shared between multiple cursors, random accesses and even entire tilings.
 public class TileIndexMapper {
 
-	// FIXME: fix for new TilingStrategy and TilingDescription layouts (e.g. by a new "TilingIndexMapper" class (extends
+	// TODO: fix for new TilingStrategy and TilingDescription layouts (e.g. by a new "TilingIndexMapper" class (extends
 	// this) that accepts a TilingDescription).
 
 	protected final int n;
@@ -41,8 +41,6 @@ public class TileIndexMapper {
 	public Interval getInterval() {
 		return interval;
 	}
-
-	// TODO: more friendly/concise method naming
 
 	public long getFlatTileIndex(final long[] index) {
 		assert index.length == n;
@@ -96,12 +94,10 @@ public class TileIndexMapper {
 		}
 	}
 
-	// Note: This method intentionally contains duplicate code (see getFlatTileIndex and getTileIndexAndLocalPosition)
-	// for performance reasons.
 	public long getFlatTileIndexAndLocalPosition(final long[] position,
 		final long[] localPosition /* , final boolean fillBorder */)
 	{
-		// TODO: stub - implement higher performance mapping by merging the D-loops of the two other methods.
+		// TODO: Implement more performant mapping by merging the D-loops of the two other methods.
 		final long[] tileIndex = new long[position.length];
 		getTileIndexAndLocalPosition(position, tileIndex, localPosition /* , fillBorder */);
 		return getFlatTileIndex(tileIndex);
@@ -109,15 +105,13 @@ public class TileIndexMapper {
 
 	// -- Static --
 
-	public static <T> TileIndexMapper createFromTiles(final List<RandomAccessibleInterval<T>> tiles,
-		final long[] tilesPerDim)
-	{
+	public static TileIndexMapper createFromTiles(final List<RandomAccessibleInterval> tiles, final long[] tilesPerDim) {
 		final int[] combinationOrder = getDefaultMappingOrder(tilesPerDim.length);
 		return createFromTiles(tiles, tilesPerDim, combinationOrder);
 	}
 
-	public static <T> TileIndexMapper createFromTiles(final List<RandomAccessibleInterval<T>> tiles,
-		final long[] tilesPerDim, final int[] combinationOrder)
+	public static TileIndexMapper createFromTiles(final List<RandomAccessibleInterval> tiles, final long[] tilesPerDim,
+		final int[] combinationOrder)
 	{
 		final Interval interval = getDefaultInterval(tiles, tilesPerDim);
 		final Dimensions tileSize = tiles.get(0);
@@ -132,13 +126,11 @@ public class TileIndexMapper {
 		return combinationOrder;
 	}
 
-	public static <T> Interval getDefaultInterval(final List<RandomAccessibleInterval<T>> tiles,
-		final long[] tilesPerDim)
-	{
-		final RandomAccessibleInterval<T> tile = tiles.get(0);
+	public static Interval getDefaultInterval(final List<RandomAccessibleInterval> tiles, final long[] tilesPerDim) {
+		final RandomAccessibleInterval<?> tile = tiles.get(0);
 		final int n = tilesPerDim.length;
 
-		// FIXME: tile.numDimensions() != n should also be allowed (or preprocessed at a central stage:
+		// TODO: tile.numDimensions() != n should also be allowed (or preprocessed at a central stage:
 		// tile.numDimensions() > n --> "pad with 1"
 		// tile.numDimensions() < n --> "use subset of n"
 		assert tile.numDimensions() == n;

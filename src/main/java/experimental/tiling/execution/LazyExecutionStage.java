@@ -15,8 +15,12 @@ public class LazyExecutionStage<I, O> implements LazyExecutionNode<I, O> {
 	}
 
 	private LazyExecutionStage(final LazyExecutionStage<I, O> node) {
-		parent = node.getParent().copy();
+		parent = node.getParent() != null ? node.getParent().copy() : null;
 		op = node.op;
+	}
+
+	public UnaryFunctionOp<I, O> getOp() {
+		return op;
 	}
 
 	// -- LazyExecutionNode --

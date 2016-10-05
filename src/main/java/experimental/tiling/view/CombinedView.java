@@ -21,12 +21,9 @@ public class CombinedView<T> extends AbstractInterval implements RandomAccessibl
 		super(mapper.getInterval());
 		final ArrayList<RandomAccessibleInterval<T>> normalizedTiles = new ArrayList<>(tiles.size());
 		for (final RandomAccessibleInterval<T> tile : tiles) {
+			// TODO: Check offset?
 			normalizedTiles.add(Views.zeroMin(tile));
 		}
-
-		// TODO: do normalization in a more efficient way, i.e. by first checking if a tile is non-normalized or by letting
-		// the caller handle normalization (use assert Util.isZeroMin(tiles); to enforce precondition).
-
 		this.tiles = Collections.unmodifiableList(normalizedTiles);
 		this.mapper = mapper;
 	}

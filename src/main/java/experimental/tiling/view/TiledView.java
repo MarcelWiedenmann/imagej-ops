@@ -29,7 +29,7 @@ public class TiledView<T> extends AbstractInterval implements RandomAccessibleIn
 		this(source, new FinalDimensions(tilesPerDim));
 	}
 
-	// TODO: tilesPerDim" or "tileSize" as user input? (NB: TiledRandomAccess needs tileSize)
+	// TODO: tilesPerDim" or "tileSize" as user input? (TiledRandomAccess needs tileSize)
 	public TiledView(final RandomAccessibleInterval<T> source, final Dimensions tilesPerDim) {
 		super(tilesPerDim);
 

@@ -23,7 +23,7 @@ import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.thread.ThreadService;
 
-import experimental.tiling.ops.interfaces.TilableOp;
+import experimental.tiling.ops.interfaces.TilableMapOp;
 
 /**
  * Code mainly stolen from net.imagej.ops.filter.gauss.DefaultGaussRAI by Christian Dietz, University of Konstanz. For
@@ -32,7 +32,7 @@ import experimental.tiling.ops.interfaces.TilableOp;
 @Plugin(type = Ops.Filter.Gauss.class, priority = Priority.LAST_PRIORITY)
 public class TilableGaussRAI<T extends RealType<T> & NativeType<T>> extends
 	AbstractUnaryHybridCF<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>> implements Ops.Filter.Gauss,
-	TilableOp
+	TilableMapOp
 {
 
 	@Parameter

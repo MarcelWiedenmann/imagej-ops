@@ -15,12 +15,12 @@ import net.imglib2.type.numeric.RealType;
 import org.scijava.Priority;
 import org.scijava.plugin.Plugin;
 
-import experimental.tiling.ops.interfaces.TilableOp;
+import experimental.tiling.ops.interfaces.TilableMapOp;
 
 @Plugin(type = Ops.Threshold.Apply.class, priority = Priority.LAST_PRIORITY)
 public class TilableApplyConstantThreshold<T extends RealType<T>> extends
 	AbstractBinaryHybridCF<RandomAccessibleInterval<T>, T, RandomAccessibleInterval<BitType>> implements
-	Ops.Threshold.Apply, TilableOp
+	Ops.Threshold.Apply, TilableMapOp
 {
 
 	private BinaryComputerOp<T, T, BitType> applyThreshold;

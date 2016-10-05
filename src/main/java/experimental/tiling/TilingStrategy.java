@@ -13,7 +13,6 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
-import experimental.tiling.misc.Util;
 import experimental.tiling.ops.interfaces.TilableOp;
 import experimental.tiling.view.TileIndexMapper;
 
@@ -21,8 +20,8 @@ import experimental.tiling.view.TileIndexMapper;
 // Get needed "tile meta information" (index etc.) from "enriched input" (i.e. TileRAI)
 public class TilingStrategy {
 
-	private Dimensions overlap = Util.ZeroDimensions;
-	private TilingSchema schema = null;
+	private Dimensions overlap;
+	private TilingSchema schema;
 
 	public TilingStrategy() {}
 
@@ -100,8 +99,10 @@ public class TilingStrategy {
 			final Op op = i.next();
 			if (op instanceof TilableOp) {
 				final Dimensions opOverlap = ((TilableOp) op).getOverlap();
-				opOverlaps.add(opOverlap);
-				if (opOverlap.numDimensions() > maxNumDimensions) maxNumDimensions = opOverlap.numDimensions();
+				if (opOverlap != null) {
+					opOverlaps.add(opOverlap);
+					if (opOverlap.numDimensions() > maxNumDimensions) maxNumDimensions = opOverlap.numDimensions();
+				}
 			}
 		}
 		// Default: Add up overlaps to facilitate image filtering or other neighborhood-dependent operations.

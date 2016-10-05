@@ -14,14 +14,10 @@ import org.scijava.plugin.Plugin;
 
 import experimental.tiling.ops.interfaces.TilableOp;
 
-// see net.imagej.ops.threshold.mean.ComputeMeanThreshold
-// see net.imagej.ops.threshold.AbstractComputeThresholdHistogram
-
 @Deprecated
 @Plugin(type = Ops.Threshold.Mean.class, priority = Priority.LAST_PRIORITY)
 public class TilableComputeMeanThreshold<T extends RealType<T>> extends
 	AbstractUnaryHybridCF<RandomAccessibleInterval<T>, T> implements Ops.Threshold.Mean, TilableOp
-// TODO: is this really a typical neighborhood op? or rather some kind of "reduce-to"-op?
 {
 
 	@Override

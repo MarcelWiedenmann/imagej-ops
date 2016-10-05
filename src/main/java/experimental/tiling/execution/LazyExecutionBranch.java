@@ -29,7 +29,7 @@ public class LazyExecutionBranch<I, O> implements LazyExecutionNode<I, O> {
 			// execution fail in such situations. However, we could also replace the old source with the new node.
 			// Manipulating our branches from the root side is cumbersome due to the single-linked nature of the graph.
 			// TODO: Change to double-linked graphs?
-			throw ex;
+			// FIXME: throw ex;
 		}
 	}
 

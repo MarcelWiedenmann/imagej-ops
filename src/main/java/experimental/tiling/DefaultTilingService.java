@@ -1,10 +1,7 @@
 
 package experimental.tiling;
 
-import io.scif.img.IO;
-
 import net.imagej.ops.OpService;
-import net.imagej.ops.cached.CachedFunctionOp;
 import net.imagej.ops.special.function.UnaryFunctionOp;
 import net.imglib2.RandomAccessibleInterval;
 
@@ -48,13 +45,15 @@ public class DefaultTilingService extends AbstractService implements TilingServi
 	public <I, O> Tiling<I, O> create(final TilingSchema<RandomAccessibleInterval<I>> schema,
 		final UnaryFunctionOp<RandomAccessibleInterval<I>, O> function)
 	{
-		return new Tiling<I, O>(schema, new LazyExecutionBranch<>(new CachedFunctionOp<>(function)));
+//		return new Tiling<I, O>(schema, new LazyExecutionBranch<>(new CachedFunctionOp<>(function)));
+		return new Tiling<I, O>(schema, new LazyExecutionBranch<>(function));
 	}
 
 	@Override
-	public <I, O> Tiling<I, O> concat(final Tiling<I, IO> tiling, final UnaryFunctionOp<IO, O> function) {
-		final LazyExecutionBranch<RandomAccessibleInterval<I>, O> branch = tiling.getBranch().appendLeaf(
-			new CachedFunctionOp<>(function));
+	public <I, IO, O> Tiling<I, O> concat(final Tiling<I, IO> tiling, final UnaryFunctionOp<IO, O> function) {
+//		final LazyExecutionBranch<RandomAccessibleInterval<I>, O> branch = tiling.getBranch().appendLeaf(
+//			new CachedFunctionOp<>(function));
+		final LazyExecutionBranch<RandomAccessibleInterval<I>, O> branch = tiling.getBranch().appendLeaf(function);
 		return new Tiling<>(tiling.getSchema(), branch);
 	}
 

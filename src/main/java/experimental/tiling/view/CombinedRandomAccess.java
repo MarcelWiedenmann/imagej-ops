@@ -12,7 +12,6 @@ import net.imglib2.Sampler;
 
 public class CombinedRandomAccess<T> extends Point implements RandomAccess<T> {
 
-	// Note: Newly added fields have to be handled in this(TilesRandomAccess<T>).
 	protected final CombinedView<T> source;
 	protected final List<RandomAccessibleInterval<T>> tiles;
 	protected final TileIndexMapper mapper;
