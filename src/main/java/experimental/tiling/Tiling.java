@@ -15,7 +15,7 @@ import experimental.tiling.execution.LazyExecutionNode;
 import experimental.tiling.execution.LazyExecutionStage;
 import experimental.tiling.misc.Util;
 import experimental.tiling.view.CombinedView;
-import experimental.tiling.view.TileIndexMapper;
+import experimental.tiling.view.GridIndexMapper;
 import experimental.tiling.view.TiledView;
 
 public class Tiling<T, O> extends LazyExecution<RandomAccessibleInterval<T>, O> {
@@ -77,7 +77,7 @@ public class Tiling<T, O> extends LazyExecution<RandomAccessibleInterval<T>, O> 
 		while (c.hasNext()) {
 			outs.add((RandomAccessibleInterval) c.next().get());
 		}
-		return (O) new CombinedView(outs, TileIndexMapper.createFromTiles(outs, Util.dimensionsToArray(schema
+		return (O) new CombinedView(outs, GridIndexMapper.createFromTiles(outs, Util.dimensionsToArray(schema
 			.getTilesPerDim())));
 	}
 

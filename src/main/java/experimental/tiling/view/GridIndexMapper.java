@@ -1,28 +1,17 @@
 
 package experimental.tiling.view;
 
-import java.util.List;
-
 import net.imglib2.Dimensions;
-import net.imglib2.FinalDimensions;
-import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
-import net.imglib2.RandomAccessibleInterval;
 
-// NB: Derivatives of this class must not maintain a current position, i.e. should stay "state-less".
-// This is because they can and will be shared between multiple cursors, random accesses and even entire tilings.
-public class TileIndexMapper {
+public final class GridIndexMapper {
 
-	// TODO: fix for new TilingStrategy and TilingDescription layouts (e.g. by a new "TilingIndexMapper" class (extends
-	// this) that accepts a TilingDescription).
+	private final int n;
+	private final Interval interval;
+	private final Dimensions tileSize;
+	private final long[] tilesPerDim;
 
-	protected final int n;
-	protected final Interval interval;
-	protected final Dimensions tileSize;
-	protected final long[] tilesPerDim;
-	protected final int[] mappingOrder;
-
-	public TileIndexMapper(final Interval interval, final Dimensions tileSize, final Dimensions tilesPerDim,
+	public GridIndexMapper(final Interval interval, final Dimensions tileSize, final Dimensions tilesPerDim,
 		final int[] mappingOrder)
 	{
 		n = interval.numDimensions();
@@ -35,7 +24,6 @@ public class TileIndexMapper {
 		this.tileSize = tileSize;
 		this.tilesPerDim = new long[n];
 		tilesPerDim.dimensions(this.tilesPerDim);
-		this.mappingOrder = mappingOrder;
 	}
 
 	public Interval getInterval() {
@@ -101,44 +89,5 @@ public class TileIndexMapper {
 		final long[] tileIndex = new long[position.length];
 		getTileIndexAndLocalPosition(position, tileIndex, localPosition /* , fillBorder */);
 		return getFlatTileIndex(tileIndex);
-	}
-
-	// -- Static --
-
-	public static TileIndexMapper createFromTiles(final List<RandomAccessibleInterval> tiles, final long[] tilesPerDim) {
-		final int[] combinationOrder = getDefaultMappingOrder(tilesPerDim.length);
-		return createFromTiles(tiles, tilesPerDim, combinationOrder);
-	}
-
-	public static TileIndexMapper createFromTiles(final List<RandomAccessibleInterval> tiles, final long[] tilesPerDim,
-		final int[] combinationOrder)
-	{
-		final Interval interval = getDefaultInterval(tiles, tilesPerDim);
-		final Dimensions tileSize = tiles.get(0);
-		return new TileIndexMapper(interval, tileSize, new FinalDimensions(tilesPerDim), combinationOrder);
-	}
-
-	public static int[] getDefaultMappingOrder(final int n) {
-		final int[] combinationOrder = new int[n];
-		for (int d = 0; d < n; d++) {
-			combinationOrder[d] = d;
-		}
-		return combinationOrder;
-	}
-
-	public static Interval getDefaultInterval(final List<RandomAccessibleInterval> tiles, final long[] tilesPerDim) {
-		final RandomAccessibleInterval<?> tile = tiles.get(0);
-		final int n = tilesPerDim.length;
-
-		// TODO: tile.numDimensions() != n should also be allowed (or preprocessed at a central stage:
-		// tile.numDimensions() > n --> "pad with 1"
-		// tile.numDimensions() < n --> "use subset of n"
-		assert tile.numDimensions() == n;
-
-		final long[] imageSize = new long[n];
-		for (int d = 0; d < n; d++) {
-			imageSize[d] = tilesPerDim[d] * tile.dimension(d);
-		}
-		return new FinalInterval(imageSize);
 	}
 }
