@@ -2,57 +2,49 @@
 package experimental.tiling.view;
 
 import net.imglib2.AbstractInterval;
-import net.imglib2.Cursor;
-import net.imglib2.Dimensions;
-import net.imglib2.FinalDimensions;
-import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
-import net.imglib2.IterableInterval;
+import net.imglib2.Point;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.View;
-import net.imglib2.view.RandomAccessibleIntervalCursor;
-
-import experimental.tiling.misc.Util;
+import net.imglib2.view.Views;
 
 public class TiledView<T> extends AbstractInterval implements RandomAccessibleInterval<RandomAccessibleInterval<T>>,
-	IterableInterval<RandomAccessibleInterval<T>>, View
+	View
 {
 
-	protected final RandomAccessibleInterval<T> source;
-	protected final Dimensions tilesPerDim;
-	protected final long size;
-	protected final Dimensions tileSize;
-	private RandomAccessibleIntervalCursor<RandomAccessibleInterval<T>> cursor;
-
-	public TiledView(final RandomAccessibleInterval<T> source, final long[] tilesPerDim) {
-		this(source, new FinalDimensions(tilesPerDim));
-	}
-
-	// TODO: tilesPerDim" or "tileSize" as user input? (TiledRandomAccess needs tileSize)
-	public TiledView(final RandomAccessibleInterval<T> source, final Dimensions tilesPerDim) {
-		super(tilesPerDim);
-
-		assert source.numDimensions() == n;
-		assert Util.isZeroMin(source);
-
-		this.source = source;
-		this.tilesPerDim = tilesPerDim;
-		long sz = 1;
-		final long[] tileSz = new long[n];
-		for (int d = 0; d < n; d++) {
-			sz *= tilesPerDim.dimension(d);
-			tileSz[d] = source.dimension(d) / tilesPerDim.dimension(d);
+	// TODO: [Review] Utility method needed? (+ ok in this form? redundant calculations: blocksperdim --> blocksize -->
+	// max)
+	public static <T> TiledView<T> createFromBlocksPerDim(final RandomAccessibleInterval<T> source,
+		final long[] blocksPerDim)
+	{
+		final long[] blockSize = new long[blocksPerDim.length];
+		for (int d = 0; d < blockSize.length; ++d) {
+			blockSize[d] = (source.dimension(d) - 1) / blocksPerDim[d] + 1;
 		}
-		this.size = sz;
-		this.tileSize = FinalDimensions.wrap(tileSz);
+		return new TiledView<>(source, blockSize);
 	}
 
-	// -- RandomAccessibleInterval --
+	private final RandomAccessibleInterval<T> source;
+	private final long[] blockSize;
+
+	public TiledView(final RandomAccessibleInterval<T> source, final long[] blockSize) {
+		super(source.numDimensions());
+		this.source = source;
+		this.blockSize = blockSize;
+		for (int d = 0; d < n; ++d) {
+			// TODO: [Review] "max" currently numbers tiles not pixels. Ok? (Should be ok...we are rai of rais)
+			max[d] = (source.dimension(d) - 1) / blockSize[d];
+		}
+	}
+
+	public RandomAccessibleInterval<T> getSource() {
+		return source;
+	}
 
 	@Override
 	public RandomAccess<RandomAccessibleInterval<T>> randomAccess() {
-		return new TiledRandomAccess<>(this, source, tileSize);
+		return new DefaultRA<>(source, blockSize);
 	}
 
 	@Override
@@ -60,41 +52,47 @@ public class TiledView<T> extends AbstractInterval implements RandomAccessibleIn
 		return randomAccess();
 	}
 
-	// -- IterableInterval --
+	public static class DefaultRA<T> extends Point implements RandomAccess<RandomAccessibleInterval<T>> {
 
-	@Override
-	public long size() {
-		return size;
-	}
+		private final RandomAccessibleInterval<T> source;
+		private final long[] blockSize;
+		private final long[] min;
+		private final long[] max;
 
-	@Override
-	public RandomAccessibleInterval<T> firstElement() {
-		if (cursor == null) {
-			cursor = new RandomAccessibleIntervalCursor<>(this);
+		public DefaultRA(final RandomAccessibleInterval<T> source, final long[] blockSize) {
+			super(source.numDimensions());
+			this.source = source;
+			this.blockSize = blockSize;
+			min = new long[n];
+			max = new long[n];
 		}
-		else {
-			cursor.reset();
+
+		private DefaultRA(final DefaultRA<T> a) {
+			super(a.position, true);
+			source = a.source;
+			blockSize = a.blockSize;
+			min = a.min.clone();
+			max = a.max.clone();
 		}
-		return cursor.next();
-	}
 
-	@Override
-	public Object iterationOrder() {
-		return new FlatIterationOrder(this);
-	}
+		@Override
+		public RandomAccessibleInterval<T> get() {
+			for (int d = 0; d < n; ++d) {
+				min[d] = position[d] * blockSize[d];
+				max[d] = min[d] + blockSize[d] - 1;
+			}
+			// TODO: [Review] Return updateable pseudo-neighborhood here?
+			return Views.interval(source, min, max);
+		}
 
-	@Override
-	public Cursor<RandomAccessibleInterval<T>> iterator() {
-		return cursor();
-	}
+		@Override
+		public DefaultRA<T> copy() {
+			return new DefaultRA<>(this);
+		}
 
-	@Override
-	public Cursor<RandomAccessibleInterval<T>> cursor() {
-		return new RandomAccessibleIntervalCursor<>(this);
-	}
-
-	@Override
-	public Cursor<RandomAccessibleInterval<T>> localizingCursor() {
-		return cursor();
+		@Override
+		public DefaultRA<T> copyRandomAccess() {
+			return copy();
+		}
 	}
 }
