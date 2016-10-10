@@ -5,10 +5,8 @@ import net.imglib2.AbstractInterval;
 import net.imglib2.Interval;
 import net.imglib2.Point;
 import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.View;
-import net.imglib2.view.IntervalView;
 
 public class TiledView<T> extends AbstractInterval implements RandomAccessibleInterval<RandomAccessibleInterval<T>>,
 	View
@@ -56,7 +54,7 @@ public class TiledView<T> extends AbstractInterval implements RandomAccessibleIn
 
 		private final RandomAccessibleInterval<T> source;
 		private final long[] blockSize;
-		private final MutableIntervalView<T> tempBlock;
+		private final MutableRandomAccessibleIntervalView<T> tempBlock;
 //		private final long[] tempMin;
 //		private final long[] tempMax;
 
@@ -64,7 +62,7 @@ public class TiledView<T> extends AbstractInterval implements RandomAccessibleIn
 			super(source.numDimensions());
 			this.source = source;
 			this.blockSize = blockSize;
-			this.tempBlock = new MutableIntervalView<>(source);
+			this.tempBlock = new MutableRandomAccessibleIntervalView<>(source);
 //			tempMin = new long[n];
 //			tempMax = new long[n];
 		}
@@ -104,18 +102,28 @@ public class TiledView<T> extends AbstractInterval implements RandomAccessibleIn
 		}
 	}
 
-	protected static final class MutableIntervalView<T> extends IntervalView<T> {
+	protected static final class MutableRandomAccessibleIntervalView<T> extends AbstractInterval implements
+		RandomAccessibleInterval<T>, View
 
-		public MutableIntervalView(final RandomAccessible<T> source, final long[] min, final long[] max) {
-			super(source, min, max);
+	{
+
+		private final RandomAccessibleInterval<T> source;
+
+		public MutableRandomAccessibleIntervalView(final RandomAccessibleInterval<T> source) {
+			super(source);
+			this.source = source;
 		}
 
-		public MutableIntervalView(final RandomAccessibleInterval<T> source) {
-			super(source, source);
+		public MutableRandomAccessibleIntervalView(final RandomAccessibleInterval<T> source, final long[] min,
+			final long[] max)
+		{
+			super(min, max);
+			this.source = source;
 		}
 
-		private MutableIntervalView(final MutableIntervalView<T> view) {
-			super(view.source, view.min.clone(), view.max.clone());
+		private MutableRandomAccessibleIntervalView(final MutableRandomAccessibleIntervalView<T> view) {
+			super(view.min, view.max);
+			source = view.source;
 		}
 
 		public void setMin(final long min, final int d) {
@@ -126,8 +134,18 @@ public class TiledView<T> extends AbstractInterval implements RandomAccessibleIn
 			this.max[d] = max;
 		}
 
-		public MutableIntervalView<T> copy() {
-			return new MutableIntervalView<T>(this);
+		public MutableRandomAccessibleIntervalView<T> copy() {
+			return new MutableRandomAccessibleIntervalView<T>(this);
+		}
+
+		@Override
+		public RandomAccess<T> randomAccess() {
+			return source.randomAccess(this);
+		}
+
+		@Override
+		public RandomAccess<T> randomAccess(final Interval interval) {
+			return source.randomAccess(interval);
 		}
 	}
 }
