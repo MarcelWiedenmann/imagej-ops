@@ -24,8 +24,8 @@ public class CombinedView<T> extends AbstractInterval implements RandomAccessibl
 		final RandomAccessibleInterval<T> block = source.randomAccess().get();
 		for (int d = 0; d < n; ++d) {
 			blockSize[d] = block.dimension(d);
-			min[d] = block.min(d);
-			max[d] = min[d] + blockSize[d] * source.dimension(d) - 1;
+			min[d] = source.min(d);
+			max[d] = source.max(d);
 		}
 	}
 
@@ -34,79 +34,81 @@ public class CombinedView<T> extends AbstractInterval implements RandomAccessibl
 	}
 
 	@Override
-	public RandomAccess<T> randomAccess() {
-		return new DefaultRA<>(source, blockSize);
+	public CombinedViewRandomAccess<T> randomAccess() {
+		return new CombinedViewRandomAccess<>(source, blockSize);
 	}
 
 	@Override
-	public RandomAccess<T> randomAccess(final Interval interval) {
+	public CombinedViewRandomAccess<T> randomAccess(final Interval interval) {
 		return randomAccess();
 	}
 
-	public static class DefaultRA<T> extends Point implements RandomAccess<T> {
+	public static class CombinedViewRandomAccess<T> extends Point implements RandomAccess<T> {
 
 		private final RandomAccessibleInterval<RandomAccessibleInterval<T>> source;
 		private final RandomAccess<RandomAccessibleInterval<T>> sourceAccess;
 		private final long[] blockSize;
 		private final HashMap<Long, RandomAccess<T>> blockAccesses;
-		final long[] index;
-		final long[] offset;
+		final long[] tempIndex;
+		final long[] tempOffset;
 
-		public DefaultRA(final RandomAccessibleInterval<RandomAccessibleInterval<T>> source, final long[] blockSize) {
+		public CombinedViewRandomAccess(final RandomAccessibleInterval<RandomAccessibleInterval<T>> source,
+			final long[] blockSize)
+		{
 			super(source.numDimensions());
 			this.source = source;
 			sourceAccess = source.randomAccess();
-			// TODO: [Review] Passing blockSize needed? blocksAccess.get().dimensions is the same..
 			this.blockSize = blockSize;
 			// TODO: [Review] Determine HashMap size?
 			blockAccesses = new HashMap<Long, RandomAccess<T>>();
-			index = new long[n];
-			offset = new long[n];
+			tempIndex = new long[n];
+			tempOffset = new long[n];
 		}
 
-		private DefaultRA(final DefaultRA<T> a) {
-			super(a.position, true);
-			source = a.source;
-			sourceAccess = a.sourceAccess.copyRandomAccess();
-			blockSize = a.blockSize;
-			blockAccesses = new HashMap<Long, RandomAccess<T>>(a.blockAccesses.size());
-			for (final Map.Entry<Long, RandomAccess<T>> entry : a.blockAccesses.entrySet()) {
+		private CombinedViewRandomAccess(final CombinedViewRandomAccess<T> ra) {
+			super(ra.position, true);
+			source = ra.source;
+			sourceAccess = ra.sourceAccess.copyRandomAccess();
+			blockSize = ra.blockSize;
+			blockAccesses = new HashMap<Long, RandomAccess<T>>(ra.blockAccesses.size());
+			for (final Map.Entry<Long, RandomAccess<T>> entry : ra.blockAccesses.entrySet()) {
 				blockAccesses.put(entry.getKey(), entry.getValue().copyRandomAccess());
 			}
-			index = a.index.clone();
-			offset = a.offset.clone();
+			tempIndex = ra.tempIndex.clone();
+			tempOffset = ra.tempOffset.clone();
 		}
 
 		@Override
 		public T get() {
 			long flatIndex = 0;
 			for (int d = n - 1; d >= 0; --d) {
+				// TODO: [Review] Needed for non-zeroMin source - ensure zeroMin somewhere else (view ctor)?
 				final long normalizedPosition = position[d] - source.min(d);
-				index[d] = normalizedPosition / blockSize[d];
-				offset[d] = normalizedPosition % blockSize[d];
-				flatIndex = flatIndex * source.dimension(d) + index[d];
+				tempIndex[d] = normalizedPosition / blockSize[d];
+				tempOffset[d] = normalizedPosition % blockSize[d];
+				flatIndex = flatIndex * source.dimension(d) + tempIndex[d];
 			}
 			final RandomAccess<T> blockAccess;
 			if (blockAccesses.containsKey(flatIndex)) {
 				blockAccess = blockAccesses.get(flatIndex);
 			}
 			else {
-				sourceAccess.setPosition(index);
-				// TODO: [Review] blockAccess.setPosition(offset) etc. assumes zeroMin. Other way to handle this?
+				sourceAccess.setPosition(tempIndex);
+				// TODO: [Review] Needed as blockAccess.setPosition(offset) etc. assume zeroMin. Other way to handle this?
 				blockAccess = Views.zeroMin(sourceAccess.get()).randomAccess();
 				blockAccesses.put(flatIndex, blockAccess);
 			}
-			blockAccess.setPosition(offset);
+			blockAccess.setPosition(tempOffset);
 			return blockAccess.get();
 		}
 
 		@Override
-		public DefaultRA<T> copy() {
-			return new DefaultRA<T>(this);
+		public CombinedViewRandomAccess<T> copy() {
+			return new CombinedViewRandomAccess<T>(this);
 		}
 
 		@Override
-		public DefaultRA<T> copyRandomAccess() {
+		public CombinedViewRandomAccess<T> copyRandomAccess() {
 			return copy();
 		}
 	}
