@@ -7,6 +7,8 @@ import java.util.List;
 
 import net.imagej.ops.Op;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.view.experimental.CombinedView;
+import net.imglib2.view.experimental.TiledView;
 
 import experimental.tiling.execution.LazyCursor;
 import experimental.tiling.execution.LazyExecution;
@@ -14,9 +16,6 @@ import experimental.tiling.execution.LazyExecutionBranch;
 import experimental.tiling.execution.LazyExecutionNode;
 import experimental.tiling.execution.LazyExecutionStage;
 import experimental.tiling.misc.Util;
-import experimental.tiling.view.CombinedView;
-import experimental.tiling.view.GridIndexMapper;
-import experimental.tiling.view.TiledView;
 
 public class Tiling<T, O> extends LazyExecution<RandomAccessibleInterval<T>, O> {
 
