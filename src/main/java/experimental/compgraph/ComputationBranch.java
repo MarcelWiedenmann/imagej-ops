@@ -3,13 +3,16 @@ package experimental.compgraph;
 
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
-public interface ComputationBranch<I, O> extends ComputationBranchInputNode<I, O>, ComputationGraph {
+public interface ComputationBranch<I, O> extends UnaryComputationGraphInputNode<I, O>, ComputationGraph {
 
-	ComputationBranchInputNode<I, ?> getStartNode();
+	UnaryComputationGraphInputNode<I, ?> getStartNode();
 
 	UnaryComputationGraphNode<?, O> getEndNode();
 
-	<I2> ComputationBranch<I2, O> concat(final UnaryFunctionOp<I2, I> func);
+	<II> ComputationBranch<II, O> concat(final UnaryFunctionOp<II, I> func);
 
-	<O2> ComputationBranch<I, O2> preConcat(final UnaryFunctionOp<O, O2> func);
+	<OO> ComputationBranch<I, OO> preConcat(final UnaryFunctionOp<O, OO> func);
+
+	@Override
+	ComputationBranch<I, O> copy();
 }

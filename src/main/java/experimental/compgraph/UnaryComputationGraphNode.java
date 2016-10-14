@@ -1,14 +1,14 @@
 
 package experimental.compgraph;
 
-import net.imagej.ops.special.Output;
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
-public interface UnaryComputationGraphNode<I, O> extends Output<O> {
+public interface UnaryComputationGraphNode<I, O> extends ComputationGraphNode<O> {
 
-	public UnaryComputationGraphNode<?, I> getParent();
+	ComputationGraphNode<I> getParent();
 
-	public UnaryFunctionOp<I, O> getOp();
+	UnaryFunctionOp<I, O> getOp();
 
-	public UnaryComputationGraphNode<I, O> copy();
+	@Override
+	UnaryComputationGraphNode<I, O> copy();
 }

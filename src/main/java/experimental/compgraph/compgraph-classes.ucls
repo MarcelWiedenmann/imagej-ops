@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.11" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="false" dependencies="false" nesting-relationships="true" router="FAN">  
-  <interface id="1" language="java" name="experimental.compgraph.ComputationBranchInputNode" project="imagej-ops-tiling" 
-    file="/imagej-ops-tiling/src/main/java/experimental/compgraph/ComputationBranchInputNode.java" binary="false" 
+  <interface id="1" language="java" name="experimental.compgraph.UnaryComputationGraphInputNode" 
+    project="imagej-ops-tiling" 
+    file="/imagej-ops-tiling/src/main/java/experimental/compgraph/UnaryComputationGraphInputNode.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1299" y="432"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -31,10 +32,10 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="4" language="java" name="experimental.compgraph.DefaultComputationBranchInputNode" 
+  <class id="4" language="java" name="experimental.compgraph.DefaultUnaryComputationGraphInputNode" 
     project="imagej-ops-tiling" 
-    file="/imagej-ops-tiling/src/main/java/experimental/compgraph/DefaultComputationBranchInputNode.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
+    file="/imagej-ops-tiling/src/main/java/experimental/compgraph/DefaultUnaryComputationGraphInputNode.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="599" y="245"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -42,8 +43,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="experimental.compgraph.DefaultComputationBranchNode" project="imagej-ops-tiling" 
-    file="/imagej-ops-tiling/src/main/java/experimental/compgraph/DefaultComputationBranchNode.java" binary="false" 
+  <class id="5" language="java" name="experimental.compgraph.DefaultUnaryComputationGraphNode" 
+    project="imagej-ops-tiling" 
+    file="/imagej-ops-tiling/src/main/java/experimental/compgraph/DefaultUnaryComputationGraphNode.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="520" y="17"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -62,8 +64,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="7" language="java" name="experimental.compgraph.AbstractComputationBranchNode" project="imagej-ops-tiling" 
-    file="/imagej-ops-tiling/src/main/java/experimental/compgraph/AbstractComputationBranchNode.java" binary="false" 
+  <class id="7" language="java" name="experimental.compgraph.AbstractUnaryComputationGraphNode" 
+    project="imagej-ops-tiling" 
+    file="/imagej-ops-tiling/src/main/java/experimental/compgraph/AbstractUnaryComputationGraphNode.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1120" y="38"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -83,28 +86,28 @@
     </display>  
   </interface>  
   <realization id="9">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="8"/>  
-  </realization>  
-  <realization id="10">    
     <end type="SOURCE" refId="7"/>    
     <end type="TARGET" refId="6"/>  
   </realization>  
-  <generalization id="11">    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="1"/>  
-  </generalization>  
-  <generalization id="12">    
+  <generalization id="10">    
     <end type="SOURCE" refId="8"/>    
     <end type="TARGET" refId="3"/>  
   </generalization>  
-  <generalization id="13">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="7"/>  
-  </generalization>  
-  <generalization id="14">    
+  <realization id="11">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="8"/>  
+  </realization>  
+  <generalization id="12">    
     <end type="SOURCE" refId="1"/>    
     <end type="TARGET" refId="6"/>  
+  </generalization>  
+  <generalization id="13">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="14">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="7"/>  
   </generalization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    

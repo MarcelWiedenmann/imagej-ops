@@ -3,42 +3,40 @@ package experimental.compgraph;
 
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
-public class DefaultComputationBranch<I, O> extends AbstractComputationBranchInputNode<I, O> implements
-	ComputationBranch<I, O>
-{
+// TODO: abstract class needed?
+public class DefaultComputationBranch<I, O> implements ComputationBranch<I, O> {
 
-	private final ComputationBranchInputNode<I, ?> start;
+	private final UnaryComputationGraphInputNode<I, ?> start;
 	private final UnaryComputationGraphNode<?, O> end;
 
 	public DefaultComputationBranch(final UnaryFunctionOp<I, O> func) {
-		super(func);
-		final DefaultComputationBranchInputNode<I, O> node = new DefaultComputationBranchInputNode<>(func);
+		final DefaultUnaryComputationGraphInputNode<I, O> node = new DefaultUnaryComputationGraphInputNode<>(func);
 		start = node;
 		end = node;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public <O2> DefaultComputationBranch(final ComputationBranch<I, O2> branch, final UnaryFunctionOp<O2, O> func) {
-		super(null);
-		start = branch.getStartNode();
-		end = new DefaultComputationBranchEndNode<>(func, new DefaultComputationBranchNode(branch.getEndNode().getParent(),
-			branch.getEndNode().getOp()));
+	public <IO> DefaultComputationBranch(final ComputationBranch<I, IO> branch, final UnaryFunctionOp<IO, O> func) {
+		final ComputationBranch<I, IO> branchCopy = branch.copy();
+		start = branchCopy.getStartNode();
+		end = new DefaultUnaryComputationGraphNode<>(branchCopy.getEndNode(), func);
 	}
 
-	public <I1> DefaultComputationBranch(final UnaryFunctionOp<I, I1> func, final ComputationBranch<I1, O> branch) {
-		super(null);
-		start = new DefaultComputationBranchStartNode<>(func);
-		end = branch.getEndNode();
+	public <IO> DefaultComputationBranch(final UnaryFunctionOp<I, IO> func, final ComputationBranch<IO, O> branch) {
+		final ComputationBranch<IO, O> branchCopy = branch.copy();
+		start = new DefaultUnaryComputationGraphInputNode<>(func);
+		// FIXME: we must establish a binding between start and the body of branch (body = branch \ {start})
+		// something like this is needed: branchCopy.getStartNode().getChild().setParent(start);
+		end = branchCopy.getEndNode();
+	}
+
+	private DefaultComputationBranch(final DefaultComputationBranch<I, O> branch) {
+		end = branch.getEndNode().copy();
+		// FIXME: something like this is needed: start = end.getRoot();
+		// we should may introduce new ".*BranchNode"-interfaces which expose getRoot() and setParent() methods
 	}
 
 	@Override
-	public O compute1(final I input) {
-		start.setInput(input);
-		return end.out();
-	}
-
-	@Override
-	public ComputationBranchInputNode<I, ?> getStartNode() {
+	public UnaryComputationGraphInputNode<I, ?> getStartNode() {
 		return start;
 	}
 
@@ -48,18 +46,38 @@ public class DefaultComputationBranch<I, O> extends AbstractComputationBranchInp
 	}
 
 	@Override
-	public <I2> ComputationBranch<I2, O> concat(final UnaryFunctionOp<I2, I> func) {
+	public <II> ComputationBranch<II, O> concat(final UnaryFunctionOp<II, I> func) {
 		return new DefaultComputationBranch<>(func, this);
 	}
 
 	@Override
-	public <O2> ComputationBranch<I, O2> preConcat(final UnaryFunctionOp<O, O2> func) {
+	public <OO> ComputationBranch<I, OO> preConcat(final UnaryFunctionOp<O, OO> func) {
 		return new DefaultComputationBranch<>(this, func);
 	}
 
 	@Override
-	public UnaryComputationGraphNode<I, O> copy() {
-		// TODO Auto-generated method stub
-		return null;
+	public DefaultComputationBranch<I, O> getOp() {
+		return this;
+	}
+
+	@Override
+	public DefaultComputationBranch<I, O> copy() {
+		return new DefaultComputationBranch<>(this);
+	}
+
+	@Override
+	public I in() {
+		return start.in();
+	}
+
+	@Override
+	public void setInput(final I input) {
+		start.setInput(input);
+	}
+
+	@Override
+	public O compute1(final I input) {
+		start.setInput(input);
+		return end.out();
 	}
 }
