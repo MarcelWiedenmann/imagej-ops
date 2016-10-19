@@ -3,10 +3,14 @@ package experimental.compgraph;
 
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
-public abstract class AbstractUnaryComputationGraphInputNode<I, O> implements UnaryComputationGraphInputNode<I, O> {
+public abstract class AbstractUnaryComputationGraphInputNode<I, O> extends AbstractUnaryComputationGraphNode<I, O>
+	implements UnaryComputationGraphInputNode<I, O>
+{
+
+	// TODO: move basic stuff to super class
 
 	private I input;
-	protected final UnaryFunctionOp<I, O> func;
+	private final UnaryFunctionOp<I, O> func;
 
 	public AbstractUnaryComputationGraphInputNode(final UnaryFunctionOp<I, O> func) {
 		this.func = func;

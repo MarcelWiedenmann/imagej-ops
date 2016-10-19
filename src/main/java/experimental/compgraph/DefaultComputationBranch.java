@@ -18,7 +18,7 @@ public class DefaultComputationBranch<I, O> implements ComputationBranch<I, O> {
 	public <IO> DefaultComputationBranch(final ComputationBranch<I, IO> branch, final UnaryFunctionOp<IO, O> func) {
 		final ComputationBranch<I, IO> branchCopy = branch.copy();
 		start = branchCopy.getStartNode();
-		end = new DefaultUnaryComputationGraphNode<>(branchCopy.getEndNode(), func);
+		end = new DefaultUnaryComputationGraphStageNode<>(branchCopy.getEndNode(), func);
 	}
 
 	public <IO> DefaultComputationBranch(final UnaryFunctionOp<I, IO> func, final ComputationBranch<IO, O> branch) {
@@ -32,7 +32,6 @@ public class DefaultComputationBranch<I, O> implements ComputationBranch<I, O> {
 	private DefaultComputationBranch(final DefaultComputationBranch<I, O> branch) {
 		end = branch.getEndNode().copy();
 		// FIXME: something like this is needed: start = end.getRoot();
-		// we should may introduce new ".*BranchNode"-interfaces which expose getRoot() and setParent() methods
 	}
 
 	@Override
