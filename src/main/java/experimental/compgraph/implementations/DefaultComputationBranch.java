@@ -4,8 +4,6 @@ package experimental.compgraph.implementations;
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
 import experimental.compgraph.interfaces.ComputationBranch;
-import experimental.compgraph.interfaces.ComputationBranchInputNode;
-import experimental.compgraph.interfaces.ComputationBranchNode;
 import experimental.compgraph.interfaces.UnaryComputationGraphInputNode;
 import experimental.compgraph.interfaces.UnaryComputationGraphNode;
 

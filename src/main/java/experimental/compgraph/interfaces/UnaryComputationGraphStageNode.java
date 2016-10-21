@@ -1,9 +1,11 @@
 
 package experimental.compgraph.interfaces;
 
-public interface UnaryComputationGraphStageNode<I, O, P extends ComputationGraphNode<I>> extends
-	UnaryComputationGraphNode<I, O, P>, ComputationGraphStageNode<O>
+public interface UnaryComputationGraphStageNode<I, O> extends UnaryComputationGraphNode<I, O>,
+	ComputationGraphStageNode<O>
 {
 
-	void setParent(P parent);
+	ComputationGraphNode<I> getParent();
+
+	void setParent(ComputationGraphNode<I> parent);
 }

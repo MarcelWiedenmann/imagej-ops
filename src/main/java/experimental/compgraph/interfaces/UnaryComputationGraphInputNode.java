@@ -3,20 +3,14 @@ package experimental.compgraph.interfaces;
 
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
-public interface UnaryComputationGraphInputNode<I, O, P extends ComputationGraphNode<I>> extends
-	UnaryComputationGraphNode<I, O, P>, ComputationGraphInputNode<O>, UnaryFunctionOp<I, O>
+public interface UnaryComputationGraphInputNode<I, O> extends UnaryComputationGraphNode<I, O>,
+	ComputationGraphInputNode<O>, UnaryFunctionOp<I, O>
 
 {
 
 	@Override
-	default P getParent() {
-		// NB: Input nodes do not have parents.
-		return null;
-	}
-
-	@Override
-	default UnaryComputationGraphInputNode<I, O, P> getIndependentInstance() {
-		return (UnaryComputationGraphInputNode<I, O, P>) copy();
+	default UnaryComputationGraphInputNode<I, O> getIndependentInstance() {
+		return (UnaryComputationGraphInputNode<I, O>) copy();
 	}
 
 	@Override
