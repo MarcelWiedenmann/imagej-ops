@@ -1,29 +1,24 @@
 
-package experimental.compgraph;
+package experimental.compgraph.abstracts;
 
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
-public abstract class AbstractUnaryComputationGraphInputNode<I, O> extends AbstractUnaryComputationGraphNode<I, O>
-	implements UnaryComputationGraphInputNode<I, O>
+import experimental.compgraph.interfaces.ComputationGraphNode;
+import experimental.compgraph.interfaces.UnaryComputationGraphInputNode;
+
+public abstract class AbstractUnaryComputationGraphInputNode<I, O, P extends ComputationGraphNode<I>> extends
+	AbstractUnaryComputationGraphNode<I, O, P> implements UnaryComputationGraphInputNode<I, O, P>
 {
 
-	// TODO: move basic stuff to super class
-
 	private I input;
-	private final UnaryFunctionOp<I, O> func;
 
 	public AbstractUnaryComputationGraphInputNode(final UnaryFunctionOp<I, O> func) {
-		this.func = func;
+		this(func, null);
 	}
 
 	public AbstractUnaryComputationGraphInputNode(final UnaryFunctionOp<I, O> func, final I input) {
-		this.func = func;
+		super(func);
 		this.input = input;
-	}
-
-	@Override
-	public UnaryFunctionOp<I, O> getOp() {
-		return func;
 	}
 
 	@Override
@@ -38,6 +33,6 @@ public abstract class AbstractUnaryComputationGraphInputNode<I, O> extends Abstr
 
 	@Override
 	public O compute1(final I input) {
-		return func.compute1(input);
+		return getOp().compute1(input);
 	}
 }

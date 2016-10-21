@@ -1,5 +1,5 @@
 
-package experimental.compgraph;
+package experimental.compgraph.interfaces;
 
 import net.imagej.ops.OpEnvironment;
 import net.imagej.ops.special.function.NullaryFunctionOp;
@@ -7,11 +7,8 @@ import net.imagej.ops.special.function.NullaryFunctionOp;
 public interface ComputationGraphInputNode<O> extends ComputationGraphNode<O>, NullaryFunctionOp<O> {
 
 	@Override
-	ComputationGraphInputNode<O> copy();
-
-	@Override
-	default NullaryFunctionOp<O> getIndependentInstance() {
-		return copy();
+	default ComputationGraphInputNode<O> getIndependentInstance() {
+		return (ComputationGraphInputNode<O>) copy();
 	}
 
 	@Override

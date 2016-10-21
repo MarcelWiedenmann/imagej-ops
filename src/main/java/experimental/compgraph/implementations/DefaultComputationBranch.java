@@ -1,16 +1,21 @@
 
-package experimental.compgraph;
+package experimental.compgraph.implementations;
 
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
-// TODO: abstract class needed?
+import experimental.compgraph.interfaces.ComputationBranch;
+import experimental.compgraph.interfaces.ComputationBranchInputNode;
+import experimental.compgraph.interfaces.ComputationBranchNode;
+import experimental.compgraph.interfaces.UnaryComputationGraphInputNode;
+import experimental.compgraph.interfaces.UnaryComputationGraphNode;
+
 public class DefaultComputationBranch<I, O> implements ComputationBranch<I, O> {
 
-	private final UnaryComputationGraphInputNode<I, ?> start;
-	private final UnaryComputationGraphNode<?, O> end;
+	private final ComputationBranchInputNode<I, ?> start;
+	private final ComputationBranchNode<?, O> end;
 
 	public DefaultComputationBranch(final UnaryFunctionOp<I, O> func) {
-		final DefaultUnaryComputationGraphInputNode<I, O> node = new DefaultUnaryComputationGraphInputNode<>(func);
+		final DefaultComputationBranchInputNode<I, O> node = new DefaultComputationBranchInputNode<>(func);
 		start = node;
 		end = node;
 	}
@@ -18,14 +23,14 @@ public class DefaultComputationBranch<I, O> implements ComputationBranch<I, O> {
 	public <IO> DefaultComputationBranch(final ComputationBranch<I, IO> branch, final UnaryFunctionOp<IO, O> func) {
 		final ComputationBranch<I, IO> branchCopy = branch.copy();
 		start = branchCopy.getStartNode();
-		end = new DefaultUnaryComputationGraphStageNode<>(branchCopy.getEndNode(), func);
+		end = new DefaultComputationBranchStageNode<>(branchCopy.getEndNode(), func);
 	}
 
 	public <IO> DefaultComputationBranch(final UnaryFunctionOp<I, IO> func, final ComputationBranch<IO, O> branch) {
 		final ComputationBranch<IO, O> branchCopy = branch.copy();
-		start = new DefaultUnaryComputationGraphInputNode<>(func);
-		// FIXME: we must establish a binding between start and the body of branch (body = branch \ {start})
-		// something like this is needed: branchCopy.getStartNode().getChild().setParent(start);
+		start = new DefaultComputationBranchInputNode<>(func);
+		// FIXME: this just works if start is <IO,IO> ...
+		branchCopy.getStartNode().getChild().setParent(start);
 		end = branchCopy.getEndNode();
 	}
 

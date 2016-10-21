@@ -1,13 +1,13 @@
 
-package experimental.compgraph;
+package experimental.compgraph.interfaces;
 
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
-public interface ComputationBranch<I, O> extends UnaryComputationGraphInputNode<I, O>, ComputationGraph {
+public interface ComputationBranch<I, O> extends ComputationBranchInputNode<I, O>, ComputationGraph {
 
-	UnaryComputationGraphInputNode<I, ?> getStartNode();
+	ComputationBranchInputNode<I, ?> getStartNode();
 
-	UnaryComputationGraphNode<?, O> getEndNode();
+	ComputationBranchStageNode<?, O> getEndNode();
 
 	<II> ComputationBranch<II, O> concat(final UnaryFunctionOp<II, I> func);
 
