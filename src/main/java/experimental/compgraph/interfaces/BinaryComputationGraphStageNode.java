@@ -10,27 +10,7 @@ public interface BinaryComputationGraphStageNode<I1, I2, O> extends BinaryComput
 
 	ComputationGraphNode<I2> getSecondParent();
 
-	default void setFirstParent(final ComputationGraphNode<I1> parent) {
-		final ComputationGraphNode<I1> current = getFirstParent();
-		if (parent != current) {
-			if (current != null) {
-				current.removeChild(this);
-			}
-			if (parent != null) {
-				parent.addChild(this);
-			}
-		}
-	}
+	void setFirstParent(final ComputationGraphNode<I1> parent);
 
-	default void setSecondParent(final ComputationGraphNode<I2> parent) {
-		final ComputationGraphNode<I2> current = getSecondParent();
-		if (parent != current) {
-			if (current != null) {
-				current.removeChild(this);
-			}
-			if (parent != null) {
-				parent.addChild(this);
-			}
-		}
-	}
+	void setSecondParent(final ComputationGraphNode<I2> parent);
 }

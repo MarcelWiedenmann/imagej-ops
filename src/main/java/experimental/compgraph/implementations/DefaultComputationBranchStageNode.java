@@ -14,6 +14,6 @@ public class DefaultComputationBranchStageNode<I, O> extends AbstractUnaryComput
 
 	@Override
 	public DefaultComputationBranchStageNode<I, O> copyUpstream() {
-		return new DefaultComputationBranchStageNode<>(getParent(), getOp());
+		return new DefaultComputationBranchStageNode<>(getParent().copyUpstream(), getOp());
 	}
 }

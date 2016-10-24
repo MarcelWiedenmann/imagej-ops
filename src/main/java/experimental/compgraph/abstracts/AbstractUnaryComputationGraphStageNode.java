@@ -26,8 +26,6 @@ public abstract class AbstractUnaryComputationGraphStageNode<I, O> extends Abstr
 
 	@Override
 	public void setParent(final ComputationGraphNode<I> parent) {
-
-		UnaryComputationGraphStageNode.super.setParent(parent);
 		this.parent = parent;
 	}
 

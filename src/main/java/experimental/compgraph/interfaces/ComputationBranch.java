@@ -9,9 +9,9 @@ public interface ComputationBranch<I, O> extends UnaryComputationGraphInputNode<
 
 	UnaryComputationGraphNode<?, O> getEndNode();
 
-	<II> ComputationBranch<II, O> concat(final UnaryFunctionOp<II, I> func);
+	<II> ComputationBranch<II, O> prepend(final UnaryFunctionOp<II, I> func);
 
-	<OO> ComputationBranch<I, OO> preConcat(final UnaryFunctionOp<O, OO> func);
+	<OO> ComputationBranch<I, OO> append(final UnaryFunctionOp<O, OO> func);
 
 	@Override
 	ComputationBranch<I, O> copyUpstream();

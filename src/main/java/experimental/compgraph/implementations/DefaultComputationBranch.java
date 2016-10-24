@@ -29,14 +29,18 @@ public class DefaultComputationBranch<I, O> implements ComputationBranch<I, O> {
 	public <IO> DefaultComputationBranch(final UnaryFunctionOp<I, IO> func, final ComputationBranch<IO, O> branch) {
 		final ComputationBranch<IO, O> branchCopy = branch.copyUpstream();
 		start = new DefaultComputationBranchInputNode<>(func);
-		// FIXME: this just works if start is <IO,IO> ...
-
-		// Alternative approach: Do not distinguish input nodes from stage nodes (interface-driven) but derive node's
-		// "nature" from state (i.e. if parent is present or not): compute on parent's result if there is a parent, else
-		// demand input.
-
-		((UnaryComputationGraphStageNode<?, ?>) branchCopy.getStartNode().getChild(0)).setParent(start);
 		end = branchCopy.getEndNode();
+
+		UnaryComputationGraphStageNode<?, ?> joinNode = (UnaryComputationGraphStageNode<?, ?>) end;
+
+		while (joinNode.getParent() != branchCopy.getStartNode()) {
+			joinNode = (UnaryComputationGraphStageNode<?, ?>) joinNode.getParent();
+		}
+
+		final UnaryComputationGraphStageNode<IO, ?> oldStartAsStage = ComputationGraphNodeConverter.convertToStageNode(
+			(UnaryComputationGraphInputNode<I, IO>) start, branchCopy.getStartNode());
+
+		joinNode.setParent(oldStartAsStage);
 	}
 
 	private DefaultComputationBranch(final DefaultComputationBranch<I, O> branch) {
@@ -59,12 +63,12 @@ public class DefaultComputationBranch<I, O> implements ComputationBranch<I, O> {
 	}
 
 	@Override
-	public <II> ComputationBranch<II, O> concat(final UnaryFunctionOp<II, I> func) {
+	public <II> ComputationBranch<II, O> prepend(final UnaryFunctionOp<II, I> func) {
 		return new DefaultComputationBranch<>(func, this);
 	}
 
 	@Override
-	public <OO> ComputationBranch<I, OO> preConcat(final UnaryFunctionOp<O, OO> func) {
+	public <OO> ComputationBranch<I, OO> append(final UnaryFunctionOp<O, OO> func) {
 		return new DefaultComputationBranch<>(this, func);
 	}
 
@@ -93,4 +97,10 @@ public class DefaultComputationBranch<I, O> implements ComputationBranch<I, O> {
 		start.setInput(input);
 		return end.out();
 	}
+
+//	@Override
+//	public Iterator<ComputationGraphNode<?>> iterator() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 }
