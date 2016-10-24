@@ -16,7 +16,7 @@ public class DefaultComputationBranchInputNode<I, O> extends AbstractUnaryComput
 	}
 
 	@Override
-	public DefaultComputationBranchInputNode<I, O> copy() {
+	public DefaultComputationBranchInputNode<I, O> copyUpstream() {
 		return new DefaultComputationBranchInputNode<>(getOp().getIndependentInstance(), in());
 	}
 }

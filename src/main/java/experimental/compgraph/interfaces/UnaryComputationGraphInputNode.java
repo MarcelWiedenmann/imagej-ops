@@ -10,7 +10,7 @@ public interface UnaryComputationGraphInputNode<I, O> extends UnaryComputationGr
 
 	@Override
 	default UnaryComputationGraphInputNode<I, O> getIndependentInstance() {
-		return (UnaryComputationGraphInputNode<I, O>) copy();
+		return (UnaryComputationGraphInputNode<I, O>) copyUpstream();
 	}
 
 	@Override

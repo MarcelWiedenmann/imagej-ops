@@ -7,6 +7,7 @@ import java.util.List;
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
 import experimental.compgraph.interfaces.ComputationGraphNode;
+import experimental.compgraph.interfaces.ComputationGraphStageNode;
 import experimental.compgraph.interfaces.UnaryComputationGraphNode;
 
 public abstract class AbstractUnaryComputationGraphNode<I, O> implements UnaryComputationGraphNode<I, O> {
@@ -16,8 +17,7 @@ public abstract class AbstractUnaryComputationGraphNode<I, O> implements UnaryCo
 
 	public AbstractUnaryComputationGraphNode(final UnaryFunctionOp<I, O> func) {
 		this.func = func;
-		// TODO: Having more than one child will rarely occur.
-		// However, this is just a good guess and may be changed.
+		// NB: Having more than one child will rarely occur.
 		this.children = new ArrayList<>(1);
 	}
 
@@ -27,19 +27,31 @@ public abstract class AbstractUnaryComputationGraphNode<I, O> implements UnaryCo
 	}
 
 	@Override
-	public List<ComputationGraphNode<?>> getChildren() {
-		return (List<ComputationGraphNode<?>>) children.clone();
-	}
-
-	// TODO/FIXME: parent registration!
-
-	@Override
-	public void addChild(final ComputationGraphNode<?> child) {
-		children.add(child);
+	public List<ComputationGraphStageNode<?>> getChildren() {
+		return (List<ComputationGraphStageNode<?>>) children.clone();
 	}
 
 	@Override
-	public boolean removeChild(final ComputationGraphNode<?> child) {
+	public boolean hasChild(final ComputationGraphStageNode<?> child) {
+		return children.contains(child);
+	}
+
+	@Override
+	public ComputationGraphStageNode<?> getChild(final int index) {
+		return (ComputationGraphStageNode<?>) children.get(0);
+	}
+
+	@Override
+	public boolean addChild(final ComputationGraphStageNode<?> child) {
+		if (!hasChild(child)) {
+			children.add(child);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean removeChild(final ComputationGraphStageNode<?> child) {
 		return children.remove(child);
 	}
 }

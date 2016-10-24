@@ -7,5 +7,15 @@ public interface UnaryComputationGraphStageNode<I, O> extends UnaryComputationGr
 
 	ComputationGraphNode<I> getParent();
 
-	void setParent(ComputationGraphNode<I> parent);
+	default void setParent(final ComputationGraphNode<I> parent) {
+		final ComputationGraphNode<I> current = getParent();
+		if (parent != current) {
+			if (current != null) {
+				current.removeChild(this);
+			}
+			if (parent != null) {
+				parent.addChild(this);
+			}
+		}
+	}
 }

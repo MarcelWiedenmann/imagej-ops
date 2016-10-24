@@ -1,12 +1,36 @@
 
 package experimental.compgraph.interfaces;
 
-public interface BinaryComputationGraphStageNode<I1, I2, O, P1 extends ComputationGraphNode<I1>, P2 extends ComputationGraphNode<I2>>
-	extends BinaryComputationGraphNode<I1, I2, O, P1, P2>, ComputationGraphStageNode<O>
+public interface BinaryComputationGraphStageNode<I1, I2, O> extends BinaryComputationGraphNode<I1, I2, O>,
+	ComputationGraphStageNode<O>
 
 {
 
-	void setFirstParent(P1 parent);
+	ComputationGraphNode<I1> getFirstParent();
 
-	void setSecondParent(P2 parent);
+	ComputationGraphNode<I2> getSecondParent();
+
+	default void setFirstParent(final ComputationGraphNode<I1> parent) {
+		final ComputationGraphNode<I1> current = getFirstParent();
+		if (parent != current) {
+			if (current != null) {
+				current.removeChild(this);
+			}
+			if (parent != null) {
+				parent.addChild(this);
+			}
+		}
+	}
+
+	default void setSecondParent(final ComputationGraphNode<I2> parent) {
+		final ComputationGraphNode<I2> current = getSecondParent();
+		if (parent != current) {
+			if (current != null) {
+				current.removeChild(this);
+			}
+			if (parent != null) {
+				parent.addChild(this);
+			}
+		}
+	}
 }
