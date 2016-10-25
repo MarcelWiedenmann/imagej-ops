@@ -1,5 +1,5 @@
 
-package mapreduce;
+package experimental.tiling.mapreduce;
 
 public interface TilableAggregateOp {
 

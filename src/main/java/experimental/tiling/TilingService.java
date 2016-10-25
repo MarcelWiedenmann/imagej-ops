@@ -8,7 +8,8 @@ import org.scijava.service.SciJavaService;
 
 public interface TilingService extends SciJavaService {
 
-	// TODO: Support for binary functions.
+	// TODO: Support for binary functions (fork-join)
+	// TODO: Make use of method chaining (see ComputationBranch.append(..)/prepend(..)).
 
 	public TilingOpEnvironment ops();
 

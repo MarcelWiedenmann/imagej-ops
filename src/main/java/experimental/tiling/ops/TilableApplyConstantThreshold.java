@@ -15,7 +15,7 @@ import net.imglib2.type.numeric.RealType;
 import org.scijava.Priority;
 import org.scijava.plugin.Plugin;
 
-import mapreduce.TilableMapOp;
+import experimental.tiling.mapreduce.TilableMapOp;
 
 @Plugin(type = Ops.Threshold.Apply.class, priority = Priority.LAST_PRIORITY)
 public class TilableApplyConstantThreshold<T extends RealType<T>> extends
