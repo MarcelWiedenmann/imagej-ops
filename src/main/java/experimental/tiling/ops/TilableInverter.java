@@ -12,7 +12,7 @@ import net.imglib2.type.numeric.RealType;
 import org.scijava.Priority;
 import org.scijava.plugin.Plugin;
 
-import experimental.tiling.ops.interfaces.TilableMapOp;
+import mapreduce.TilableMapOp;
 
 /**
  * Code mainly stolen from net.imagej.ops.image.invert.InvertII by Martin Horn, University of Konstanz. For the sake of

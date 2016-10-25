@@ -4,8 +4,8 @@ package experimental.tiling;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 
-import experimental.tiling.execution.LazyCursor;
-import experimental.tiling.execution.LazyExecutionBranch;
+import mapreduce.LazyCursor;
+import mapreduce.LazyExecutionBranch;
 
 public class TilingCursor<I, O> extends LazyCursor<RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> {
 

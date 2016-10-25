@@ -10,7 +10,7 @@ import org.scijava.plugin.Plugin;
 import org.scijava.service.AbstractService;
 import org.scijava.service.Service;
 
-import experimental.tiling.execution.LazyExecutionBranch;
+import mapreduce.LazyExecutionBranch;
 
 @Plugin(type = Service.class)
 public class DefaultTilingService extends AbstractService implements TilingService {

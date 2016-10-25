@@ -3,8 +3,8 @@ package experimental.tiling;
 
 import net.imglib2.RandomAccessibleInterval;
 
-import experimental.tiling.execution.LazyExecution;
-import experimental.tiling.execution.LazyExecutionBranch;
+import mapreduce.LazyExecution;
+import mapreduce.LazyExecutionBranch;
 
 public class CachedRandomAccessibleInterval<I, O> extends
 	LazyExecution<RandomAccessibleInterval<I>, RandomAccessibleInterval<O>>

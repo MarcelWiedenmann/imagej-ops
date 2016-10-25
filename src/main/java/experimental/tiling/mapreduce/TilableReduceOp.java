@@ -1,5 +1,5 @@
 
-package experimental.tiling.ops.interfaces;
+package mapreduce;
 
 public interface TilableReduceOp extends TilableOp {
 

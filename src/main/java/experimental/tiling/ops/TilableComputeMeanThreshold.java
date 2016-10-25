@@ -12,7 +12,7 @@ import net.imglib2.view.Views;
 import org.scijava.Priority;
 import org.scijava.plugin.Plugin;
 
-import experimental.tiling.ops.interfaces.TilableOp;
+import mapreduce.TilableOp;
 
 @Deprecated
 @Plugin(type = Ops.Threshold.Mean.class, priority = Priority.LAST_PRIORITY)

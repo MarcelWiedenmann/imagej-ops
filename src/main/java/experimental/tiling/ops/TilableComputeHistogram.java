@@ -12,7 +12,7 @@ import net.imglib2.view.Views;
 import org.scijava.Priority;
 import org.scijava.plugin.Plugin;
 
-import experimental.tiling.ops.interfaces.TilableMapOp;
+import mapreduce.TilableMapOp;
 
 @Plugin(type = Ops.Image.Histogram.class, priority = Priority.FIRST_PRIORITY)
 public class TilableComputeHistogram<T extends RealType<T>> extends

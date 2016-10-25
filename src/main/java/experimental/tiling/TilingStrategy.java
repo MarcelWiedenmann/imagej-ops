@@ -13,8 +13,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
-import experimental.tiling.ops.interfaces.TilableOp;
-import experimental.tiling.view.GridIndexMapper;
+import mapreduce.TilableOp;
 
 // TODO: Tiling vs lazy execution?! -- Convert TilingStrategy to op (and use as 1st and last in op chain)?
 // Get needed "tile meta information" (index etc.) from "enriched input" (i.e. TileRAI)
@@ -61,9 +60,7 @@ public class TilingStrategy {
 		}
 	}
 
-	public <T> List<RandomAccessibleInterval<T>> transformBack(final List<RandomAccessibleInterval<T>> tiles,
-		final GridIndexMapper mapper)
-	{
+	public <T> List<RandomAccessibleInterval<T>> transformBack(final List<RandomAccessibleInterval<T>> tiles) {
 		final ArrayList<RandomAccessibleInterval<T>> transformedTiles = new ArrayList<>(tiles.size());
 		final Dimensions tilesPerDim = schema.getTilesPerDim();
 		for (int i = 0; i < tiles.size(); i++) {
@@ -73,7 +70,7 @@ public class TilingStrategy {
 			tile.min(min);
 			tile.max(max);
 			final long[] tileIndex = new long[tile.numDimensions()];
-			mapper.getTileIndex(i, tileIndex);
+			// FIXME mapper.getTileIndex(i, tileIndex);
 			for (int d = 0; d < tile.numDimensions(); d++) {
 				// Border checks
 				if (tileIndex[d] > 0) {

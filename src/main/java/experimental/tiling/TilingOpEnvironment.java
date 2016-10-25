@@ -16,7 +16,7 @@ import net.imagej.ops.OpUtils;
 
 import org.scijava.log.LogService;
 
-import experimental.tiling.ops.interfaces.TilableOp;
+import mapreduce.TilableOp;
 
 public class TilingOpEnvironment extends CustomOpEnvironment /* extends CachedOpEnvironment*/ {
 

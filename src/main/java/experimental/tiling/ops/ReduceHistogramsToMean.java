@@ -9,7 +9,7 @@ import net.imglib2.histogram.Histogram1d;
 
 import org.scijava.plugin.Plugin;
 
-import experimental.tiling.ops.interfaces.TilableReduceOp;
+import mapreduce.TilableReduceOp;
 
 @Plugin(type = ReduceHistogramsToMean.class)
 public class ReduceHistogramsToMean<T> extends AbstractUnaryFunctionOp<Iterable<Histogram1d<T>>, T> implements

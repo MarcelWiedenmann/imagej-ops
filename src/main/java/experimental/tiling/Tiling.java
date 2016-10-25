@@ -7,15 +7,12 @@ import java.util.List;
 
 import net.imagej.ops.Op;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.view.experimental.CombinedView;
-import net.imglib2.view.experimental.TiledView;
 
-import experimental.tiling.execution.LazyCursor;
-import experimental.tiling.execution.LazyExecution;
-import experimental.tiling.execution.LazyExecutionBranch;
-import experimental.tiling.execution.LazyExecutionNode;
-import experimental.tiling.execution.LazyExecutionStage;
-import experimental.tiling.misc.Util;
+import mapreduce.LazyCursor;
+import mapreduce.LazyExecution;
+import mapreduce.LazyExecutionBranch;
+import mapreduce.LazyExecutionNode;
+import mapreduce.LazyExecutionStage;
 
 public class Tiling<T, O> extends LazyExecution<RandomAccessibleInterval<T>, O> {
 
@@ -65,8 +62,10 @@ public class Tiling<T, O> extends LazyExecution<RandomAccessibleInterval<T>, O> 
 	}
 
 	public LazyCursor<RandomAccessibleInterval<T>, O> cursor() {
-		final TiledView<T> view = new TiledView<>(schema.getInput(), schema.getTilesPerDim());
-		return new LazyCursor<RandomAccessibleInterval<T>, O>(view.cursor(), branch);
+//		final TiledView<T> view = new TiledView<>(schema.getInput(), schema.getTilesPerDim());
+//		return new LazyCursor<RandomAccessibleInterval<T>, O>(view.cursor(), branch);
+		// FIXME
+		return null;
 	}
 
 	@Override
@@ -76,8 +75,9 @@ public class Tiling<T, O> extends LazyExecution<RandomAccessibleInterval<T>, O> 
 		while (c.hasNext()) {
 			outs.add((RandomAccessibleInterval) c.next().get());
 		}
-		return (O) new CombinedView(outs, GridIndexMapper.createFromTiles(outs, Util.dimensionsToArray(schema
-			.getTilesPerDim())));
+//		return (O) new CombinedView(outs, GridIndexMapper.createFromTiles(outs, Util.dimensionsToArray(schema
+//			.getTilesPerDim())));
+		return null; // FIXME
 	}
 
 	@Override

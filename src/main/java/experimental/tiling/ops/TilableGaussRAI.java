@@ -23,7 +23,7 @@ import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.thread.ThreadService;
 
-import experimental.tiling.ops.interfaces.TilableMapOp;
+import mapreduce.TilableMapOp;
 
 /**
  * Code mainly stolen from net.imagej.ops.filter.gauss.DefaultGaussRAI by Christian Dietz, University of Konstanz. For
