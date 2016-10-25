@@ -8,7 +8,7 @@ public interface ComputationGraphInputNode<O> extends ComputationGraphNode<O>, N
 
 	@Override
 	default ComputationGraphInputNode<O> getIndependentInstance() {
-		return (ComputationGraphInputNode<O>) copyUpstream();
+		return (ComputationGraphInputNode<O>) copy();
 	}
 
 	@Override

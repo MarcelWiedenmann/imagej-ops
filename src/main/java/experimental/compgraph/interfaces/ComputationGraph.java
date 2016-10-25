@@ -1,6 +1,13 @@
 
 package experimental.compgraph.interfaces;
 
+import java.util.List;
+
 public interface ComputationGraph extends Iterable<ComputationGraphNode<?>> {
-	// TODO: This probably has functionality. No marker interface.
+
+	List<ComputationGraphInputNode<?>> getStartNodes();
+
+	List<ComputationGraphNode<?>> getEndNodes();
+
+	ComputationGraph copy();
 }

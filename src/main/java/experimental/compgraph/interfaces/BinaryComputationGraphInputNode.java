@@ -8,8 +8,9 @@ public interface BinaryComputationGraphInputNode<I1, I2, O> extends BinaryComput
 {
 
 	@Override
+	@SuppressWarnings("unchecked")
 	default BinaryComputationGraphInputNode<I1, I2, O> getIndependentInstance() {
-		return (BinaryComputationGraphInputNode<I1, I2, O>) copyUpstream();
+		return (BinaryComputationGraphInputNode<I1, I2, O>) copy();
 	}
 
 	@Override

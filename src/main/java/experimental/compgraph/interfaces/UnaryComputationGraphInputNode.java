@@ -9,8 +9,9 @@ public interface UnaryComputationGraphInputNode<I, O> extends UnaryComputationGr
 {
 
 	@Override
+	@SuppressWarnings("unchecked")
 	default UnaryComputationGraphInputNode<I, O> getIndependentInstance() {
-		return (UnaryComputationGraphInputNode<I, O>) copyUpstream();
+		return (UnaryComputationGraphInputNode<I, O>) copy();
 	}
 
 	@Override

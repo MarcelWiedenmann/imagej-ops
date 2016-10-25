@@ -10,12 +10,12 @@ public class ComputationGraphNodeConverter {
 	public static <I, O> UnaryComputationGraphStageNode<I, O> convertToStageNode(final ComputationGraphNode<I> parent,
 		final UnaryComputationGraphInputNode<I, O> node)
 	{
-		return new DefaultComputationBranchStageNode<>(parent, node.getOp().getIndependentInstance());
+		return new DefaultUnaryComputationGraphStageNode<>(parent, node.getOp().getIndependentInstance());
 	}
 
 	public static <I, O> UnaryComputationGraphInputNode<I, O> convertToInputNode(
 		final UnaryComputationGraphInputNode<I, O> node)
 	{
-		return new DefaultComputationBranchInputNode<>(node.getOp().getIndependentInstance());
+		return new DefaultUnaryComputationGraphInputNode<>(node.getOp().getIndependentInstance());
 	}
 }

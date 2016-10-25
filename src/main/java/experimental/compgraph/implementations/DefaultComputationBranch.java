@@ -1,6 +1,8 @@
 
 package experimental.compgraph.implementations;
 
+import java.util.Iterator;
+
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
 import experimental.compgraph.interfaces.ComputationBranch;
@@ -11,45 +13,58 @@ import experimental.compgraph.interfaces.UnaryComputationGraphStageNode;
 
 public class DefaultComputationBranch<I, O> implements ComputationBranch<I, O> {
 
+	private final int length;
 	private final UnaryComputationGraphInputNode<I, ?> start;
 	private final UnaryComputationGraphNode<?, O> end;
 
 	public DefaultComputationBranch(final UnaryFunctionOp<I, O> func) {
-		final DefaultComputationBranchInputNode<I, O> node = new DefaultComputationBranchInputNode<>(func);
+		length = 1;
+		final DefaultUnaryComputationGraphInputNode<I, O> node = new DefaultUnaryComputationGraphInputNode<>(func);
 		start = node;
 		end = node;
 	}
 
 	public <IO> DefaultComputationBranch(final ComputationBranch<I, IO> branch, final UnaryFunctionOp<IO, O> func) {
-		final ComputationBranch<I, IO> branchCopy = branch.copyUpstream();
+		length = branch.getLength() + 1;
+		final ComputationBranch<I, IO> branchCopy = branch.copy();
 		start = branchCopy.getStartNode();
-		end = new DefaultComputationBranchStageNode<>(branchCopy.getEndNode(), func);
+		end = new DefaultUnaryComputationGraphStageNode<>(branchCopy.getEndNode(), func);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public <IO> DefaultComputationBranch(final UnaryFunctionOp<I, IO> func, final ComputationBranch<IO, O> branch) {
-		final ComputationBranch<IO, O> branchCopy = branch.copyUpstream();
-		start = new DefaultComputationBranchInputNode<>(func);
-		end = branchCopy.getEndNode();
-
-		UnaryComputationGraphStageNode<?, ?> joinNode = (UnaryComputationGraphStageNode<?, ?>) end;
-
-		while (joinNode.getParent() != branchCopy.getStartNode()) {
-			joinNode = (UnaryComputationGraphStageNode<?, ?>) joinNode.getParent();
-		}
-
-		final UnaryComputationGraphStageNode<IO, ?> oldStartAsStage = ComputationGraphNodeConverter.convertToStageNode(
+		length = branch.getLength() + 1;
+		final ComputationBranch<IO, O> branchCopy = branch.copy();
+		start = new DefaultUnaryComputationGraphInputNode<>(func);
+		final UnaryComputationGraphStageNode<IO, ?> join = ComputationGraphNodeConverter.convertToStageNode(
 			(UnaryComputationGraphInputNode<I, IO>) start, branchCopy.getStartNode());
-
-		joinNode.setParent(oldStartAsStage);
+		if (branchCopy.getLength() > 1) {
+			end = branchCopy.getEndNode();
+			UnaryComputationGraphStageNode<?, ?> joinChild = (UnaryComputationGraphStageNode<?, ?>) end;
+			for (int i = 1; i < branchCopy.getLength() - 1; i++) {
+				joinChild = (UnaryComputationGraphStageNode<?, ?>) joinChild.getParent();
+			}
+			joinChild.setParent((ComputationGraphNode) join);
+		}
+		else {
+			end = (UnaryComputationGraphStageNode<IO, O>) join;
+		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private DefaultComputationBranch(final DefaultComputationBranch<I, O> branch) {
-		end = (UnaryComputationGraphNode<?, O>) branch.getEndNode().copyUpstream();
+		length = branch.getLength();
+		end = (UnaryComputationGraphNode<?, O>) branch.getEndNode().copy();
 		ComputationGraphNode<?> startNode = end;
-		while (startNode instanceof UnaryComputationGraphStageNode<?, ?>) {
+		for (int i = 1; i < branch.getLength(); i++) {
 			startNode = ((UnaryComputationGraphStageNode<?, ?>) startNode).getParent();
 		}
 		start = (UnaryComputationGraphInputNode<I, ?>) startNode;
+	}
+
+	@Override
+	public int getLength() {
+		return length;
 	}
 
 	@Override
@@ -78,7 +93,7 @@ public class DefaultComputationBranch<I, O> implements ComputationBranch<I, O> {
 	}
 
 	@Override
-	public DefaultComputationBranch<I, O> copyUpstream() {
+	public DefaultComputationBranch<I, O> copy() {
 		return new DefaultComputationBranch<>(this);
 	}
 
@@ -98,9 +113,32 @@ public class DefaultComputationBranch<I, O> implements ComputationBranch<I, O> {
 		return end.out();
 	}
 
-//	@Override
-//	public Iterator<ComputationGraphNode<?>> iterator() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	@Override
+	public Iterator<ComputationGraphNode<?>> iterator() {
+		return new DefaultComputationBranchIterator(this);
+	}
+
+	public static class DefaultComputationBranchIterator implements Iterator<ComputationGraphNode<?>> {
+
+		private final ComputationBranch<?, ?> branch;
+		private ComputationGraphNode<?> current;
+		private int i;
+
+		public <I, O> DefaultComputationBranchIterator(final ComputationBranch<I, O> branch) {
+			this.branch = branch;
+			i = 0;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return i < branch.getLength();
+		}
+
+		@Override
+		public ComputationGraphNode<?> next() {
+			current = current != null ? ((UnaryComputationGraphStageNode<?, ?>) current).getParent() : branch.getEndNode();
+			i++;
+			return current;
+		}
+	}
 }
