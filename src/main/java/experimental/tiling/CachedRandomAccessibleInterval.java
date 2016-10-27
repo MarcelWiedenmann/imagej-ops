@@ -7,11 +7,14 @@ import net.imglib2.Point;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 
+import bdv.cache.VolatileCacheValue;
 import experimental.compgraph.interfaces.ComputationBranch;
 
 // TODO: Caching
 
-public class CachedRandomAccessibleInterval<I, O> extends AbstractInterval implements RandomAccessibleInterval<O> {
+public class CachedRandomAccessibleInterval<I, O> extends AbstractInterval implements RandomAccessibleInterval<O>,
+	VolatileCacheValue
+{
 
 	private final RandomAccessibleInterval<I> source;
 	private final ComputationBranch<I, O> branch;
@@ -26,6 +29,7 @@ public class CachedRandomAccessibleInterval<I, O> extends AbstractInterval imple
 
 	@Override
 	public RandomAccess<O> randomAccess() {
+		// TODO
 		throw new UnsupportedOperationException("Not yet implemented");
 	}
 
@@ -34,6 +38,13 @@ public class CachedRandomAccessibleInterval<I, O> extends AbstractInterval imple
 		return randomAccess();
 	}
 
+	@Override
+	public boolean isValid() {
+		// TODO
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
+	// TODO
 	public static class CachedRandomAccess<I, O> extends Point implements RandomAccess<O> {
 
 		@Override

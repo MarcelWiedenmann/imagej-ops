@@ -9,12 +9,8 @@ import net.imglib2.histogram.Histogram1d;
 
 import org.scijava.plugin.Plugin;
 
-import experimental.tiling.mapreduce.TilableReduceOp;
-
 @Plugin(type = ReduceHistogramsToMean.class)
-public class ReduceHistogramsToMean<T> extends AbstractUnaryFunctionOp<Iterable<Histogram1d<T>>, T> implements
-	TilableReduceOp
-{
+public class ReduceHistogramsToMean<T> extends AbstractUnaryFunctionOp<Iterable<Histogram1d<T>>, T> {
 
 	@Override
 	public T compute1(final Iterable<Histogram1d<T>> input) {

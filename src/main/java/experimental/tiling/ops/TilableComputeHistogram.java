@@ -12,11 +12,12 @@ import net.imglib2.view.Views;
 import org.scijava.Priority;
 import org.scijava.plugin.Plugin;
 
-import experimental.tiling.mapreduce.TilableMapOp;
+import experimental.tiling.mapreduce.TilableMap;
 
 @Plugin(type = Ops.Image.Histogram.class, priority = Priority.FIRST_PRIORITY)
 public class TilableComputeHistogram<T extends RealType<T>> extends
-	AbstractUnaryHybridCF<RandomAccessibleInterval<T>, Histogram1d<T>> implements Ops.Image.Histogram, TilableMapOp
+	AbstractUnaryHybridCF<RandomAccessibleInterval<T>, Histogram1d<T>> implements Ops.Image.Histogram,
+	TilableMap<RandomAccessibleInterval<T>, Histogram1d<T>>
 {
 
 	@Override

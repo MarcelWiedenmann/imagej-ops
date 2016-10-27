@@ -3,8 +3,6 @@ package experimental.tiling.ops;
 
 import net.imagej.ops.Ops;
 import net.imagej.ops.special.hybrid.AbstractUnaryHybridCF;
-import net.imglib2.Dimensions;
-import net.imglib2.FinalDimensions;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.gauss3.Gauss3;
@@ -23,7 +21,7 @@ import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.thread.ThreadService;
 
-import experimental.tiling.mapreduce.TilableMapOp;
+import experimental.tiling.mapreduce.TilableMapOverlap;
 
 /**
  * Code mainly stolen from net.imagej.ops.filter.gauss.DefaultGaussRAI by Christian Dietz, University of Konstanz. For
@@ -32,7 +30,7 @@ import experimental.tiling.mapreduce.TilableMapOp;
 @Plugin(type = Ops.Filter.Gauss.class, priority = Priority.LAST_PRIORITY)
 public class TilableGaussRAI<T extends RealType<T> & NativeType<T>> extends
 	AbstractUnaryHybridCF<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>> implements Ops.Filter.Gauss,
-	TilableMapOp
+	TilableMapOverlap<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>>
 {
 
 	@Parameter
@@ -64,10 +62,8 @@ public class TilableGaussRAI<T extends RealType<T> & NativeType<T>> extends
 		return ops().create().img(input);
 	}
 
-	// -- TilableOp --
-
 	@Override
-	public Dimensions getOverlap() {
-		return new FinalDimensions(Gauss3.halfkernelsizes(sigmas));
+	public int[] getOverlap() {
+		return Gauss3.halfkernelsizes(sigmas);
 	}
 }

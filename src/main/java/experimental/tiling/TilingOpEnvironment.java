@@ -16,7 +16,7 @@ import net.imagej.ops.OpUtils;
 
 import org.scijava.log.LogService;
 
-import mapreduce.TilableOp;
+import experimental.tiling.mapreduce.Tilable;
 
 public class TilingOpEnvironment extends CustomOpEnvironment /* extends CachedOpEnvironment*/ {
 
@@ -73,7 +73,7 @@ public class TilingOpEnvironment extends CustomOpEnvironment /* extends CachedOp
 			else {
 				types = new ArrayList<>(1);
 			}
-			types.add(TilableOp.class);
+			types.add(Tilable.class);
 			final OpRef tilingOpRef = new OpRef(ref.getName(), types, ref.getOutTypes(), ref.getArgs());
 			Op op = null;
 			try {
@@ -87,7 +87,7 @@ public class TilingOpEnvironment extends CustomOpEnvironment /* extends CachedOp
 			}
 			finally {
 				if (op != null) {
-					if (!(op instanceof TilableOp)) {
+					if (!(op instanceof Tilable)) {
 						final LogService log = context().getService(LogService.class);
 						if (log != null) {
 							final String msg = "No tiling op available. Selected regular op: " + op.toString();

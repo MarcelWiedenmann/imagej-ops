@@ -12,12 +12,10 @@ import net.imglib2.view.Views;
 import org.scijava.Priority;
 import org.scijava.plugin.Plugin;
 
-import experimental.tiling.mapreduce.TilableOp;
-
 @Deprecated
 @Plugin(type = Ops.Threshold.Mean.class, priority = Priority.LAST_PRIORITY)
 public class TilableComputeMeanThreshold<T extends RealType<T>> extends
-	AbstractUnaryHybridCF<RandomAccessibleInterval<T>, T> implements Ops.Threshold.Mean, TilableOp
+	AbstractUnaryHybridCF<RandomAccessibleInterval<T>, T> implements Ops.Threshold.Mean
 {
 
 	@Override

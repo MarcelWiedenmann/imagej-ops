@@ -112,7 +112,7 @@ public class ComputationGraphTest extends AbstractOpTest {
 
 		@Override
 		public Integer compute1(final Integer input) {
-			return new Integer(input.intValue() + 1);
+			return input + 1;
 		}
 	}
 }

@@ -78,12 +78,12 @@ public class DefaultComputationBranch<I, O> implements ComputationBranch<I, O> {
 	}
 
 	@Override
-	public <II> ComputationBranch<II, O> prepend(final UnaryFunctionOp<II, I> func) {
+	public <II> DefaultComputationBranch<II, O> prepend(final UnaryFunctionOp<II, I> func) {
 		return new DefaultComputationBranch<>(func, this);
 	}
 
 	@Override
-	public <OO> ComputationBranch<I, OO> append(final UnaryFunctionOp<O, OO> func) {
+	public <OO> DefaultComputationBranch<I, OO> append(final UnaryFunctionOp<O, OO> func) {
 		return new DefaultComputationBranch<>(this, func);
 	}
 
