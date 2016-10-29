@@ -29,9 +29,4 @@ public abstract class AbstractUnaryComputationGraphInputNode<I, O> extends Abstr
 	public void setInput(final I input) {
 		this.input = input;
 	}
-
-	@Override
-	public O compute1(final I input) {
-		return getOp().compute1(input);
-	}
 }
