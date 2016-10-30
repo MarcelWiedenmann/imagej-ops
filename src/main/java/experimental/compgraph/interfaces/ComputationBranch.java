@@ -16,6 +16,8 @@ public interface ComputationBranch<I, O> extends UnaryComputationGraphInputNode<
 
 	<II> ComputationBranch<II, O> prepend(final UnaryFunctionOp<II, I> func);
 
+	<II> ComputationBranch<II, O> prepend(final UnaryComputationGraphNode<II, I> node);
+
 	<OO> ComputationBranch<I, OO> append(final UnaryFunctionOp<O, OO> func);
 
 	@Override
