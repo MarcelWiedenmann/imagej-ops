@@ -7,7 +7,10 @@ import net.imagej.ops.special.function.UnaryFunctionOp;
 
 public interface Tiling<I, O> {
 
-	// TODO: Java 8 Functional Interfaces.
+	// NB: See http://spark.apache.org/docs/latest/api/java/org/apache/spark/api/java/JavaRDD.html for corresponding Spark
+	// functionality & naming.
+
+	// TODO: Accept Java 8 Functional Interfaces as soon as they're implemented in ops.
 	// TODO: Restrict aggregate methods to "AggregateOp" input?
 
 	// TODO:

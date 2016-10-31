@@ -6,7 +6,7 @@ import java.util.List;
 
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
-public interface ComputationBranch<I, O> extends UnaryComputationGraphInputNode<I, O>, ComputationGraph {
+public interface ComputationBranch<I, O> extends UnaryComputationGraphInputNode<I, O>, ComputationGraph<I, O> {
 
 	int getLength();
 
@@ -15,8 +15,6 @@ public interface ComputationBranch<I, O> extends UnaryComputationGraphInputNode<
 	UnaryComputationGraphNode<?, O> getEndNode();
 
 	<II> ComputationBranch<II, O> prepend(final UnaryFunctionOp<II, I> func);
-
-	<II> ComputationBranch<II, O> prepend(final UnaryComputationGraphNode<II, I> node);
 
 	<OO> ComputationBranch<I, OO> append(final UnaryFunctionOp<O, OO> func);
 
