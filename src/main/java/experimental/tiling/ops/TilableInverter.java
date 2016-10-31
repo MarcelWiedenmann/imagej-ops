@@ -12,7 +12,7 @@ import net.imglib2.type.numeric.RealType;
 import org.scijava.Priority;
 import org.scijava.plugin.Plugin;
 
-import experimental.tiling.mapreduce.TilableMap;
+import experimental.tiling.mapreduce.BinaryTilableMap;
 
 /**
  * Code mainly stolen from net.imagej.ops.image.invert.InvertII by Martin Horn, University of Konstanz. For the sake of
@@ -21,7 +21,7 @@ import experimental.tiling.mapreduce.TilableMap;
 @Plugin(type = Ops.Image.Invert.class, priority = Priority.LAST_PRIORITY)
 public class TilableInverter<T extends RealType<T>> extends
 	AbstractUnaryHybridCF<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>> implements Ops.Image.Invert,
-	TilableMap<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>>
+	BinaryTilableMap<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>>
 {
 
 	private UnaryComputerOp<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>> mapper;

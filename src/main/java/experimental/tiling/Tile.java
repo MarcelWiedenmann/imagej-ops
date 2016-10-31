@@ -2,9 +2,10 @@
 package experimental.tiling;
 
 import net.imglib2.Interval;
-import net.imglib2.RandomAccessibleInterval;
 
-public interface Tile<T> extends RandomAccessibleInterval<T> {
+// TODO: think of other tile types than RAI (text tile, geospatial data etc). exposes element-info (T).
+
+public interface Tile<T> extends DistributedGrid<T> {
 
 	int[] getIndex();
 

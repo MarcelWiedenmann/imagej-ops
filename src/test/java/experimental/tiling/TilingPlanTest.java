@@ -15,8 +15,6 @@ import org.junit.Test;
 
 import experimental.compgraph.implementations.ComputationGraphFactory;
 import experimental.compgraph.interfaces.ComputationGraph;
-import experimental.tiling.mapreduce.Tilable;
-import experimental.tiling.mapreduce.TilableMap;
 
 public class TilingPlanTest extends AbstractOpTest {
 
@@ -48,14 +46,16 @@ public class TilingPlanTest extends AbstractOpTest {
 	{
 
 		@Override
-		public <II> Tiling<II, Integer> getTilingPlan(final Tiling<II, Pair<Integer, Integer>> t) {
-			return t.map.first().map(new IncrementFunctionOp()).all().map(new SumPairsFunctionOp()).forwardAggregate(
+		public <II> Tiling<II, Integer> getTilingPlan(final Tiling<II, Pair<TilingNode<Integer>, TilingNode<Integer>>> t) {
+			return t.first().map(new IncrementFunctionOp()).all().map(new SumPairsFunctionOp()).forwardAggregate(
 				new SumFunctionOp());
+
+			TilingBranchView<II, Integer> extends Tiling<II,Integer>
 		}
 
 		@Override
 		public Integer compute2(final Integer input1, final Integer input2) {
-			return (input1 + 1) + input2;
+			return input1 + 1 + input2;
 		}
 	}
 

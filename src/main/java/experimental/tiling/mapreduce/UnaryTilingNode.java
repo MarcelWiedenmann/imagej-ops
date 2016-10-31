@@ -1,11 +1,11 @@
 
-package experimental.tiling;
+package experimental.tiling.mapreduce;
 
 import java.util.Iterator;
 
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
-public interface Tiling<I, O> {
+public interface UnaryTilingNode<O> {
 
 	// NB: See http://spark.apache.org/docs/latest/api/java/org/apache/spark/api/java/JavaRDD.html for corresponding Spark
 	// functionality & naming.
@@ -13,13 +13,14 @@ public interface Tiling<I, O> {
 	// TODO: Accept Java 8 Functional Interfaces as soon as they're implemented in ops.
 	// TODO: Restrict aggregate methods to "AggregateOp" input?
 
-	// TODO:
+	// TODO: Where to put those? (which we'll probably need)
 	// public TilingSchema<O> getTilingSchema();
 	// public Pair<Interval, O> getSingleTileSchema();
 
-	public <OO> Tiling<I, OO> map(final UnaryFunctionOp<O, OO> map);
+	public <OO> UnaryTilingNode<OO> map(final UnaryFunctionOp<O, OO> mapper);
 
-	public <OO> Tiling<I, OO> forwardAggregate(final UnaryFunctionOp<Iterator<O>, OO> aggregate);
+	public <OO> UnaryTilingNode<OO> forwardAggregate(final UnaryFunctionOp<Iterator<O>, OO> aggregator);
 
-	public <OO> Tiling<I, OO> treeAggregate(final UnaryFunctionOp<Iterator<O>, OO> aggregate);
+	public <OO> UnaryTilingNode<OO> treeAggregate(final UnaryFunctionOp<Iterator<O>, OO> aggregator);
+
 }
