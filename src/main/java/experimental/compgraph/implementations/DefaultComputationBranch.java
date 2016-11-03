@@ -88,7 +88,7 @@ public class DefaultComputationBranch<I, O> implements ComputationBranch<I, O> {
 	}
 
 	@Override
-	public DefaultComputationBranch<I, O> getOp() {
+	public DefaultComputationBranch<I, O> getFunc() {
 		return this;
 	}
 

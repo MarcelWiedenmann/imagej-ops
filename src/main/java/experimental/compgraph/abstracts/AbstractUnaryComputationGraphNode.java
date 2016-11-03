@@ -14,7 +14,7 @@ public abstract class AbstractUnaryComputationGraphNode<I, O> implements UnaryCo
 	}
 
 	@Override
-	public UnaryFunctionOp<I, O> getOp() {
+	public UnaryFunctionOp<I, O> getFunc() {
 		return func;
 	}
 }

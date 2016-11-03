@@ -60,8 +60,8 @@ public class ComputationGraphTest extends AbstractOpTest {
 		final ComputationBranch<String, String> branch = new DefaultComputationBranch<>(toInt).prepend(toStr).prepend(inc)
 			.prepend(inc).prepend(toInt).append(toStr).prepend(toStr).prepend(inc).prepend(toInt);
 		assertEquals(branch.getLength(), 9);
-		assertEquals(branch.getStartNode().getOp(), toInt);
-		assertEquals(branch.getEndNode().getOp(), toStr);
+		assertEquals(branch.getStartNode().getFunc(), toInt);
+		assertEquals(branch.getEndNode().getFunc(), toStr);
 		assertEquals(branch.compute1(String.valueOf(input)), String.valueOf(input + 3));
 		branch.setInput("");
 		branch.setInput(String.valueOf(input));

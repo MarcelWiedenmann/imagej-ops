@@ -15,6 +15,8 @@ import org.junit.Test;
 
 import experimental.compgraph.implementations.ComputationGraphFactory;
 import experimental.compgraph.interfaces.ComputationGraph;
+import experimental.compgraph.interfaces.ComputationGraphNode;
+import experimental.compgraph.interfaces.ComputationGraphNode.*;
 
 public class TilingPlanTest extends AbstractOpTest {
 
@@ -39,6 +41,22 @@ public class TilingPlanTest extends AbstractOpTest {
 			new LocalExecutionPlanner());
 
 		op.compute(Arrays.asList(tiledInput1), Arrays.asList(tiledInput2));
+
+		// --
+
+		final ComputationGraphNode<UnaryInput<Integer>, Integer> node1;
+		final ComputationGraphNode<UnaryInput<Integer>, Integer> node2;
+		final ComputationGraphNode<UnaryInput<Integer>, Integer> node3;
+
+		// Es ist...wunderschön :')
+
+		final ComputationGraphNode<UnaryStage<UnaryStage<BinaryStage<BinaryStage<UnaryInput<Integer>, Integer, UnaryInput<Integer>, Integer>, Integer, UnaryInput<Integer>, Integer>, Integer>, Integer>, String> leaf =
+			node1.join(node2, new MyVeryComplexProcessing()).join(node3, new SumPairsFunctionOp()).map(
+				new IncrementFunctionOp()).map(new ToStrFunctionOp<>());
+
+		leaf.in().source().in().source().in().firstSource().in().firstSource().in(); // = input-handle von node1
+
+		// --
 	}
 
 	public static class MyVeryComplexProcessing extends AbstractBinaryFunctionOp<Integer, Integer, Integer> implements

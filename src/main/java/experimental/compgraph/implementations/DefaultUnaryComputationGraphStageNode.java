@@ -14,11 +14,11 @@ public class DefaultUnaryComputationGraphStageNode<I, O> extends AbstractUnaryCo
 
 	@Override
 	public O out() {
-		return getOp().compute1(getParent().out());
+		return getFunc().compute1(getParent().out());
 	}
 
 	@Override
 	public DefaultUnaryComputationGraphStageNode<I, O> copy() {
-		return new DefaultUnaryComputationGraphStageNode<>(getParent().copy(), getOp());
+		return new DefaultUnaryComputationGraphStageNode<>(getParent().copy(), getFunc());
 	}
 }

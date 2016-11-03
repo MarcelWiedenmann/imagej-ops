@@ -8,7 +8,7 @@ import net.imagej.ops.special.function.BinaryFunctionOp;
 import net.imagej.ops.special.function.UnaryFunctionOp;
 import net.imglib2.RandomAccessibleInterval;
 
-public interface DistributedGrid<E> extends RandomAccessibleInterval<E> {
+public interface DistributedGrid<E> extends RandomAccessibleInterval<E>, DistributedCollection<E> {
 
 	<R> DistributedGrid<R> elementwise(UnaryFunctionOp<E, R> func);
 

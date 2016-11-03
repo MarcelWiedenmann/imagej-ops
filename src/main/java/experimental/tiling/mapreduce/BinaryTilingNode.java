@@ -4,11 +4,11 @@ package experimental.tiling.mapreduce;
 import net.imagej.ops.special.function.BinaryFunctionOp;
 import net.imglib2.util.Pair;
 
-public interface BinaryTilingNode<O1, O2> extends UnaryTilingNode<Pair<O1, O2>> {
+public interface BinaryTilingNode<E1, E2> extends UnaryTilingNode<Pair<E1, E2>> {
 
-	UnaryTilingNode<O1> first();
+	UnaryTilingNode<E1> first();
 
-	UnaryTilingNode<O2> second();
+	UnaryTilingNode<E2> second();
 
-	<O> UnaryTilingNode<O> map(BinaryFunctionOp<O1, O2, O> mapper);
+	<O> UnaryTilingNode<O> map(BinaryFunctionOp<E1, E2, O> f);
 }

@@ -17,11 +17,11 @@ public class DefaultUnaryComputationGraphInputNode<I, O> extends AbstractUnaryCo
 
 	@Override
 	public O compute1(final I input) {
-		return getOp().compute1(input);
+		return getFunc().compute1(input);
 	}
 
 	@Override
 	public DefaultUnaryComputationGraphInputNode<I, O> copy() {
-		return new DefaultUnaryComputationGraphInputNode<>(getOp().getIndependentInstance(), in());
+		return new DefaultUnaryComputationGraphInputNode<>(getFunc().getIndependentInstance(), in());
 	}
 }
