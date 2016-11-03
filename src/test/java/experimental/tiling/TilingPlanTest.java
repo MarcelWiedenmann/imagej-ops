@@ -2,7 +2,6 @@
 package experimental.tiling;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import net.imagej.ops.AbstractOpTest;
@@ -16,7 +15,15 @@ import org.junit.Test;
 import experimental.compgraph.implementations.ComputationGraphFactory;
 import experimental.compgraph.interfaces.ComputationGraph;
 import experimental.compgraph.interfaces.ComputationGraphNode;
-import experimental.compgraph.interfaces.ComputationGraphNode.*;
+import experimental.compgraph.interfaces.ComputationGraphNode.BinaryStage;
+import experimental.compgraph.interfaces.ComputationGraphNode.ComputationGraphJoinNode;
+import experimental.compgraph.interfaces.ComputationGraphNode.Input;
+import experimental.compgraph.interfaces.ComputationGraphNode.UnaryInput;
+import experimental.compgraph.interfaces.ComputationGraphNode.UnaryStage;
+import experimental.tiling.mapreduce.BinaryDistributable;
+import experimental.tiling.mapreduce.BinaryMappable;
+import experimental.tiling.mapreduce.BinaryTilingNode;
+import experimental.tiling.mapreduce.UnaryMappable;
 
 public class TilingPlanTest extends AbstractOpTest {
 
@@ -60,15 +67,17 @@ public class TilingPlanTest extends AbstractOpTest {
 	}
 
 	public static class MyVeryComplexProcessing extends AbstractBinaryFunctionOp<Integer, Integer, Integer> implements
-		Tilable<Pair<Integer, Integer>, Integer>
+		BinaryDistributable<Integer, Integer, Integer>
 	{
 
 		@Override
-		public <II> Tiling<II, Integer> getTilingPlan(final Tiling<II, Pair<TilingNode<Integer>, TilingNode<Integer>>> t) {
-			return t.first().map(new IncrementFunctionOp()).all().map(new SumPairsFunctionOp()).forwardAggregate(
-				new SumFunctionOp());
-
-			TilingBranchView<II, Integer> extends Tiling<II,Integer>
+		public ComputationGraphJoinNode<UnaryStage<?, Integer>, UnaryStage<?, Integer>, Integer> getDistributionPlan(
+			final BinaryTilingNode<Integer, Integer> t)
+		{
+			// FIXME
+			final ComputationGraphNode<Input<?>, ?> result = t.first().map(new IncrementFunctionOp()).join(t.second(),
+				new SumPairsFunctionOp());
+			throw new UnsupportedOperationException("not yet implemented");
 		}
 
 		@Override
@@ -78,7 +87,7 @@ public class TilingPlanTest extends AbstractOpTest {
 	}
 
 	public static class IncrementFunctionOp extends AbstractUnaryFunctionOp<Integer, Integer> implements
-		TilableMap<Integer, Integer>
+		UnaryMappable<Integer, Integer>
 	{
 
 		@Override
@@ -87,7 +96,9 @@ public class TilingPlanTest extends AbstractOpTest {
 		}
 	}
 
-	public static class SumPairsFunctionOp extends AbstractBinaryFunctionOp<Integer, Integer, Integer> {
+	public static class SumPairsFunctionOp extends AbstractBinaryFunctionOp<Integer, Integer, Integer> implements
+		BinaryMappable<Integer, Integer, Integer>
+	{
 
 		@Override
 		public Integer compute2(final Integer input1, final Integer input2) {
@@ -95,19 +106,9 @@ public class TilingPlanTest extends AbstractOpTest {
 		}
 	}
 
-	public static class SumFunctionOp extends AbstractUnaryFunctionOp<Iterator<Integer>, Integer> {
-
-		@Override
-		public Integer compute1(final Iterator<Integer> input) {
-			int sum = 0;
-			while (input.hasNext()) {
-				sum += input.next();
-			}
-			return sum;
-		}
-	}
-
-	public static class ToStrFunctionOp<I> extends AbstractUnaryFunctionOp<I, String> {
+	public static class ToStrFunctionOp<I> extends AbstractUnaryFunctionOp<I, String> implements
+		UnaryMappable<I, String>
+	{
 
 		@Override
 		public String compute1(final I input) {

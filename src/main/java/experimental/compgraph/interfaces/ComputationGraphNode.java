@@ -39,23 +39,28 @@ public interface ComputationGraphNode<I extends Input<?>, O> {
 	// --A--B--C
 	// <A,B> ==> <<A, B>,C> == <A,C>
 
-	public interface UnaryStage<A extends Input<?>, B> extends Stage<A, B> {
+	public interface UnaryStage<A extends Input<?>, B> extends Stage<A, B>, UnaryInput<B> {
 
+		@Override
 		ComputationGraphNode<A, B> source();
 	}
 
 	public interface BinaryStage<A1 extends Input<?>, B1, A2 extends Input<?>, B2> extends
-		Stage<BinaryInput<A1, A2>, Pair<B1, B2>>
+		Stage<BinaryInput<A1, A2>, Pair<B1, B2>>, BinaryInput<B1, B2>
 	{
 
+		@Override
 		UnaryStage<A1, B1> first();
 
+		@Override
 		UnaryStage<A2, B2> second();
 
+		@Override
 		default ComputationGraphNode<A1, B1> firstSource() {
 			return first().source();
 		}
 
+		@Override
 		default ComputationGraphNode<A2, B2> secondSource() {
 			return second().source();
 		}

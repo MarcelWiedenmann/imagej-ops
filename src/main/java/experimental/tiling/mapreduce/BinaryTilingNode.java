@@ -1,14 +1,14 @@
 
 package experimental.tiling.mapreduce;
 
-import net.imagej.ops.special.function.BinaryFunctionOp;
 import net.imglib2.util.Pair;
 
-public interface BinaryTilingNode<E1, E2> extends UnaryTilingNode<Pair<E1, E2>> {
+import experimental.compgraph.interfaces.ComputationGraphNode;
+import experimental.compgraph.interfaces.ComputationGraphNode.BinaryInput;
 
-	UnaryTilingNode<E1> first();
+public interface BinaryTilingNode<E1, E2> extends ComputationGraphNode<BinaryInput<?, ?>, Pair<E1, E2>> {
 
-	UnaryTilingNode<E2> second();
+	ComputationGraphNode<UnaryInput<?>, E1> first();
 
-	<O> UnaryTilingNode<O> map(BinaryFunctionOp<E1, E2, O> f);
+	ComputationGraphNode<UnaryInput<?>, E2> second();
 }
