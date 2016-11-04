@@ -17,7 +17,7 @@ public interface ComputationGraphNode<I extends Input<?>, O> {
 	// functionality & naming.
 
 	// TODO: Accept Java 8 Functional Interfaces as soon as they're implemented in ops.
-	// TODO: Restrict aggregate methods to "AggregateOp" input?
+	// TODO: Restrict aggregate methods to "AggregateOp" input? (...would be un-Spark-ish but may improve API)
 
 	<OO> ComputationGraphNode<UnaryStage<I, O>, OO> map(final UnaryFunctionOp<O, OO> f);
 
@@ -97,7 +97,7 @@ public interface ComputationGraphNode<I extends Input<?>, O> {
 	}
 
 	public interface ComputationGraphJoinNode<I1, I2, O> extends ComputationGraphNode<BinaryInput<I1, I2>, O> {
-		// TODO
+		// TODO see below
 	}
 
 	public interface ComputationGraphForkNode<I extends Input<?>, O> {

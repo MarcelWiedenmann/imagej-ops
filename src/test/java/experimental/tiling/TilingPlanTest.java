@@ -15,6 +15,7 @@ import org.junit.Test;
 import experimental.compgraph.implementations.ComputationGraphFactory;
 import experimental.compgraph.interfaces.ComputationGraph;
 import experimental.compgraph.interfaces.ComputationGraphNode;
+import experimental.compgraph.interfaces.ComputationGraphNode.BinaryInput;
 import experimental.compgraph.interfaces.ComputationGraphNode.BinaryStage;
 import experimental.compgraph.interfaces.ComputationGraphNode.ComputationGraphJoinNode;
 import experimental.compgraph.interfaces.ComputationGraphNode.Input;
@@ -58,6 +59,7 @@ public class TilingPlanTest extends AbstractOpTest {
 		// Es ist...wunderschön :')
 
 		final ComputationGraphNode<UnaryStage<UnaryStage<BinaryStage<BinaryStage<UnaryInput<Integer>, Integer, UnaryInput<Integer>, Integer>, Integer, UnaryInput<Integer>, Integer>, Integer>, Integer>, String> leaf =
+
 			node1.join(node2, new MyVeryComplexProcessing()).join(node3, new SumPairsFunctionOp()).map(
 				new IncrementFunctionOp()).map(new ToStrFunctionOp<>());
 
@@ -74,10 +76,43 @@ public class TilingPlanTest extends AbstractOpTest {
 		public ComputationGraphJoinNode<UnaryStage<?, Integer>, UnaryStage<?, Integer>, Integer> getDistributionPlan(
 			final BinaryTilingNode<Integer, Integer> t)
 		{
+
+			final ComputationGraphNode<UnaryInput<?>, Integer> first = t.first();
+			final ComputationGraphNode<UnaryInput<?>, Integer> second = t.second();
+
+			final ComputationGraphNode<UnaryStage<UnaryInput<?>, Integer>, Integer> third = first.map(
+				new IncrementFunctionOp());
+
+			// This MUST work by definition!: (and does by using "? extends ...")
+			final ComputationGraphNode<? extends Input<?>, Integer> thirdSimplerType = third;
+
+			final ComputationGraphNode<BinaryStage<UnaryStage<UnaryInput<?>, Integer>, Integer, UnaryInput<?>, Integer>, Integer> fourth =
+
+				third.join(t.second(), new SumPairsFunctionOp());
+
+			// This MUST work by definition!: (and does by using "? extends ...")
+			final ComputationGraphNode<? extends BinaryInput<Integer, Integer>, Integer> fourthSimplerType = fourth;
+
 			// FIXME
-			final ComputationGraphNode<Input<?>, ?> result = t.first().map(new IncrementFunctionOp()).join(t.second(),
-				new SumPairsFunctionOp());
+			// final ComputationGraphNode<Input<?>, ?> result =
+			final ComputationGraphNode<BinaryStage<UnaryStage<UnaryInput<?>, Integer>, Integer, UnaryInput<?>, Integer>, Integer> result =
+				t.first().map(new IncrementFunctionOp()).join(t.second(), new SumPairsFunctionOp());
+
+			// TODO:
+			// return type is:
+			// ComputationGraphJoinNode<UnaryStage<?, Integer>, UnaryStage<?, Integer>, Integer>
+			// ComputationGraphNode<BinaryInput<UnaryStage<?, Integer>, UnaryStage<?, Integer>>, Integer>
+			// should be simplified to sth like:
+			// ComputationGrapNode<? extends BinaryInput<Integer, Integer>, Integer> =
+			// ComputationGraphJoinNode<Integer,Integer,Integer> (<-- should be perfect for the user, make sure that type info
+			// does not get lost on system side...) or
+			// ComputationGraphJoinNode<? extends UnaryInput<Integer>, ? extends UnaryInput<Integer>, Integer> or pairs etc..
+
 			throw new UnsupportedOperationException("not yet implemented");
+
+			// return SomeJoinNode<Integer,Integer, Integer> (which should implicitly keep the nested generics of the
+			// underlying graph, hide from user, show system - how? we probably end up casting and using system-internal type
+			// knowledge...).
 		}
 
 		@Override
