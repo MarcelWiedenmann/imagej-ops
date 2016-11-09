@@ -11,11 +11,10 @@ import net.imagej.ops.special.function.AbstractUnaryFunctionOp;
 
 import org.junit.Test;
 
-import experimental.compgraph.implementations.DefaultComputationBranch;
-import experimental.compgraph.implementations.DefaultUnaryComputationGraphInputNode;
-import experimental.compgraph.implementations.DefaultUnaryComputationGraphStageNode;
-import experimental.compgraph.interfaces.ComputationBranch;
-import experimental.compgraph.interfaces.ComputationGraphNode;
+import experimental.compgraph_old.ComputationBranch;
+import experimental.compgraph_old.DefaultComputationBranch;
+import experimental.compgraph_old.implementations.DefaultUnaryComputationGraphInputNode;
+import experimental.compgraph_old.implementations.DefaultUnaryComputationGraphStageNode;
 
 public class ComputationGraphTest extends AbstractOpTest {
 

@@ -8,23 +8,13 @@ import net.imagej.ops.special.function.BinaryFunctionOp;
 import net.imagej.ops.special.function.UnaryFunctionOp;
 import net.imglib2.RandomAccessibleInterval;
 
-import experimental.tiling.mapreduce.UnaryDistributable;
+public interface DistributedGrid<I, O> extends DistributedCollection<I, O>, RandomAccessibleInterval<O> {
 
-public interface DistributedGrid<E> extends RandomAccessibleInterval<E>, DistributedCollection<E> {
+	<OO> DistributedGrid<O, OO> elementwise(UnaryFunctionOp<O, OO> func);
 
-	<R> DistributedGrid<R> elementwise(UnaryFunctionOp<E, R> func);
+	<OO> Iterator<PairResult<O, OO>> pairwise(BinaryFunctionOp<O, O, OO> func);
 
-	<R> Iterator<PairResult<E, R>> pairwise(BinaryFunctionOp<E, E, R> func);
+	DistributedGrid<I, DistributedGrid<I, O>> group(Function<long[], Long> func);
 
-	DistributedGrid<DistributedGrid<E>> group(Function<long[], Long> func);
-
-	DistributedGrid<DistributedGrid<E>> blockify(long[] blockSize, long[] offset);
-
-	// TODO:
-	// Something like this needed: (maybe in Tiling, maybe in DistributedCollection). Same needed for join?
-	default <R> void /* what to return? */ append(final UnaryFunctionOp<E, R> f) {
-		if (f instanceof UnaryDistributable) {
-			return ((UnaryDistributable<E, R>) f).getDistributionPlan(this);
-		}
-	}
+	DistributedGrid<I, DistributedGrid<I, O>> blockify(long[] blockSize, long[] offset);
 }

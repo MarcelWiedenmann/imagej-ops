@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
-import experimental.compgraph.implementations.DefaultComputationBranch;
+import experimental.compgraph_old.DefaultComputationBranch;
 
 public class DefaultTiling<I, O> implements Tiling<I, O> {
 

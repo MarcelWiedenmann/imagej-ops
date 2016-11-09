@@ -1,9 +1,9 @@
 
 package experimental.tiling.mapreduce;
 
-import experimental.compgraph.interfaces.ComputationGraphNode;
-import experimental.compgraph.interfaces.ComputationGraphNode.Input;
-import experimental.compgraph.interfaces.ComputationGraphNode.UnaryStage;
+import experimental.compgraph.ComputationGraphNode;
+import experimental.compgraph.Input;
+import experimental.compgraph.UnaryStage;
 
 public interface UnaryMappable<I, O> extends UnaryDistributable<I, O> {
 

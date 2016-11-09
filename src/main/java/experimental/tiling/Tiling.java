@@ -1,6 +1,6 @@
 
 package experimental.tiling;
 
-public interface Tiling<T> extends DistributedGrid<Tile<T>> {
+public interface Tiling<I, O> extends DistributedGrid<Tile<I>, Tile<O>> {
 
 }

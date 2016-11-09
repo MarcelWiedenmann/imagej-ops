@@ -3,9 +3,9 @@ package experimental.tiling.mapreduce;
 
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
-import experimental.compgraph.interfaces.ComputationGraphNode;
-import experimental.compgraph.interfaces.ComputationGraphNode.Input;
-import experimental.compgraph.interfaces.ComputationGraphNode.UnaryStage;
+import experimental.compgraph.ComputationGraphNode;
+import experimental.compgraph.Input;
+import experimental.compgraph.UnaryStage;
 
 public interface UnaryDistributable<I, O> extends UnaryFunctionOp<I, O> {
 

@@ -1,10 +1,12 @@
 
-package experimental.compgraph.interfaces;
+package experimental.compgraph_old;
 
 import java.util.Collections;
 import java.util.List;
 
 import net.imagej.ops.special.function.UnaryFunctionOp;
+
+import experimental.compgraph.ComputationGraphNode;
 
 public interface ComputationBranch<I, O> extends UnaryComputationGraphInputNode<I, O>, ComputationGraph<I, O> {
 

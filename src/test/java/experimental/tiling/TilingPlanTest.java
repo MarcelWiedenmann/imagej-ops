@@ -12,15 +12,14 @@ import net.imglib2.util.Pair;
 
 import org.junit.Test;
 
-import experimental.compgraph.implementations.ComputationGraphFactory;
-import experimental.compgraph.interfaces.ComputationGraph;
-import experimental.compgraph.interfaces.ComputationGraphNode;
-import experimental.compgraph.interfaces.ComputationGraphNode.BinaryInput;
-import experimental.compgraph.interfaces.ComputationGraphNode.BinaryStage;
-import experimental.compgraph.interfaces.ComputationGraphNode.ComputationGraphJoinNode;
-import experimental.compgraph.interfaces.ComputationGraphNode.Input;
-import experimental.compgraph.interfaces.ComputationGraphNode.UnaryInput;
-import experimental.compgraph.interfaces.ComputationGraphNode.UnaryStage;
+import experimental.compgraph.BinaryInput;
+import experimental.compgraph.BinaryStage;
+import experimental.compgraph.ComputationGraphNode;
+import experimental.compgraph.ComputationGraphNode.ComputationGraphJoinNode;
+import experimental.compgraph.Input;
+import experimental.compgraph.UnaryInput;
+import experimental.compgraph.UnaryStage;
+import experimental.compgraph_old.ComputationGraphFactory;
 import experimental.tiling.mapreduce.BinaryDistributable;
 import experimental.tiling.mapreduce.BinaryMappable;
 import experimental.tiling.mapreduce.BinaryTilingNode;
@@ -37,13 +36,18 @@ public class TilingPlanTest extends AbstractOpTest {
 		final ComputationGraphFactory cgfactory = new ComputationGraphFactory();
 
 		// out = in + 1
+		final DistributedGrid<Integer, Integer> t1;
+		t1 = t1.append(new IncrementFunctionOp());
+
+		final DistributedGrid<String> t2;
+		t2 = t2.append(new MyVeryComplexProcessing()).joinSecond(t1, new SumPairsFunctionOp()).append(
+			new ToStrFunctionOp<>());
+
 		final ComputationGraph<Integer, Integer> cg1 = cgfactory.create(new IncrementFunctionOp());
 
 		// out = (in1 + 1 + in2) + (in2 + 1) as String
 		final ComputationGraph<Pair<Integer, Integer>, String> cg2 = cgfactory.create(new MyVeryComplexProcessing())
 			.joinSecond(cg1, new SumPairsFunctionOp()).append(new ToStrFunctionOp());
-
-		final Tiling<Pair<Integer, Integer>, Integer> t = tilingService.getTilingPlan(cg2);
 
 		final BinaryFunctionOp<List<Integer>, List<Integer>, String> op = tilingService.getExecutable(t,
 			new LocalExecutionPlanner());
@@ -71,6 +75,14 @@ public class TilingPlanTest extends AbstractOpTest {
 	public static class MyVeryComplexProcessing extends AbstractBinaryFunctionOp<Integer, Integer, Integer> implements
 		BinaryDistributable<Integer, Integer, Integer>
 	{
+
+		@Override
+		public ComputationGraphJoinNode<Integer, Integer, BinaryStage<?, ?, Integer, Integer>, Integer> getDistributionPlan(
+			final BinaryTilingNode<Integer, Integer> t)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
 
 		@Override
 		public ComputationGraphJoinNode<UnaryStage<?, Integer>, UnaryStage<?, Integer>, Integer> getDistributionPlan(

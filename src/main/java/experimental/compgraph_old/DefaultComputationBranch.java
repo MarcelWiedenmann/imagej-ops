@@ -1,15 +1,14 @@
 
-package experimental.compgraph.implementations;
+package experimental.compgraph_old;
 
 import java.util.Iterator;
 
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
-import experimental.compgraph.interfaces.ComputationBranch;
-import experimental.compgraph.interfaces.ComputationGraphNode;
-import experimental.compgraph.interfaces.UnaryComputationGraphInputNode;
-import experimental.compgraph.interfaces.UnaryComputationGraphNode;
-import experimental.compgraph.interfaces.UnaryComputationGraphStageNode;
+import experimental.compgraph.ComputationGraphNode;
+import experimental.compgraph_old.interfaces.UnaryComputationGraphInputNode;
+import experimental.compgraph_old.interfaces.UnaryComputationGraphNode;
+import experimental.compgraph_old.interfaces.UnaryComputationGraphStageNode;
 
 public class DefaultComputationBranch<I, O> implements ComputationBranch<I, O> {
 

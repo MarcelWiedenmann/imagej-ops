@@ -1,9 +1,11 @@
 
-package experimental.tiling;
+package experimental.cache;
 
 import net.imglib2.AbstractInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
+
+import experimental.tiling.Tile;
 
 public class VolatileTile<T> extends AbstractInterval implements Tile<T> {
 
