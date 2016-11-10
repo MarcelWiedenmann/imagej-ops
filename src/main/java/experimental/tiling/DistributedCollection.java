@@ -6,7 +6,7 @@ import net.imagej.ops.special.function.UnaryFunctionOp;
 import experimental.compgraph.ComputationGraphNode;
 import experimental.compgraph.UnaryInput;
 
-public interface DistributedCollection<I, O> extends ComputationGraphNode<UnaryInput<I>, O> {
+public interface DistributedCollection<I, O> extends  {
 
 	// -- TEST - separate collection from graph?
 	void set(ComputationGraphNode<? extends UnaryInput<I>, O> node);

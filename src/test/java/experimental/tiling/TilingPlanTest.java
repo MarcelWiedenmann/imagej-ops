@@ -14,8 +14,10 @@ import org.junit.Test;
 
 import experimental.compgraph.BinaryInput;
 import experimental.compgraph.BinaryStage;
+import experimental.compgraph.ComputationGraph;
 import experimental.compgraph.ComputationGraphNode;
 import experimental.compgraph.ComputationGraphNode.ComputationGraphJoinNode;
+import experimental.compgraph.ComputationGraphNode.ComputationGraphMapNode;
 import experimental.compgraph.Input;
 import experimental.compgraph.UnaryInput;
 import experimental.compgraph.UnaryStage;
@@ -32,6 +34,15 @@ public class TilingPlanTest extends AbstractOpTest {
 
 		final Integer[] tiledInput1 = { 0, 1, 2, 3, 4, 5 };
 		final Integer[] tiledInput2 = { 0, 1, 2, 3, 4, 5 };
+
+		final ComputationGraphNode<UnaryInput<Integer>, Integer> n1;
+		final ComputationGraphNode<UnaryInput<Integer>, Integer> n2;
+		final ComputationGraphMapNode<Integer, Integer> map = n1.append(new IncrementFunctionOp());
+		final ComputationGraphMapNode<Integer, Integer> append = map.append(new MyVeryComplexProcessing());
+		final ComputationGraphJoinNode<Integer, Integer, Integer> join = append.joinSecond(n2, new SumPairsFunctionOp());
+		final ComputationGraphMapNode<Integer, String> append2 = join.append(new ToStrFunctionOp<Integer>());
+
+		// --
 
 		final ComputationGraphFactory cgfactory = new ComputationGraphFactory();
 

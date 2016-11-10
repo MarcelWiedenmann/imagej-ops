@@ -17,4 +17,7 @@ public interface DistributedGrid<I, O> extends DistributedCollection<I, O>, Rand
 	DistributedGrid<I, DistributedGrid<I, O>> group(Function<long[], Long> func);
 
 	DistributedGrid<I, DistributedGrid<I, O>> blockify(long[] blockSize, long[] offset);
+
+	@Override
+	<OO> DistributedGrid<I, OO> map(UnaryFunctionOp<O, OO> f);
 }
