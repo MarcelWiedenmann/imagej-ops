@@ -3,10 +3,11 @@ package experimental.tiling;
 
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
+import experimental.compgraph.ComputationGraph;
 import experimental.compgraph.ComputationGraphNode;
 import experimental.compgraph.UnaryInput;
 
-public interface DistributedCollection<I, O> extends  {
+public interface DistributedCollection<I, O> extends ComputationGraph<UnaryInput<I>, O> {
 
 	// -- TEST - separate collection from graph?
 	void set(ComputationGraphNode<? extends UnaryInput<I>, O> node);

@@ -42,6 +42,17 @@ public class TilingPlanTest extends AbstractOpTest {
 		final ComputationGraphJoinNode<Integer, Integer, Integer> join = append.joinSecond(n2, new SumPairsFunctionOp());
 		final ComputationGraphMapNode<Integer, String> append2 = join.append(new ToStrFunctionOp<Integer>());
 
+		final ComputationGraph<UnaryInput<Integer>, Integer> g1;
+		final ComputationGraph<UnaryInput<Integer>, Integer> g2;
+		final ComputationGraph<UnaryInput<Integer>, Integer> gmap = g1.append(new IncrementFunctionOp());
+		final ComputationGraph<UnaryInput<Integer>, Integer> gappend = gmap.append(new MyVeryComplexProcessing());
+		final ComputationGraph<BinaryInput<UnaryInput<Integer>, UnaryInput<Integer>>, Integer> gjoin = gappend.joinSecond(
+			g2, new SumPairsFunctionOp());
+		final ComputationGraph<BinaryInput<UnaryInput<Integer>, UnaryInput<Integer>>, String> gappend2 = gjoin.append(
+			new ToStrFunctionOp<Integer>());
+		final ComputationGraph<BinaryInput<BinaryInput<UnaryInput<Integer>, UnaryInput<Integer>>, UnaryInput<Integer>>, Integer> gjoin2 =
+			gjoin.joinFirst(g2, new SumPairsFunctionOp());
+
 		// --
 
 		final ComputationGraphFactory cgfactory = new ComputationGraphFactory();
@@ -91,6 +102,8 @@ public class TilingPlanTest extends AbstractOpTest {
 		public ComputationGraphJoinNode<Integer, Integer, BinaryStage<?, ?, Integer, Integer>, Integer> getDistributionPlan(
 			final BinaryTilingNode<Integer, Integer> t)
 		{
+			// TODO: input & output: "ComputationSubGraph"
+
 			// TODO Auto-generated method stub
 			return null;
 		}

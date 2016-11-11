@@ -12,13 +12,16 @@ import net.imglib2.util.Pair;
 // TODO: Restrict aggregate methods to "AggregateOp" input? (...would be un-Spark-ish but may improve API)
 // TODO: meta nodes
 // TODO: keys & split, collect, ...
-public interface ComputationGraphNode<I extends Input<?>, O> extends Stage<I, O> {
+public interface ComputationGraphNode<I extends Input<?>, O> extends Stage<I, O>, UnaryInput<O> {
 
 	I in();
 
 	UnaryFunctionOp<?, O> func();
 
-	// -- Graph Operations --
+	@Override
+	default ComputationGraphNode<I, O> source() {
+		return this;
+	}
 
 	<OO> ComputationGraphMapNode<O, OO> append(UnaryFunctionOp<O, OO> f);
 
@@ -29,14 +32,6 @@ public interface ComputationGraphNode<I extends Input<?>, O> extends Stage<I, O>
 		BinaryFunctionOp<O2, O, OO> f);
 
 	ComputationGraphForkNode<I, O> fork();
-
-	// -- MapReduce Operations --
-
-	<OO> ComputationGraphMapNode<O, OO> map(UnaryFunctionOp<O, OO> f);
-
-	<OO> ComputationGraphAggregateNode<O, OO> flatAggregate(BinaryFunctionOp<O, O, OO> f);
-
-	<OO> ComputationGraphAggregateNode<O, OO> treeAggregate(BinaryFunctionOp<O, O, OO> f);
 
 	ComputationGraphNode<I, O> copy();
 
