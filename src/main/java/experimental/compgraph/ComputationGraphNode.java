@@ -9,7 +9,6 @@ import net.imglib2.util.Pair;
 // functionality & naming.
 // TODO: implement java.util.stream.BaseStream (or on execution level)?: https://docs.oracle.com/javase/8/docs/api/java/util/stream/BaseStream.html
 // TODO: Accept Java 8 Functional Interfaces as soon as they're implemented in ops.
-// TODO: Restrict aggregate methods to "AggregateOp" input? (...would be un-Spark-ish but may improve API)
 // TODO: meta nodes
 // TODO: keys & split, collect, ...
 public interface ComputationGraphNode<I extends Input<?>, O> extends Stage<I, O>, UnaryInput<O> {

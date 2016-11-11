@@ -35,6 +35,12 @@ public class TilingPlanTest extends AbstractOpTest {
 		final Integer[] tiledInput1 = { 0, 1, 2, 3, 4, 5 };
 		final Integer[] tiledInput2 = { 0, 1, 2, 3, 4, 5 };
 
+
+		final TilingService ts;
+		ts.create().append(new IncrementFunctionOp()).append(new MyVeryComplexProcessing().fork()
+
+		// --
+
 		final ComputationGraphNode<UnaryInput<Integer>, Integer> n1;
 		final ComputationGraphNode<UnaryInput<Integer>, Integer> n2;
 		final ComputationGraphMapNode<Integer, Integer> map = n1.append(new IncrementFunctionOp());

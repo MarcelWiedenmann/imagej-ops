@@ -1,16 +1,12 @@
 
 package experimental.tiling.mapreduce;
 
-import experimental.compgraph.ComputationGraphNode;
-import experimental.compgraph.Input;
-import experimental.compgraph.UnaryStage;
+import experimental.tiling.DistributedCollection;
 
 public interface UnaryMappable<I, O> extends UnaryDistributable<I, O> {
 
 	@Override
-	default ComputationGraphNode<UnaryStage<Input<?>, I>, O> getDistributionPlan(
-		final ComputationGraphNode<Input<?>, I> t)
-	{
-		return t.map(this);
+	default DistributedCollection<?, O> getDistributionPlan(final DistributedCollection<?, I> c) {
+		return c.map(this);
 	}
 }

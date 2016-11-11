@@ -1,29 +1,29 @@
 
 package experimental.tiling;
 
+import net.imagej.ops.Ops.Join;
+import net.imagej.ops.special.function.BinaryFunctionOp;
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
-import experimental.compgraph.ComputationGraph;
-import experimental.compgraph.ComputationGraphNode;
-import experimental.compgraph.UnaryInput;
+public interface DistributedCollection<I, O> extends LazyCollection<I, O> {
 
-public interface DistributedCollection<I, O> extends ComputationGraph<UnaryInput<I>, O> {
+	// -- MapReduce Operations --
 
-	// -- TEST - separate collection from graph?
-	void set(ComputationGraphNode<? extends UnaryInput<I>, O> node);
+	<OO> DistributedCollection<I, OO> map(UnaryFunctionOp<O, OO> f);
 
-	default <OO> DistributedCollection<O, OO> mapTest(final UnaryFunctionOp<O, OO> f) {
+	<OO> DistributedCollection<I, OO> flatAggregate(BinaryFunctionOp<O, O, OO> f);
 
-		final ComputationGraphNode<UnaryInput<I>, O> test = null;
+	<OO> DistributedCollection<I, OO> treeAggregate(BinaryFunctionOp<O, O, OO> f);
 
-		set(test);
+	// -- Graph Operations --
 
-		final ComputationGraphNode<? extends UnaryInput<O>, OO> map = test.map(f);
+	// TODO: how to model forks and joins? Generic Fork and Join classes are probably easier than implementing explicit
+	// fork/join-collections/grids/tilings/etc...
+	Fork<DistributedCollection<I, O>> fork();
 
-		final DistributedCollection<O, OO> test2 = null;
+	<I2, O2, OO> Join<DistributedCollection<I, O>, DistributedCollection<I2, O2>> joinFirst(
+		DistributedCollection<I2, O2> c, BinaryFunctionOp<O, O2, OO> f);
 
-		test2.set(map);
-
-	}
-	// --
+	<I2, O2, OO> Join<DistributedCollection<I, O>, DistributedCollection<I2, O2>> joinSecond(
+		DistributedCollection<I2, O2> c, BinaryFunctionOp<O2, O, OO> f);
 }
