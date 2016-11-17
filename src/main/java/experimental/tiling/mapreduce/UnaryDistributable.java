@@ -3,9 +3,9 @@ package experimental.tiling.mapreduce;
 
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
-import experimental.tiling.DistributedCollection;
+import experimental.tiling.DistributedList;
 
 public interface UnaryDistributable<I, O> extends UnaryFunctionOp<I, O> {
 
-	DistributedCollection<?, O> getDistributionPlan(DistributedCollection<?, I> c);
+	DistributedList<?, O> getDistributionPlan(DistributedList<?, I> c);
 }

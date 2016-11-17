@@ -105,13 +105,10 @@ public class TilingPlanTest extends AbstractOpTest {
 	{
 
 		@Override
-		public ComputationGraphJoinNode<Integer, Integer, BinaryStage<?, ?, Integer, Integer>, Integer> getDistributionPlan(
-			final BinaryTilingNode<Integer, Integer> t)
+		public DistributedCollection<? extends Pair<?, ?>, Integer> getDistributionPlan(
+			final JoinedDistributedCollection<?, ?, Integer, Integer> c)
 		{
-			// TODO: input & output: "ComputationSubGraph"
-
-			// TODO Auto-generated method stub
-			return null;
+			c.first().map(f)
 		}
 
 		@Override

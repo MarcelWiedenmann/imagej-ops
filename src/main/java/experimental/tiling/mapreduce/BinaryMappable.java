@@ -1,16 +1,16 @@
 
 package experimental.tiling.mapreduce;
 
-import net.imagej.ops.Ops.Join;
+import net.imglib2.util.Pair;
 
-import experimental.tiling.DistributedCollection;
+import experimental.tiling.DistributedList;
 
 public interface BinaryMappable<I1, I2, O> extends BinaryDistributable<I1, I2, O> {
 
 	@Override
-	default Join<DistributedCollection<?, I1>, DistributedCollection<?, I2>, O> getDistributionPlan(
-		final DistributedCollection<?, I1> c1, final DistributedCollection<?, I2> c2)
+	default DistributedList<? extends Pair<?, ?>, O> getDistributionPlan(final DistributedList<?, I1> c1,
+		final DistributedList<?, I2> c2)
 	{
-		return c1.joinFirst(c2, this);
+		return c1.join(c2).map(this);
 	}
 }
