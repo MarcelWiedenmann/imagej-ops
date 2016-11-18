@@ -21,7 +21,8 @@ import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.thread.ThreadService;
 
-import experimental.tiling.mapreduce.BinaryTilableMapOverlap;
+import experimental.tiling.mapreduce.Overlapping;
+import experimental.tiling.mapreduce.UnaryMappable;
 
 /**
  * Code mainly stolen from net.imagej.ops.filter.gauss.DefaultGaussRAI by Christian Dietz, University of Konstanz. For
@@ -30,7 +31,7 @@ import experimental.tiling.mapreduce.BinaryTilableMapOverlap;
 @Plugin(type = Ops.Filter.Gauss.class, priority = Priority.LAST_PRIORITY)
 public class TilableGaussRAI<T extends RealType<T> & NativeType<T>> extends
 	AbstractUnaryHybridCF<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>> implements Ops.Filter.Gauss,
-	BinaryTilableMapOverlap<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>>
+	UnaryMappable<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>>, Overlapping
 {
 
 	@Parameter

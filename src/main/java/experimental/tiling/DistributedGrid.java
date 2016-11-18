@@ -1,43 +1,39 @@
 
 package experimental.tiling;
 
-import java.util.function.Function;
-
 import net.imagej.ops.special.function.BinaryFunctionOp;
 import net.imagej.ops.special.function.UnaryFunctionOp;
 import net.imglib2.Interval;
+import net.imglib2.util.Pair;
 
 import experimental.compgraph.Fork;
 
-public interface DistributedGrid<I, O> extends DistributedCollection<I, O>, Interval /* No RAI: no access allowed. */ {
+public interface DistributedGrid<E> extends DistributedList<E>, Interval /* No RAI: no access allowed. */ {
 
-	<I2, O2, K> JoinedDistributedGrid<I, I2, O, O2> join(DistributedGrid<I2, O2> g);
+	// TODO: (look at Google doc)
 
-	// TODO: look at Google doc
+	// <O> DistributedGrid<O> elementwise(UnaryFunctionOp<E, O> f);
 
-	// <OO> DistributedGrid<O, OO> elementwise(UnaryFunctionOp<O, OO> f);
+	// <O> DistributedList<O> pairs(BinaryFunctionOp<E, E, O> f);
 
-	// <OO> DistributedList<OO> pairs(BinaryFunctionOp<O, O, OO> f);
+	// DistributedGrid<DistributedGrid<E>> group(Function<long[], Long> f);
 
-	// DistributedGrid<I, DistributedGrid<I, O>> group(Function<long[], Long> f);
-
-	// DistributedGrid<I, DistributedGrid<I, O>> blockify(long[] size, long[] overlap);
+	// DistributedGrid<DistributedGrid<E>> blockify(long[] size, long[] overlap);
 
 	// -- DistributedList --
 
 	@Override
-	<OO> DistributedGrid<I, OO> map(UnaryFunctionOp<O, OO> f);
+	<O> DistributedGrid<O> map(UnaryFunctionOp<E, O> f);
 
 	@Override
-	<OO> DistributedGrid<I, OO> flatAggregate(BinaryFunctionOp<O, O, OO> f);
+	<O> DistributedGrid<O> flatAggregate(BinaryFunctionOp<E, E, O> f);
 
 	@Override
-	<OO> DistributedGrid<I, OO> treeAggregate(BinaryFunctionOp<O, O, OO> f);
+	<O> DistributedGrid<O> treeAggregate(BinaryFunctionOp<E, E, O> f);
 
 	@Override
-	Fork<? extends DistributedGrid<I, O>> fork();
+	Fork<? extends DistributedGrid<E>> fork();
 
 	@Override
-	<I2, O2, K> JoinedDistributedGrid<I, I2, O, O2> join(LazyCollection<I2, O2> c, Function<O, K> kf1,
-		Function<O2, K> kf2);
+	<E2> DistributedGrid<Pair<E, E2>> join(OpsList<E2> g);
 }

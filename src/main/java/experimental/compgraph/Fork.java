@@ -1,11 +1,19 @@
 
 package experimental.compgraph;
 
-public interface Fork<I> {
+public class Fork<I> {
 
-	// TODO: can be changed to class, copy I on access etc.
+	// TODO: copy "I" on first (not "first") access etc.
 
-	I first();
+	public Fork(final I in) {
 
-	I second();
+	}
+
+	I first() {
+		throw new UnsupportedOperationException("not yet implemented");
+	}
+
+	I second() {
+		throw new UnsupportedOperationException("not yet implemented");
+	}
 }

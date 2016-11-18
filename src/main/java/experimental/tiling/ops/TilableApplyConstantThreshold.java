@@ -20,7 +20,7 @@ import experimental.tiling.mapreduce.BinaryMappable;
 @Plugin(type = Ops.Threshold.Apply.class, priority = Priority.LAST_PRIORITY)
 public class TilableApplyConstantThreshold<T extends RealType<T>> extends
 	AbstractBinaryHybridCF<RandomAccessibleInterval<T>, T, RandomAccessibleInterval<BitType>> implements
-	Ops.Threshold.Apply, BinaryMappable<RandomAccessibleInterval<T>, RandomAccessibleInterval<BitType>>
+	Ops.Threshold.Apply, BinaryMappable<RandomAccessibleInterval<T>, T, RandomAccessibleInterval<BitType>>
 {
 
 	private BinaryComputerOp<T, T, BitType> applyThreshold;

@@ -24,13 +24,9 @@ public interface ComputationGraphNode<I extends Input<?>, O> extends Stage<I, O>
 
 	<OO> ComputationGraphMapNode<O, OO> append(UnaryFunctionOp<O, OO> f);
 
-	<O2, OO> ComputationGraphJoinNode<O, O2, OO> joinFirst(ComputationGraphNode<?, O2> node,
-		BinaryFunctionOp<O, O2, OO> f);
-
-	<O2, OO> ComputationGraphJoinNode<O2, O, OO> joinSecond(ComputationGraphNode<?, O2> node,
-		BinaryFunctionOp<O2, O, OO> f);
-
 	ComputationGraphForkNode<I, O> fork();
+
+	<O2, OO> ComputationGraphJoinNode<O, O2, OO> join(ComputationGraphNode<?, O2> node, BinaryFunctionOp<O, O2, OO> f);
 
 	ComputationGraphNode<I, O> copy();
 

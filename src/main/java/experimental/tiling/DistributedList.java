@@ -3,27 +3,28 @@ package experimental.tiling;
 
 import net.imagej.ops.special.function.BinaryFunctionOp;
 import net.imagej.ops.special.function.UnaryFunctionOp;
+import net.imglib2.util.Pair;
 
 import experimental.compgraph.Fork;
 
-public interface DistributedList<I, O> extends OpsList<I, O> {
+public interface DistributedList<E> extends OpsList<E> {
 
 	// -- MapReduce Operations --
 
-	<OO> DistributedList<I, OO> map(UnaryFunctionOp<O, OO> f);
+	<O> DistributedList<O> map(UnaryFunctionOp<E, O> f);
 
-	<OO> DistributedList<I, OO> flatAggregate(BinaryFunctionOp<O, O, OO> f);
+	<O> DistributedList<O> flatAggregate(BinaryFunctionOp<E, E, O> f);
 
-	<OO> DistributedList<I, OO> treeAggregate(BinaryFunctionOp<O, O, OO> f);
+	<O> DistributedList<O> treeAggregate(BinaryFunctionOp<E, E, O> f);
 
 	// -- LazyCollection --
 
 	@Override
-	<OO> DistributedList<I, OO> append(UnaryFunctionOp<O, OO> f);
+	<O> DistributedList<O> append(UnaryFunctionOp<E, O> f);
 
 	@Override
-	Fork<? extends DistributedList<I, O>> fork();
+	Fork<? extends DistributedList<E>> fork();
 
 	@Override
-	<I2, O2, K> JoinedDistributedCollection<I, I2, O, O2> join(final OpsList<I2, O2> c);
+	<E2> DistributedList<Pair<E, E2>> join(final OpsList<E2> c);
 }

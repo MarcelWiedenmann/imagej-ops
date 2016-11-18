@@ -7,5 +7,5 @@ import experimental.tiling.DistributedList;
 
 public interface UnaryDistributable<I, O> extends UnaryFunctionOp<I, O> {
 
-	DistributedList<?, O> getDistributionPlan(DistributedList<?, I> c);
+	DistributedList<O> getDistributionPlan(DistributedList<I> in);
 }
