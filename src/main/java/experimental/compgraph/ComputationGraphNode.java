@@ -5,6 +5,10 @@ import net.imagej.ops.special.function.BinaryFunctionOp;
 import net.imagej.ops.special.function.UnaryFunctionOp;
 import net.imglib2.util.Pair;
 
+import experimental.algebra.compgraph.BinaryInput;
+import experimental.algebra.compgraph.Input;
+import experimental.algebra.compgraph.UnaryInput;
+
 // NB: See http://spark.apache.org/docs/latest/api/java/org/apache/spark/api/java/JavaRDD.html for corresponding Spark
 // functionality & naming.
 // TODO: implement java.util.stream.BaseStream (or on execution level)?: https://docs.oracle.com/javase/8/docs/api/java/util/stream/BaseStream.html

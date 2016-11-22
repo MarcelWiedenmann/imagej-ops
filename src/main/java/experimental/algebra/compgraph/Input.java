@@ -1,5 +1,5 @@
 
-package experimental.compgraph;
+package experimental.algebra.compgraph;
 
 public interface Input<I> {
 	// NB: Marker interface.

@@ -1,7 +1,11 @@
 
-package experimental.compgraph;
+package experimental.algebra.compgraph;
 
 import net.imglib2.util.Pair;
+
+import experimental.compgraph.ComputationGraphNode;
+import experimental.compgraph.Stage;
+import experimental.compgraph.UnaryStage;
 
 public interface BinaryStage<II1 extends Input<?>, II2 extends Input<?>, I1, I2> extends
 	Stage<BinaryInput<II1, II2>, Pair<I1, I2>>, BinaryInput<I1, I2>

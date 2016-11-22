@@ -4,6 +4,10 @@ package experimental.compgraph;
 import net.imagej.ops.special.function.BinaryFunctionOp;
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
+import experimental.algebra.compgraph.BinaryInput;
+import experimental.algebra.compgraph.Input;
+import experimental.algebra.compgraph.UnaryInput;
+
 public interface ComputationGraph<I extends Input<?>, O> extends UnaryInput<O>, Stage<I, O> {
 
 	ComputationGraphNode<? extends Input<?>, O> last();

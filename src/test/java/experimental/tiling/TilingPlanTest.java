@@ -7,14 +7,14 @@ import net.imagej.ops.special.function.AbstractUnaryFunctionOp;
 
 import org.junit.Test;
 
+import experimental.algebra.compgraph.BinaryInput;
+import experimental.algebra.compgraph.BinaryStage;
+import experimental.algebra.compgraph.UnaryInput;
 import experimental.compgraph.BinaryAsUnaryFunctionOp;
-import experimental.compgraph.BinaryInput;
-import experimental.compgraph.BinaryStage;
 import experimental.compgraph.ComputationGraph;
 import experimental.compgraph.ComputationGraphNode;
 import experimental.compgraph.ComputationGraphNode.ComputationGraphJoinNode;
 import experimental.compgraph.ComputationGraphNode.ComputationGraphMapNode;
-import experimental.compgraph.UnaryInput;
 import experimental.compgraph.UnaryStage;
 import experimental.tiling.mapreduce.BinaryDistributable;
 import experimental.tiling.mapreduce.BinaryMappable;
