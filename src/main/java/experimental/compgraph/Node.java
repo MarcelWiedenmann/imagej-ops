@@ -1,9 +1,9 @@
 
 package experimental.compgraph;
 
-import net.imagej.ops.special.function.UnaryFunctionOp;
+import java.util.function.Function;
 
-public interface Node<IN extends Edge<?>, BODY extends UnaryFunctionOp<IN, OUT>, OUT extends Edge<?>> {
+public interface Node<IN extends Edge<?>, BODY extends Function<? super IN, OUT>, OUT extends UnaryEdge<?>> {
 
 	IN in();
 

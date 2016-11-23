@@ -1,9 +1,10 @@
 
 package experimental.compgraph;
 
-import net.imagej.ops.special.function.UnaryFunctionOp;
-
 public interface UnaryEdge<IO> extends Edge<IO> {
 
-	Node<?, ? extends UnaryFunctionOp<?, IO>, ? extends UnaryEdge<IO>> source();
+//	FIXME: typing
+//	Node<?, ? extends Function<?, ? extends UnaryEdge<IO>>, ? extends UnaryEdge<IO>> source();
+//
+//	void setSource(Node<?, ? extends Function<?, ? extends UnaryEdge<IO>>, ? extends UnaryEdge<IO>> src);
 }

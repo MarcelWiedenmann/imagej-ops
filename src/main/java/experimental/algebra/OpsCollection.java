@@ -20,7 +20,7 @@ public interface OpsCollection<I> extends UnaryEdge<I> {
 	<O> OpsCollection<O> map(Function<? super I, O> f);
 
 	// which is actually a UnaryComputerOp in ops
-	<O> OpsCollection<O> map(BiConsumer<I, Consumer<O>> f);
+	<O> OpsCollection<O> map(BiConsumer<I, Consumer<O>> f); // f = Supplier<O>?
 
 	<O> OpsCollection<O> reduce(O memo, BiFunction<O, I, O> f);
 
@@ -34,7 +34,7 @@ public interface OpsCollection<I> extends UnaryEdge<I> {
 
 	OpsCollection<I> filter(Predicate<I> f);
 
-	<I2> OpsCollection<Pair<I, I2>> cartesian(OpsCollection<I2> coll);
+	<I2> OpsCollection<Pair<I, I2>> cartesian(OpsCollection<I2> c);
 
 	OpsList<I> sort(Comparator<I> f);
 
@@ -43,10 +43,10 @@ public interface OpsCollection<I> extends UnaryEdge<I> {
 	// -- Higher Order Operators --
 
 	// TODO: Nested collections? coll-map and merge should be added there.
-	// TODO: How to determine O in scatter & scatterElements? Allow converters?
+	// TODO: How to determine O in scatter? Allow converters?
 	// Identity?
 
-	<O, C extends OpsCollection<O>> OpsCollectionNested<O, C> scatter(Function<I, Integer> func);
+	<O, C extends OpsCollection<O>> OpsCollectionNested<O, C> scatter(Function<I, Integer> f);
 
 	<O, C extends OpsCollection<O>> OpsCollectionNested<O, C> partition(Function<I, OpsCollection<O>> f);
 }
