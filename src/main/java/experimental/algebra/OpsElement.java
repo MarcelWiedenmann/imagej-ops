@@ -1,7 +1,7 @@
 
 package experimental.algebra;
 
-public interface OpsHandle<I> extends OpsCollection<I> {
+public interface OpsElement<I> extends OpsList<I> {
 	// TODO
 
 	// -- OpsCollection --

@@ -12,8 +12,9 @@ import java.util.function.Predicate;
 import net.imglib2.util.Pair;
 
 import experimental.compgraph.Fork;
+import experimental.compgraph.UnaryEdge;
 
-public interface OpsCollection<I> {
+public interface OpsCollection<I> extends UnaryEdge<I> {
 
 	// -- First Order Operations --
 	<O> OpsCollection<O> map(Function<? super I, O> f);

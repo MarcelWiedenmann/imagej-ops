@@ -7,8 +7,9 @@ import net.imagej.ops.special.function.BinaryFunctionOp;
 import net.imagej.ops.special.function.UnaryFunctionOp;
 
 import experimental.compgraph.Fork;
+import experimental.compgraph.UnaryEdge;
 
-public interface OpsUnboundedStream<I> {
+public interface OpsUnboundedStream<I> extends UnaryEdge<I> {
 
 	// -- First Order Operations --
 
