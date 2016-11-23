@@ -48,16 +48,15 @@ public class OpsAlgebraTestDriven<T extends RealType<T> & NativeType<T>> {
 				.partition(() -> tileSize);
 
 		// option 1: use java to distribute via forEach on each partition
-		OpsGridNested<Object, OpsCollection<Object>> allRegions = ccaPartition.collMap((l) -> l.map((t) -> new LabelRegions<String>(t)));
+		OpsGrid<LabelRegions<String>> regionsPerTile = ccaPartition.map((l) -> new LabelRegions<>(l));
+		
+		// all label regions
+		OpsCollection<LabelRegions<String>> regions = regionsPerTile.reduce(null, (m, r) -> r);
 
-		// .map((p, e) -> p.getA().forEach((a) -> Regions.sample(a,
-		// p.getB())).scatter((r) -> 15 /* depending on label we scatter
-		// somewhere else. */)).
-
-		// option 2: we distribute
-		OpsCollection<IterableInterval<T>> distRegions = ccaPartition.map((l) -> new LabelRegions<>(l))
-				.indexJoin(partition).map((p, e) -> p.getA().forEach((a) -> Regions.sample(a, p.getB())));
-
+		// now we need a really strange join construct.
+		// we want to match all label-regions on the corresponding tilings WITHOUT copying (too much) data around. We want to copy the regions around, not the image data!
+		// if this doesn't work, we could think of copying IterableRegion<T> around if necessary.
+	
 	}
 
 	public void kmeans() {

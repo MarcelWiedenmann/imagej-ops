@@ -23,7 +23,7 @@ public interface OpsCollection<I> {
 
 	<O> OpsCollection<O> reduce(O memo, BiFunction<O, I, O> f);
 
-	<O> OpsCollection<O> aggregate(BiFunction<O, I, O> f);
+	<O, K> OpsCollection<O> aggregate(BiFunction<O, I, O> f);
 
 	OpsCollection<I> concat(OpsCollection<I> c);
 

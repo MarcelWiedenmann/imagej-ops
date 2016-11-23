@@ -20,7 +20,10 @@ public interface OpsGrid<T> extends OpsCollection<T>, RandomAccessibleInterval<T
 	// In theory we could simply call join internally... however, this would
 	// suck in performance in the case we know we are joining a grid why
 	// shouldn't we make use of this information (instanceof)
-	<T2> OpsGrid<Pair<T, T2>> indexJoin(OpsGrid<T2> c);
+	
+	// TODO we should add a join strategy, if g2 has fewer indices than g1 and vice-versa (take only minimum, fail etc).  
+	// TODO for tilings we can then add OutOfBoundsStrategy! :-)
+	<T2> OpsGrid<Pair<T, T2>> indexJoin(OpsGrid<T2> g2);
 
 	@Override
 	<O> OpsGrid<O> map(Function<? super T, O> f);
