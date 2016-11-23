@@ -30,6 +30,8 @@
 
 package net.imagej.ops.special.function;
 
+import java.util.function.BiFunction;
+
 import net.imagej.ops.special.BinaryOp;
 import net.imagej.ops.special.computer.BinaryComputerOp;
 import net.imagej.ops.special.inplace.BinaryInplaceOp;
@@ -51,9 +53,14 @@ import net.imagej.ops.special.inplace.BinaryInplaceOp;
  * @see BinaryInplaceOp
  */
 public interface BinaryFunctionOp<I1, I2, O> extends BinaryOp<I1, I2, O>,
-	UnaryFunctionOp<I1, O>
+	UnaryFunctionOp<I1, O>, BiFunction<I1, I2, O>
 {
 
+	@Override
+	default O apply(I1 t, I2 u) {
+		return compute2(t,u);
+	}
+	
 	/**
 	 * Computes the output given two inputs.
 	 * 

@@ -24,10 +24,10 @@ public interface OpsUnboundedStream<I> {
 
 	// -- Higher Order Operators -
 
-	collection.map(this)
+	// collection.map(this)
 
-	map(f) {
-		n = new Node(this, map(f));
-		return n.out();
-	}
+	// map(f) {
+	// n = new Node(this, map(f));
+	// return n.out();
+	// }
 }

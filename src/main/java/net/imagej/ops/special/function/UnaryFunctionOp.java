@@ -30,6 +30,8 @@
 
 package net.imagej.ops.special.function;
 
+import java.util.function.Function;
+
 import net.imagej.ops.special.UnaryOp;
 import net.imagej.ops.special.computer.UnaryComputerOp;
 import net.imagej.ops.special.inplace.UnaryInplaceOp;
@@ -50,8 +52,13 @@ import net.imagej.ops.special.inplace.UnaryInplaceOp;
  * @see UnaryInplaceOp
  */
 public interface UnaryFunctionOp<I, O> extends UnaryOp<I, O>,
-	NullaryFunctionOp<O>
+	NullaryFunctionOp<O>, Function<I,O>
 {
+	
+	@Override
+	default O apply(I t) {
+		return compute1(t);
+	}
 
 	/**
 	 * Computes the output given some input.
