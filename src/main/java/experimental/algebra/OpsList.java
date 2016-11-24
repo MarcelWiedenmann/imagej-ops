@@ -3,8 +3,6 @@ package experimental.algebra;
 
 import net.imglib2.util.Pair;
 
-import experimental.algebra.rai.OpsGrid;
-
 // special 1D grid
 public interface OpsList<I> extends OpsGrid<I> {
 

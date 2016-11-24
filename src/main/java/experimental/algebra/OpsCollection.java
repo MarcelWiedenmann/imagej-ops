@@ -28,9 +28,9 @@ public interface OpsCollection<I> extends UnaryEdge<I>, OpsSpace<I> {
 	@Override
 	OpsCollection<I> filter(Predicate<? super I> f);
 
-	<O> OpsCollection<O> reduce(O memo, BiFunction<O, I, O> f);
+	<O> OpsCollection<O> reduce(O memo, BiFunction<O, ? super I, O> f);
 
-	<O, K> OpsCollection<O> aggregate(BiFunction<O, I, O> f);
+	<O, K> OpsCollection<O> aggregate(BiFunction<O, ? super I, O> f);
 
 	OpsCollection<I> concat(OpsCollection<I> c);
 
@@ -50,7 +50,10 @@ public interface OpsCollection<I> extends UnaryEdge<I>, OpsSpace<I> {
 	// TODO: How to determine O in scatter? Allow converters?
 	// Identity?
 
-	OpsCollectionNested<I> scatter(Function<I, Integer> func);
+	DOpsCollection<I> scatter(Function<I, Integer> func);
 
-	<O, C extends OpsCollection<O>> OpsCollectionNested<O> partition(Function<I, C> f);
+	// pure syntactical sugar
+	default <O, C extends DOpsCollection<O>> OpsCollection<C> partition(final Function<I, C> f) {
+		return map(f);
+	}
 }

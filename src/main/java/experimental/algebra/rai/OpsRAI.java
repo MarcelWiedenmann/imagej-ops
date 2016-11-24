@@ -2,17 +2,18 @@ package experimental.algebra.rai;
 
 import java.util.function.Function;
 
-import experimental.algebra.OpsCollection;
-import experimental.algebra.OpsGridNested;
-import experimental.algebra.rai.OpsTiling.TilingHints;
+import experimental.algebra.OpsGrid;
 
 public interface OpsRAI<T> extends OpsGrid<T> {
 
 	@Override
 	<O> OpsRAI<O> map(Function<? super T, O> f);
 
-	@Override
-	<O, C extends OpsCollection<O>> OpsGridNested<O> partition(Function<T, C> f);
-	
-	OpsTiling<T> partition(TilingHints hints);
+	/**
+	 * Special tiling stuff
+	 */
+	default DOpsTiling<T> tiling(@SuppressWarnings("unused") TilingHints... hints) {
+		// internally calls SCATTER!!!!
+		return null;
+	}
 }

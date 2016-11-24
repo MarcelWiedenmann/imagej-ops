@@ -1,5 +1,5 @@
 
-package experimental.algebra.rai;
+package experimental.algebra;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -9,8 +9,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.neighborhood.Shape;
 import net.imglib2.util.Pair;
 
-import experimental.algebra.OpsCollection;
-import experimental.algebra.OpsGridNested;
+import experimental.algebra.rai.OpsRegion;
 
 // TODO we may want to re-add OpsGrid to separate it from imglib2.
 public interface OpsGrid<T> extends OpsCollection<T>, RandomAccessibleInterval<T> {
@@ -22,12 +21,6 @@ public interface OpsGrid<T> extends OpsCollection<T>, RandomAccessibleInterval<T
 
 	@Override
 	OpsRegion<T> filter(Predicate<? super T> f);
-
-	@Override
-	<O, C extends OpsCollection<O>> OpsGridNested<O> partition(final Function<T, C> f);
-
-	@Override
-	OpsGridNested<T> scatter(Function<T, Integer> func);
 
 	/* Special methods on grid */
 	OpsCollection<Pair<T, T>> pairs(/*

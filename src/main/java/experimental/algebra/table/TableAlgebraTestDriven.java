@@ -1,21 +1,8 @@
 package experimental.algebra.table;
 
-import net.imagej.ops.filter.gauss.DefaultGaussRAI;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.array.ArrayImgs;
-import net.imglib2.roi.labeling.ImgLabeling;
-import net.imglib2.roi.labeling.LabelingType;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
-
 import experimental.algebra.OpsCollection;
-import experimental.algebra.OpsCollectionNested;
+import experimental.algebra.DOpsCollection;
 import experimental.algebra.OpsList;
-import experimental.algebra.rai.OpsGrid;
-import experimental.algebra.rai.OpsRAI;
-import experimental.algebra.rai.OpsRAINested;
-import experimental.algebra.rai.OpsTile;
-import experimental.algebra.rai.OpsTiling;
 
 public class TableAlgebraTestDriven {
 
@@ -25,10 +12,10 @@ public class TableAlgebraTestDriven {
 			OpsList<Row> rows = null;
 			OpsList<Row> cluster = null;
 
-			OpsCollectionNested<Row> scatter = rows
+			DOpsCollection<Row> scatter = rows
 					.scatter((r) -> 15 /* distribute to workers */);
 
-			OpsCollectionNested<KMeansPair> pairs = scatter
+			DOpsCollection<KMeansPair> pairs = scatter
 					.map((c) -> c.cartesian(cluster).map(p -> new KMeansPair(p.getA(), p.getB())).reduce(KMeansPair.memo(),
 							(m, p) -> m.getDist() < p.getDist() ? m : p))
 					.merge().scatter((r) -> 10 /* distribute over cluster-centers */);

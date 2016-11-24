@@ -1,22 +1,41 @@
 package experimental.algebra.rai;
 
-import net.imagej.ops.filter.gauss.DefaultGaussRAI;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
+import net.imagej.ops.special.function.AbstractUnaryFunctionOp;
+import net.imagej.ops.special.hybrid.AbstractUnaryHybridCF;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.array.ArrayImgs;
-import net.imglib2.roi.labeling.ImgLabeling;
-import net.imglib2.roi.labeling.LabelingType;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.real.DoubleType;
 
+import experimental.algebra.DOpsCollection;
 import experimental.algebra.OpsCollection;
-import experimental.algebra.OpsCollectionNested;
+import experimental.algebra.OpsGrid;
 
 public class ImgAlgebraTestDriven {
 
 	public <T extends RealType<T> & NativeType<T>> void funWithImages() {
-		OpsCollection<T> in = null;
+		/* Some input elements */
+		OpsRAI<T> inRAI = null;
+		OpsCollection<OpsRAI<T>> inRAIs = null;
 
-		/* 1: parallelize and merge back */
+		/* -1: Scatter OpsRAI */
+		DOpsTiling<T> tiling = inRAI.tiling(() -> new long[5]);
+		OpsRAI<T> merge = tiling.mergeTiles();
+		assert (merge.equals(tiling));
+
+		/* 0: Partition OpsRAI in Collection */
+		DOpsCollection<OpsRAI<T>> scatter = inRAIs.scatter((f) -> 16);
+
+		// (a) distribution over images which distribute over tiles
+		DOpsCollection<DOpsTiling<T>> map = scatter.map((o) -> o.map((r) -> r.tiling(() -> new long[5])));
+
+		// (b) beautiful
+		OpsCollection<DOpsTiling<T>> partitioned = inRAIs.partition(new MyPartitioner<T>());
+
+		/* 1: TODO partition, do something and merge back */
 
 		/* 2: TODO parallelize and do not merge back (groupby) */
 
@@ -32,25 +51,27 @@ public class ImgAlgebraTestDriven {
 
 		/* 8: TODO RAI inputs */
 		OpsCollection<OpsGrid<T>> c = null;
-		OpsCollectionNested<OpsGrid<T>> scattered = c.scatter((f) -> 14);
+		DOpsCollection<OpsGrid<T>> scattered = c.scatter((f) -> 14);
 
 		/* 9: TODO Mean per x,y plane in video */
-
-		/* 10: TODO */
-		// here I have C<C<T>> where inner C<T> is a tile!
-		OpsRAINested<Integer> merge = bigImg.partition(() -> new long[] { 1, 1, 512 })
-				.map((ci) -> ci.aggregate((a, b) -> 5));
+		// DOpsTiling<T> oneDGrid = inRAI.tiling(() -> new long[] { 1024, 1024,
+		// 1 });
+		// DOpsRAI<DoubleType> distributedMeans = oneDGrid.map((c1) ->
+		// c1.reduce(new DoubleType(), new MyMean<T>()));
+		// OpsRAI<DoubleType> localMeans = distributedMeans.merge();
 
 	}
 
 	// TODO
 	public void ccaWithFilter() {
 
-		OpsRAI<T> bigImg = null;
-		final long[] tileSize = null;
+		// OpsRAI<T> bigImg = null;
+		// final long[] tileSize = null;
 
-		OpsRAI<RandomAccessibleInterval<LabelingType<String>>> cca = bigImg.partition(() -> tileSize)
-				.map(new DefaultGaussRAI<T>()).map((t) -> ArrayImgs.bits(1, 2, 3)).map((t) -> new ImgLabeling<>(null));
+		// OpsRAI<RandomAccessibleInterval<LabelingType<String>>> cca =
+		// bigImg.partition(() -> tileSize)
+		// .map(new DefaultGaussRAI<T>()).map((t) -> ArrayImgs.bits(1, 2,
+		// 3)).map((t) -> new ImgLabeling<>(null));
 
 		// How to get back an entire image?
 		// OpsCollection<ArrayList<RandomAccessibleInterval<LabelingType<String>>>>
@@ -80,4 +101,79 @@ public class ImgAlgebraTestDriven {
 		// around if necessary.
 
 	}
+
+	/**
+	 * Helpers
+	 */
+
+	public static class MyHybridSimpleMapper<I, O> extends AbstractUnaryHybridCF<I, O> {
+
+		@Override
+		public void compute1(I input, O output) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public O createOutput(I input) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+	}
+
+	public static class MyNeighborhoodFunction<I, O>
+			extends AbstractUnaryFunctionOp<RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> {
+
+		@Override
+		public RandomAccessibleInterval<O> compute1(RandomAccessibleInterval<I> input) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+	}
+
+	public static class MyMoreComplexFunction<I, O>
+			extends AbstractUnaryFunctionOp<RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> {
+
+		@Override
+		public RandomAccessibleInterval<O> compute1(RandomAccessibleInterval<I> input) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+	}
+
+	public static class MyMean<T> implements BiFunction<DoubleType, RandomAccessibleInterval<T>, DoubleType> {
+
+		@Override
+		public DoubleType apply(DoubleType memo, RandomAccessibleInterval<T> u) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+	}
+
+	public static class MyPartitioner<T> implements Function<OpsRAI<T>, DOpsTiling<T>> {
+
+		@Override
+		public DOpsTiling<T> apply(OpsRAI<T> t) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+	}
+
+	// public static class MyPartitionFunction<I, O>
+	// extends AbstractUnaryFunctionOp<RandomAccessibleInterval<I>,
+	// RandomAccessibleInterval<O>> {
+	//
+	// @Override
+	// public RandomAccessibleInterval<O> compute1(RandomAccessibleInterval<I>
+	// input) {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
+	//
+	// }
 }
