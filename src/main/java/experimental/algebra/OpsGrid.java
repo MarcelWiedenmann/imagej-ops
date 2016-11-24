@@ -5,14 +5,12 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import net.imglib2.Interval;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.algorithm.neighborhood.Shape;
 import net.imglib2.util.Pair;
 
 import experimental.algebra.rai.OpsRegion;
 
 // TODO we may want to re-add OpsGrid to separate it from imglib2.
-public interface OpsGrid<T> extends OpsCollection<T>, RandomAccessibleInterval<T> {
+public interface OpsGrid<T> extends OpsCollection<T> {
 
 	// TODO we need to take care that we go for OpsTiles -> OpsTiles whenever
 	// possible.
@@ -27,9 +25,6 @@ public interface OpsGrid<T> extends OpsCollection<T>, RandomAccessibleInterval<T
 									 * something which helps us iterating over
 									 * pairs of a point
 									 */);
-
-	/* alle neighbors */
-	OpsGrid<OpsCollection<T>> neighbors(final Shape s);
 
 	// filters a grid such that only grid coordinates within the interval are
 	// left

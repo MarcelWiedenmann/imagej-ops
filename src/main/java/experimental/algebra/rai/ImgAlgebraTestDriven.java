@@ -11,6 +11,7 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 import experimental.algebra.DOpsCollection;
+import experimental.algebra.OpsBoundedStream;
 import experimental.algebra.OpsCollection;
 import experimental.algebra.OpsGrid;
 
@@ -34,6 +35,7 @@ public class ImgAlgebraTestDriven {
 
 		// (b) beautiful
 		OpsCollection<DOpsTiling<T>> partitioned = inRAIs.partition(new MyPartitioner<T>());
+		stream = partitioned.stream().map(new MyMoreComplexFunction<T, T>());
 
 		/* 1: TODO partition, do something and merge back */
 
