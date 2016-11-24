@@ -4,13 +4,12 @@ package experimental.algebra;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import net.imglib2.Interval;
 import net.imglib2.util.Pair;
 
 import experimental.algebra.rai.OpsRegion;
 
 // TODO we may want to re-add OpsGrid to separate it from imglib2.
-public interface OpsGrid<T> extends OpsCollection<T>, Interval {
+public interface OpsGrid<T> extends OpsCollection<T> {
 
 	// TODO we need to take care that we go for OpsTiles -> OpsTiles whenever
 	// possible.

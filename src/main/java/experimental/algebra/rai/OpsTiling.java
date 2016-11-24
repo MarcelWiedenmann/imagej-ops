@@ -3,14 +3,13 @@ package experimental.algebra.rai;
 
 import java.util.function.Function;
 
-import experimental.algebra.OpsCollection;
-import experimental.algebra.OpsGrid;
+import net.imglib2.RandomAccessibleInterval;
 
 public interface OpsTiling<T> extends OpsRAI<OpsTile<T>> {
 
-	@Override
-	default <O> OpsGrid<O> map(Function<? super OpsTile<T>, O> f) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	// map tiles
+	<O> OpsTiling<O> mapTiles(Function<? super OpsTile<T>, RandomAccessibleInterval<O>> func);
+
+	// make it a OpsRAI<T> again.
+	OpsRAI<T> flatten();
 }
