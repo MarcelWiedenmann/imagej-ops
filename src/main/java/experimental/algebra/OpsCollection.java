@@ -46,7 +46,7 @@ public interface OpsCollection<I> extends UnaryEdge<I> {
 	// TODO: How to determine O in scatter? Allow converters?
 	// Identity?
 
-	<O, C extends OpsCollection<O>> OpsCollectionNested<O, C> scatter(Function<I, Integer> f);
+	OpsCollectionNested<I> scatter(Function<I, Integer> func);
 
-	<O, C extends OpsCollection<O>> OpsCollectionNested<O, C> partition(Function<I, OpsCollection<O>> f);
+	<O, C extends OpsCollection<O>> OpsCollection<C> partition(Function<I, C> f);
 }
