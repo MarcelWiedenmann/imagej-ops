@@ -10,7 +10,7 @@ import net.imglib2.util.Pair;
 import experimental.algebra.rai.OpsRegion;
 
 // TODO we may want to re-add OpsGrid to separate it from imglib2.
-public interface OpsGrid<T> extends OpsCollection<T> {
+public interface OpsGrid<T> extends OpsCollection<T>, Interval {
 
 	// TODO we need to take care that we go for OpsTiles -> OpsTiles whenever
 	// possible.
@@ -25,10 +25,6 @@ public interface OpsGrid<T> extends OpsCollection<T> {
 									 * something which helps us iterating over
 									 * pairs of a point
 									 */);
-
-	// filters a grid such that only grid coordinates within the interval are
-	// left
-	OpsGrid<T> filter(Interval val);
 
 	// In theory we could simply call join internally... however, this would
 	// suck in performance in the case we know we are joining a grid why

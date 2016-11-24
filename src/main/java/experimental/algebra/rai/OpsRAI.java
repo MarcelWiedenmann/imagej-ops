@@ -4,18 +4,16 @@ import java.util.function.Function;
 
 import net.imglib2.RandomAccessibleInterval;
 
+import experimental.algebra.OpsCollection;
 import experimental.algebra.OpsGrid;
 
-public interface OpsRAI<T> extends OpsGrid<T>, RandomAccessibleInterval<T> {
+public interface OpsRAI<T> extends RandomAccessibleInterval<T>, OpsGrid<T> {
 
-	@Override
-	<O> OpsRAI<O> map(Function<? super T, O> f);
+	// filters a grid such that only grid coordinates within the interval are
+	// left
+	// OpsGrid<T> filter(Interval val);
 
-	/**
-	 * Special tiling stuff
-	 */
-	default DOpsTiling<T> tiling(@SuppressWarnings("unused") TilingHints... hints) {
-		// internally calls SCATTER!!!!
-		return null;
-	}
+	// scatter on pixels
+	OpsTiling<T> tiling(TilingHints... hints);
+
 }

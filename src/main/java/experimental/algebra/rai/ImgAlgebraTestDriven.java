@@ -10,32 +10,26 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
-import experimental.algebra.DOpsCollection;
 import experimental.algebra.OpsBoundedStream;
 import experimental.algebra.OpsCollection;
+import experimental.algebra.OpsElement;
 import experimental.algebra.OpsGrid;
 
 public class ImgAlgebraTestDriven {
 
 	public <T extends RealType<T> & NativeType<T>> void funWithImages() {
-		/* Some input elements */
-		OpsRAI<T> inRAI = null;
-		OpsCollection<OpsRAI<T>> inRAIs = null;
 
-		/* -1: Scatter OpsRAI */
-		DOpsTiling<T> tiling = inRAI.tiling(() -> new long[5]);
-		OpsRAI<T> merge = tiling.mergeTiles();
-		assert (merge.equals(tiling));
+		/* fun with input elements */
+		OpsElement<RandomAccessibleInterval<T>> elementInput = null;
 
-		/* 0: Partition OpsRAI in Collection */
-		DOpsCollection<OpsRAI<T>> scatter = inRAIs.scatter((f) -> 16);
+		/* 0: Working with Distributed */
+		OpsElement<OpsTiling<T>> partition = elementInput.partition(new MyPartitioner<T>());
+		partition.map((t) -> t.scatter(null);
 
-		// (a) distribution over images which distribute over tiles
-		DOpsCollection<DOpsTiling<T>> map = scatter.map((o) -> o.map((r) -> r.tiling(() -> new long[5])));
-
-		// (b) beautiful
-		OpsCollection<DOpsTiling<T>> partitioned = inRAIs.partition(new MyPartitioner<T>());
-		stream = partitioned.stream().map(new MyMoreComplexFunction<T, T>());
+		// if partitioned, we have to take care about what we are actually doing
+		// in the map
+		OpsElement<OpsGrid<RandomAccessibleInterval<T>>> map2 = partition
+				.map((t) -> t.map(new MyMoreComplexFunction<T, T>()));
 
 		/* 1: TODO partition, do something and merge back */
 
@@ -51,17 +45,20 @@ public class ImgAlgebraTestDriven {
 
 		/* 7: TODO pixels: has to be evaluate lazy locally */
 
-		/* 8: TODO RAI inputs */
-		OpsCollection<OpsGrid<T>> c = null;
-		DOpsCollection<OpsGrid<T>> scattered = c.scatter((f) -> 14);
+		/* 8: Mean per x,y plane in video */
+		OpsElement<OpsGrid<Double>> map = elementInput.partition(new MyPartitioner<T>()).map((t) -> t.map((o) -> 5.0));
+		// is there a nicer way to directly transform OpsCollection<T> to
+		// Grid<T> etc.?! (reshape?).
+		map.map((g) -> g.stream());
 
-		/* 9: TODO Mean per x,y plane in video */
-		// DOpsTiling<T> oneDGrid = inRAI.tiling(() -> new long[] { 1024, 1024,
-		// 1 });
-		// DOpsRAI<DoubleType> distributedMeans = oneDGrid.map((c1) ->
-		// c1.reduce(new DoubleType(), new MyMean<T>()));
-		// OpsRAI<DoubleType> localMeans = distributedMeans.merge();
-
+		/* 9: Work on Distributed over time */
+		OpsCollection<OpsTiling<T>> manyPartitions = elementInput.partition(new MyPartitioner<T>());
+		OpsBoundedStream<OpsTiling<T>> partitionStream = manyPartitions.stream();
+		
+		/* 10: partition over Z and do gauss in 2D X,Y and then partition over X to do gauss in  Z,Y */
+		/* Here we will do a blockwise partitioning X,Y,Z e and logically apply partitionings request by ops */
+		
+		/* 11: Do something per pixel logically, but find a nice tiling for it */
 	}
 
 	// TODO
@@ -135,12 +132,30 @@ public class ImgAlgebraTestDriven {
 
 	}
 
-	public static class MyMoreComplexFunction<I, O>
+	public static class MyComplexSlicer<I, O>
 			extends AbstractUnaryFunctionOp<RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> {
 
 		@Override
 		public RandomAccessibleInterval<O> compute1(RandomAccessibleInterval<I> input) {
 			// TODO Auto-generated method stub
+			return null;
+		}
+
+	}
+
+	public static class MyMoreComplexFunction<I, O>
+			extends AbstractUnaryFunctionOp<RandomAccessibleInterval<I>, RandomAccessibleInterval<O>>
+			implements OpsPlanable<RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> {
+
+		@Override
+		public RandomAccessibleInterval<O> compute1(RandomAccessibleInterval<I> input) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public OpsCollection<RandomAccessibleInterval<O>> getPlan(OpsElement<RandomAccessibleInterval<I>> tiling) {
+			OpsCollection<OpsTiling<I>> partition = tiling.partition(new MyPartitioner<I>());
 			return null;
 		}
 
@@ -156,10 +171,10 @@ public class ImgAlgebraTestDriven {
 
 	}
 
-	public static class MyPartitioner<T> implements Function<OpsRAI<T>, DOpsTiling<T>> {
+	public static class MyPartitioner<T> implements Function<RandomAccessibleInterval<T>, OpsTiling<T>> {
 
 		@Override
-		public DOpsTiling<T> apply(OpsRAI<T> t) {
+		public OpsTiling<T> apply(RandomAccessibleInterval<T> t) {
 			// TODO Auto-generated method stub
 			return null;
 		}

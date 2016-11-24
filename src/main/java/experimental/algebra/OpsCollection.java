@@ -2,6 +2,7 @@
 package experimental.algebra;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -50,10 +51,10 @@ public interface OpsCollection<I> extends UnaryEdge<I>, OpsSpace<I> {
 	// TODO: How to determine O in scatter? Allow converters?
 	// Identity?
 
-	DOpsCollection<I> scatter(Function<I, Integer> func);
+	<C extends OpsCollection<I>> OpsCollection<C> scatter(Function<I, Integer> func);
+
+	// OpsGrid.scatter() actually can be equivalent to OpsGrid.partition(..)
 
 	// pure syntactical sugar
-	default <O, C extends DOpsCollection<O>> OpsCollection<C> partition(final Function<I, C> f) {
-		return map(f);
-	}
+	<O, C extends OpsCollection<O>> OpsCollection<C> partition(final Function<I, List<O>> func);
 }
