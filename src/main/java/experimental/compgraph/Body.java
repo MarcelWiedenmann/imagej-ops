@@ -1,6 +1,6 @@
 
 package experimental.compgraph;
 
-public interface Node<I, O> {
+public interface Body<I, O> {
 
 }

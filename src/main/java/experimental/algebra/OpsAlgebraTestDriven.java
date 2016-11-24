@@ -8,20 +8,20 @@ import net.imglib2.roi.labeling.LabelingType;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-import experimental.algebra.img.OpsTile;
+import experimental.algebra.rai.OpsTile;
 
 public class OpsAlgebraTestDriven<T extends RealType<T> & NativeType<T>> {
 
 	public void project() {
 		// usecase 1: projection
-		OpsGrid<T> bigImg = null;
+		OpsRAI<T> bigImg = null;
 
 		// here I have C<C<T>> where inner C<T> is a tile!
-		OpsGrid<Object> merge = bigImg.partition(() -> new long[] { 1, 1, 512 }).map((ci) -> ci.aggregate((a, b) -> 5));
+		OpsRAI<Object> merge = bigImg.partition(() -> new long[] { 1, 1, 512 }).map((ci) -> ci.aggregate((a, b) -> 5));
 	}
 
 	public void fun() {
-		OpsGrid<T> grid = null;
+		OpsRAI<T> grid = null;
 		OpsCollection<T> in = null;
 
 		/* 1: parallelize and merge back */
@@ -55,10 +55,10 @@ public class OpsAlgebraTestDriven<T extends RealType<T> & NativeType<T>> {
 	// TODO
 	public void ccaWithFilter() {
 
-		OpsGrid<T> bigImg = null;
+		OpsRAI<T> bigImg = null;
 		final long[] tileSize = null;
 
-		OpsGrid<RandomAccessibleInterval<LabelingType<String>>> cca = bigImg.partition(() -> tileSize)
+		OpsRAI<RandomAccessibleInterval<LabelingType<String>>> cca = bigImg.partition(() -> tileSize)
 				.map(new DefaultGaussRAI<T>()).map((t) -> ArrayImgs.bits(1, 2, 3)).map((t) -> new ImgLabeling<>(null));
 
 		// How to get back an entire image?

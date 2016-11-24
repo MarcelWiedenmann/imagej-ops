@@ -14,13 +14,18 @@ import net.imglib2.util.Pair;
 import experimental.compgraph.Fork;
 import experimental.compgraph.UnaryEdge;
 
-public interface OpsCollection<I> extends UnaryEdge<I> {
+public interface OpsCollection<I> extends UnaryEdge<I>, OpsSpace<I> {
 
 	// -- First Order Operations --
+	@Override
 	<O> OpsCollection<O> map(Function<? super I, O> f);
 
 	// which is actually a UnaryComputerOp in ops
-	<O> OpsCollection<O> map(BiConsumer<I, Consumer<O>> f); // f = Supplier<O>?
+	@Override
+	<O> OpsCollection<O> map(BiConsumer<? super I, Consumer<O>> f); // f = Supplier<O>?
+	
+	@Override
+	OpsCollection<I> filter(Predicate<? super I> f);
 
 	<O> OpsCollection<O> reduce(O memo, BiFunction<O, I, O> f);
 
@@ -32,7 +37,7 @@ public interface OpsCollection<I> extends UnaryEdge<I> {
 
 	<I2> OpsCollection<Pair<I, I2>> join(OpsCollection<I2> c, BiPredicate<I, I2> f);
 
-	OpsCollection<I> filter(Predicate<I> f);
+
 
 	<I2> OpsCollection<Pair<I, I2>> cartesian(OpsCollection<I2> c);
 

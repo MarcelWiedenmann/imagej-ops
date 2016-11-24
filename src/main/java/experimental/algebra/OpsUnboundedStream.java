@@ -1,23 +1,27 @@
 
 package experimental.algebra;
 
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
-
-import net.imagej.ops.special.function.BinaryFunctionOp;
-import net.imagej.ops.special.function.UnaryFunctionOp;
 
 import experimental.compgraph.Fork;
 import experimental.compgraph.UnaryEdge;
 
-public interface OpsUnboundedStream<I> extends UnaryEdge<I> {
+public interface OpsUnboundedStream<I> extends UnaryEdge<I>, OpsSpace<I> {
 
-	// -- First Order Operations --
+	@Override
+	OpsUnboundedStream<I> filter(Predicate<? super I> f);
 
-	<O> OpsUnboundedStream<O> map(UnaryFunctionOp<I, O> f);
+	@Override
+	public <O> OpsUnboundedStream<O> map(Function<? super I, O> func);
 
-	<O> OpsUnboundedStream<O> reduce(BinaryFunctionOp<O, I, O> f, int window);
+	@Override
+	public <O> OpsCollection<O> map(BiConsumer<? super I, Consumer<O>> f);
 
-	OpsUnboundedStream<I> filter(Predicate<I> f);
+	<O> OpsUnboundedStream<O> reduce(BiFunction<O, I, O> f, int window);
 
 	Fork<? extends OpsUnboundedStream<I>> fork();
 

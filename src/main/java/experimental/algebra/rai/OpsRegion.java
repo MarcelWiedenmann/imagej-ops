@@ -1,4 +1,4 @@
-package experimental.algebra.img;
+package experimental.algebra.rai;
 
 import net.imglib2.IterableInterval;
 
