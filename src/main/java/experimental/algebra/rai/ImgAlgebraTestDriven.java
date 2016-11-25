@@ -10,7 +10,6 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
-import experimental.algebra.OpsBoundedStream;
 import experimental.algebra.OpsCollection;
 import experimental.algebra.OpsGrid;
 
@@ -28,13 +27,13 @@ public class ImgAlgebraTestDriven {
 		OpsRAI<T> in = null;
 
 		/* 0: Working with partitioned */
-		OpsTiling<T> partitioned = in.tiling(() -> new long[] { 1024, 1024, 3 });
+		NestedOpsRAI<T> partitioned = in.reshape(0, 1);
 
 		/* 1: TODO partition, do something and merge back */
 
 		// TODO can we make sure that this is also an OpsRAI<T> again?! Do we
 		// need mapTile?
-		OpsTiling<T> tiling = partitioned.mapTiles(new MyMoreComplexFunction<T, T>());
+		NestedOpsRAI<T> tiling = partitioned.mapRAI(new MyMoreComplexFunction<T, T>());
 		OpsRAI<T> back = tiling.flatten();
 
 		/* 2: TODO parallelize and do not merge back (groupby) */
@@ -50,7 +49,7 @@ public class ImgAlgebraTestDriven {
 
 		/* 8: Mean per x,y plane in video */
 		// each XY plane
-		OpsGrid<Double> map = in.tiling(() -> new long[] { 1, 1, 512 }).map((f) -> 5.0);
+		OpsGrid<Double> map = in.reshape(0, 1).map((f) -> 5.0);
 
 		map.stream();
 
@@ -59,10 +58,10 @@ public class ImgAlgebraTestDriven {
 
 		// just to show a different way to partitioning. must be in the graph,
 		// too!
-		OpsCollection<OpsTiling<T>> tiled = grid.map((t) -> t.tiling(() -> new long[5]));
+		OpsCollection<NestedOpsRAI<T>> reshaped = grid.map((t) -> t.reshape(0, 1));
 
 		// if someone can visualize this LAZY graphy he is genious.
-		OpsBoundedStream<OpsTiling<T>> stream = tiled.stream();
+		// OpsBoundedStream<OpsTiling<T>> stream = tiled.stream();
 
 		/**
 		 * 10: partition over Z and do gauss in 2D X,Y and then partition over X
@@ -87,16 +86,24 @@ public class ImgAlgebraTestDriven {
 		 * and if distributable a distributable distribution plan?
 		 * 
 		 * Marcel. Übernehmen Sie ;-)
+		 * 
+		 * Remark from one day later: I added `reshape` on grid for logical
+		 * tiling. Additionally, I added `NestedGridRAI` which is pure
+		 * syntactical sugar. Feel free to remove this again, however, I think
+		 * it's quite useful. Important: `reshape` also indicates parallel
+		 * independence, but in contrast to tiling, this is a logical operation.
+		 * 
+		 * The user should never choose a tiling operation on his own. we should
+		 * do that. He should however, provide hints and provide the information
+		 * what he would do in a tiled world. Therefore we separate tiling and
+		 * reshape.
+		 * 
+		 * API: In the long run, we can think of forcing all Ops
 		 */
 
-		OpsRAI<DoubleType> first = in.tiling(() -> new long[] { 1, 1, 512 })
-				.mapTiles(new MyMoreComplexFunction<T, DoubleType>()).flatten();
-
-		OpsRAI<DoubleType> second = in.tiling(() -> new long[] { 512, 1, 1 })
-				.mapTiles(new MyMoreComplexFunction<T, DoubleType>()).flatten();
-
-		OpsRAI<DoubleType> third = in.tiling(() -> new long[] { 1, 1, 512 })
-				.mapTiles(new MyMoreComplexFunction<T, DoubleType>()).flatten();
+		OpsRAI<DoubleType> first = in.reshape(0, 1).mapRAI(new MyMoreComplexFunction<T, DoubleType>()).flatten();
+		OpsRAI<DoubleType> second = in.reshape(0, 1).mapRAI(new MyMoreComplexFunction<T, DoubleType>()).flatten();
+		OpsRAI<DoubleType> third = in.reshape(0, 1).mapRAI(new MyMoreComplexFunction<T, DoubleType>()).flatten();
 
 		/**
 		 * 11: Do something per pixel logically, but find a nice tiling for it
@@ -194,20 +201,27 @@ public class ImgAlgebraTestDriven {
 
 		@Override
 		public RandomAccessibleInterval<O> compute1(RandomAccessibleInterval<I> input) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
+		// TODO wrapper object for OpsRAI in favour of NestedOpsRAI
+		// TODO this is the standard way of writing interface for ops in the
+		// future.
+		public OpsTiling<O> getExecutionPlan(OpsTiling<I> rai) {
+			return rai.mapTiles(this);
+		}
 	}
 
 	public static class MyMean<T> implements BiFunction<DoubleType, RandomAccessibleInterval<T>, DoubleType> {
 
 		@Override
 		public DoubleType apply(DoubleType memo, RandomAccessibleInterval<T> u) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
+		public OpsTiling<O> getExecutionPlan(OpsTiling<I> rai) {
+			return rai.mapTiles(this);
+		}
 	}
 
 	public static class MyTiler<T> implements Function<RandomAccessibleInterval<T>, OpsTiling<T>> {

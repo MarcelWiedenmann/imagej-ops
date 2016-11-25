@@ -27,10 +27,13 @@ public interface OpsGrid<T> extends OpsCollection<T> {
 
 	// In theory we could simply call join internally... however, this would
 	// suck in performance in the case we know we are joining a grid why
-	// shouldn't we make use of this information (instanceof)
+	// shouldn't we make use of this information (instance of)
 	// TODO we should add a join strategy, if g2 has fewer indices than g1 and
 	// vice-versa (take only minimum, fail etc).
 	// TODO for tilings we can then add OutOfBoundsStrategy! :-)
 	<T2> OpsGrid<Pair<T, T2>> indexJoin(OpsGrid<T2> g2);
+
+	// logical tiling for processing. can be used to get optimal tiling
+	<OG extends OpsGrid<T>> OpsGrid<OG> reshape(long... spatialAxes);
 
 }

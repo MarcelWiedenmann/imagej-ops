@@ -12,4 +12,5 @@ public interface OpsTiling<T> extends OpsRAI<OpsTile<T>> {
 
 	// make it a OpsRAI<T> again.
 	OpsRAI<T> flatten();
+
 }

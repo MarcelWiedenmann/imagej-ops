@@ -28,9 +28,9 @@ public interface OpsCollection<I> extends OpsChannel<I> {
 	/*
 	 * OpsCollection specific
 	 */
-	<O> OpsCollection<O> reduce(O memo, BiFunction<O, ? super I, O> f);
+	<O> OpsCollection<O> reduce(O memo, BiFunction<O, ? super I, O> f, BiFunction<O, O, O> merge);
 
-	<O, K> OpsCollection<O> aggregate(BiFunction<O, ? super I, O> f);
+	<O> OpsCollection<O> treeReduce(BiFunction<O, O, O> aggregate);
 
 	OpsCollection<I> concat(OpsCollection<I> c);
 
