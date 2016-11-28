@@ -7,10 +7,10 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import experimental.compgraph.UnaryEdge;
+import experimental.compgraph.CompgraphSingleEdge;
 
 public interface OpsUnboundedStream<I> extends OpsChannel<I>,
-	UnaryEdge<I> /* or OpsChannel extends UnaryEdge or wrapper? (just need it somewhere :D) */
+	CompgraphSingleEdge<I> /* or OpsChannel extends UnaryEdge or wrapper? (just need it somewhere :D) */
 {
 
 	@Override

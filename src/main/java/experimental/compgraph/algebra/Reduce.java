@@ -2,12 +2,18 @@
 package experimental.compgraph.algebra;
 
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
-import experimental.compgraph.Edge;
-import experimental.compgraph.UnaryEdge;
+import experimental.compgraph.CompgraphEdge;
+import experimental.compgraph.CompgraphNodeBody;
+import experimental.compgraph.CompgraphSingleEdge;
 
-public interface Reduce<IN extends Edge<I>, I, O, OUT extends UnaryEdge<O>> extends Function<IN, OUT> {
+public interface Reduce<IN extends CompgraphEdge<I>, I, O, OUT extends CompgraphSingleEdge<O>> extends
+	CompgraphNodeBody<IN, OUT>
+{
 
-	BiFunction<O, I, O> func();
+	O memo();
+
+	BiFunction<O, ? super I, O> func();
+
+	BiFunction<O, O, O> merge();
 }

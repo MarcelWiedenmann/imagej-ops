@@ -11,10 +11,10 @@ import java.util.function.Predicate;
 
 import net.imglib2.util.Pair;
 
-import experimental.compgraph.UnaryEdge;
+import experimental.compgraph.CompgraphSingleEdge;
 
 public interface OpsCollection<I> extends OpsChannel<I>,
-	UnaryEdge<I> /* or OpsChannel extends UnaryEdge or wrapper? (just need it somewhere :D) */
+	CompgraphSingleEdge<I> /* or OpsChannel extends UnaryEdge or wrapper? (just need it somewhere :D) */
 {
 
 	/*
