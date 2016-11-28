@@ -7,7 +7,11 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public interface OpsUnboundedStream<I> extends OpsChannel<I> {
+import experimental.compgraph.UnaryEdge;
+
+public interface OpsUnboundedStream<I> extends OpsChannel<I>,
+	UnaryEdge<I> /* or OpsChannel extends UnaryEdge or wrapper? (just need it somewhere :D) */
+{
 
 	@Override
 	OpsUnboundedStream<I> filter(Predicate<? super I> f);

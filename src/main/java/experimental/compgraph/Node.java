@@ -10,4 +10,6 @@ public interface Node<IN extends Edge<?>, BODY extends Function<? super IN, OUT>
 	BODY body();
 
 	OUT out();
+
+	void setOutput(OUT out);
 }

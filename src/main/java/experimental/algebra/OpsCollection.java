@@ -11,7 +11,11 @@ import java.util.function.Predicate;
 
 import net.imglib2.util.Pair;
 
-public interface OpsCollection<I> extends OpsChannel<I> {
+import experimental.compgraph.UnaryEdge;
+
+public interface OpsCollection<I> extends OpsChannel<I>,
+	UnaryEdge<I> /* or OpsChannel extends UnaryEdge or wrapper? (just need it somewhere :D) */
+{
 
 	/*
 	 * Overrides

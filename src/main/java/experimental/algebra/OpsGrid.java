@@ -21,9 +21,9 @@ public interface OpsGrid<T> extends OpsCollection<T> {
 
 	/* Special methods on grid */
 	OpsCollection<Pair<T, T>> pairs(/*
-									 * something which helps us iterating over
-									 * pairs of a point
-									 */);
+																	* something which helps us iterating over
+																	* pairs of a point
+																	*/);
 
 	// In theory we could simply call join internally... however, this would
 	// suck in performance in the case we know we are joining a grid why
