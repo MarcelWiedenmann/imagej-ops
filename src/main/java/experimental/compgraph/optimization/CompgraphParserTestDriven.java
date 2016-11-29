@@ -14,7 +14,7 @@ import experimental.compgraph.CompgraphEdge;
 import experimental.compgraph.CompgraphNode;
 import experimental.compgraph.CompgraphNodeBody;
 import experimental.compgraph.CompgraphSingleEdge;
-import experimental.compgraph.algebra.Map;
+import experimental.compgraph.body.Map;
 
 public class CompgraphParserTestDriven {
 

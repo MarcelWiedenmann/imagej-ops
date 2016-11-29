@@ -7,8 +7,8 @@ import net.imagej.ops.special.function.AbstractUnaryFunctionOp;
 
 import org.junit.Test;
 
-import experimental.algebra.compgraph.BinaryInput;
-import experimental.algebra.compgraph.UnaryInput;
+import experimental.algebra_backup.compgraph.BinaryInput;
+import experimental.algebra_backup.compgraph.UnaryInput;
 import experimental.compgraph.BinaryAsUnaryFunctionOp;
 import experimental.compgraph.ComputationGraph;
 import experimental.compgraph.ComputationGraphNode;

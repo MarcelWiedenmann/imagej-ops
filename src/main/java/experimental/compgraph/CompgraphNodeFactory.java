@@ -4,10 +4,10 @@ package experimental.compgraph;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import experimental.compgraph.algebra.DefaultMap;
-import experimental.compgraph.algebra.DefaultReduce;
-import experimental.compgraph.algebra.Map;
-import experimental.compgraph.algebra.Reduce;
+import experimental.compgraph.body.DefaultMap;
+import experimental.compgraph.body.DefaultReduce;
+import experimental.compgraph.body.Map;
+import experimental.compgraph.body.Reduce;
 
 public class CompgraphNodeFactory {
 

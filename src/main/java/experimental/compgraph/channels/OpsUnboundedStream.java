@@ -1,5 +1,5 @@
 
-package experimental.algebra;
+package experimental.compgraph.channels;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -7,11 +7,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import experimental.compgraph.CompgraphSingleEdge;
-
-public interface OpsUnboundedStream<I> extends OpsChannel<I>,
-	CompgraphSingleEdge<I> /* or OpsChannel extends UnaryEdge or wrapper? (just need it somewhere :D) */
-{
+public interface OpsUnboundedStream<I> extends OpsChannel<I> {
 
 	@Override
 	OpsUnboundedStream<I> filter(Predicate<? super I> f);

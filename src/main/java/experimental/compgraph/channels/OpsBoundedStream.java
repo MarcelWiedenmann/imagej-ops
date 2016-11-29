@@ -1,5 +1,5 @@
 
-package experimental.algebra;
+package experimental.compgraph.channels;
 
 public interface OpsBoundedStream<I> extends OpsUnboundedStream<I> {
 

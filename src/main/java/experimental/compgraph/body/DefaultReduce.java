@@ -1,5 +1,5 @@
 
-package experimental.compgraph.algebra;
+package experimental.compgraph.body;
 
 import java.util.function.BiFunction;
 
