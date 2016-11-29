@@ -1,4 +1,4 @@
-package experimental.compgraph.channels;
+package experimental.compgraph.channel;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;

@@ -1,5 +1,5 @@
 
-package experimental.compgraph.channels;
+package experimental.compgraph.channel.collection;
 
 import java.util.Comparator;
 import java.util.function.BiConsumer;
@@ -11,7 +11,10 @@ import java.util.function.Predicate;
 
 import net.imglib2.util.Pair;
 
-public interface OpsCollection<I> extends OpsChannel<I> {
+import experimental.compgraph.channel.OpsChannel;
+import experimental.compgraph.channel.stream.OpsBoundedStream;
+
+public interface OpsCollection<I> extends OpsChannel<I>, Iterable<I> {
 
 	/*
 	 * -- Overrides --

@@ -1,5 +1,5 @@
 
-package experimental.compgraph.channels.rai;
+package experimental.compgraph.channel.collection.tiling;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -18,10 +18,11 @@ import net.imglib2.util.Pair;
 
 import experimental.cache.OpsTiling;
 import experimental.cache.OpsTilingCollection;
-import experimental.compgraph.channels.OpsCollection;
-import experimental.compgraph.channels.OpsElement;
-import experimental.compgraph.channels.OpsGrid;
-import experimental.compgraph.channels.OpsList;
+import experimental.compgraph.channel.collection.OpsRai;
+import experimental.compgraph.channels.collections.OpsCollection;
+import experimental.compgraph.channels.collections.OpsElement;
+import experimental.compgraph.channels.collections.OpsGrid;
+import experimental.compgraph.channels.collections.OpsList;
 import experimental.compgraph.channels.rai.ImgAlgebraTestDriven.MyMoreComplexFunction;
 
 public class ImgAlgebraTestDriven {

@@ -1,8 +1,8 @@
-package experimental.compgraph.channels.table;
+package experimental.compgraph.channel.table;
 
-import experimental.compgraph.channels.OpsCollection;
-import experimental.compgraph.channels.OpsList;
-import experimental.compgraph.channels.table.TableAlgebraTestDriven.KMeansPair;
+import experimental.compgraph.channel.collection.OpsCollection;
+import experimental.compgraph.channel.collection.OpsList;
+import experimental.compgraph.channel.table.TableAlgebraTestDriven.KMeansPair;
 
 public class TableAlgebraTestDriven {
 

@@ -6,12 +6,12 @@ import java.util.function.Function;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.util.Pair;
 
-import experimental.compgraph.channels.OpsCollection;
-import experimental.compgraph.channels.OpsElement;
-import experimental.compgraph.channels.OpsGrid;
-import experimental.compgraph.channels.rai.OpsRai;
-import experimental.compgraph.channels.rai.OpsRaiCollection;
-import experimental.compgraph.channels.rai.OpsRaiGrid;
+import experimental.compgraph.channel.collection.OpsCollection;
+import experimental.compgraph.channel.collection.OpsElement;
+import experimental.compgraph.channel.collection.OpsGrid;
+import experimental.compgraph.channel.rai.OpsRai;
+import experimental.compgraph.channel.rai.OpsRaiCollection;
+import experimental.compgraph.channel.rai.OpsRaiGrid;
 
 public interface OpsTiling<T> extends OpsRaiGrid<T> {
 

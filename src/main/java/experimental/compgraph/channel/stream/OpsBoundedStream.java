@@ -1,5 +1,7 @@
 
-package experimental.compgraph.channels;
+package experimental.compgraph.channel.stream;
+
+import experimental.compgraph.channel.collection.OpsList;
 
 public interface OpsBoundedStream<I> extends OpsUnboundedStream<I> {
 

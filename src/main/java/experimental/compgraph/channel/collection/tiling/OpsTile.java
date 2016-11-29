@@ -1,8 +1,8 @@
-package experimental.cache;
+package experimental.compgraph.channel.collection.tiling;
 
 import net.imglib2.Localizable;
 
-import experimental.compgraph.channel.rai.OpsRai;
+import experimental.compgraph.channel.collection.OpsRai;
 
 // tile only represents inner part of cropped image
 public interface OpsTile<T> extends OpsRai<T>, Localizable {
