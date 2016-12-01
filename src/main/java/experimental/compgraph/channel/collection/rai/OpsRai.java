@@ -1,5 +1,5 @@
 
-package experimental.compgraph.channel.collection;
+package experimental.compgraph.channel.collection.rai;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -9,7 +9,17 @@ import java.util.function.Predicate;
 import net.imglib2.converter.Converter;
 import net.imglib2.util.Pair;
 
+import experimental.compgraph.channel.collection.OpsGrid;
+import experimental.compgraph.channel.collection.OpsIterableInterval;
+import experimental.compgraph.channel.collection.tiling.OpsTiling;
+
 public interface OpsRai<I> extends OpsGrid<I> {
+
+	OpsTiling<I> tile(long[] tilesPerDim, long[] overlap);
+
+	<O> OpsRai<O> mapPixel(Converter<I, O> c);
+
+	// -- Overrides --
 
 	@Override
 	<O> OpsRai<O> map(Function<? super I, O> f);
@@ -22,7 +32,4 @@ public interface OpsRai<I> extends OpsGrid<I> {
 
 	@Override
 	OpsIterableInterval<I> filter(Predicate<? super I> f);
-
-	<O> OpsRai<O> mapPixel(Converter<I, O> c);
-
 }

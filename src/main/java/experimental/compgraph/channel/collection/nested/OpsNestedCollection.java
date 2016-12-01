@@ -22,4 +22,10 @@ public interface OpsNestedCollection<I, C extends OpsChannel<I>> extends OpsNest
 
 	@Override
 	<O, CC extends OpsChannel<O>> OpsNestedCollection<O, CC> mapEach(Function<? super I, O> f);
+
+	@Override
+	default <O> OpsCollection<O> map(final Function<? super C, O> func) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

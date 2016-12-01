@@ -10,9 +10,9 @@ import experimental.compgraph.channel.collection.OpsCollection;
 import experimental.compgraph.channel.collection.OpsGrid;
 import experimental.compgraph.channel.rai.OpsRai;
 
-public interface OpsTilingCollection<T> extends OpsListCollection<OpsRai<T>, OpsTiling<T>> {
+public interface OpsTilingCollection_old<T> extends OpsListCollection<OpsRai<T>, OpsTiling_old<T>> {
 
-	<O> OpsTilingCollection<O> mapTile(Function<? super OpsRai<T>, RandomAccessibleInterval<O>> f);
+	<O> OpsTilingCollection_old<O> mapTile(Function<? super OpsRai<T>, RandomAccessibleInterval<O>> f);
 
 	// TODO: nesting?
 	<O> OpsCollection<OpsGrid<O>> mapTileTo(Function<? super OpsRai<T>, O> f);

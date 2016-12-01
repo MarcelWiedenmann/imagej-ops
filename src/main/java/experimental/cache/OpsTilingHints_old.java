@@ -1,5 +1,5 @@
 package experimental.cache;
 
-public interface OpsTilingHints {
+public interface OpsTilingHints_old {
 	long[] getPartitioningHints();
 }

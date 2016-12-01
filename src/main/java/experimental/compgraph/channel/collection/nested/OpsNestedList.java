@@ -22,5 +22,4 @@ public interface OpsNestedList<I, C extends OpsChannel<I>> extends OpsNestedGrid
 
 	@Override
 	<O, CC extends OpsChannel<O>> OpsNestedList<O, CC> mapEach(Function<? super I, O> f);
-
 }

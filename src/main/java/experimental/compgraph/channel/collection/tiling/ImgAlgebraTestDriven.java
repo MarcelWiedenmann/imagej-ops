@@ -12,18 +12,22 @@ import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.roi.labeling.LabelRegion;
 import net.imglib2.roi.labeling.LabelingType;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.util.Pair;
 
-import experimental.cache.OpsTiling;
-import experimental.cache.OpsTilingCollection;
-import experimental.compgraph.channel.collection.OpsRai;
-import experimental.compgraph.channels.collections.OpsCollection;
-import experimental.compgraph.channels.collections.OpsElement;
-import experimental.compgraph.channels.collections.OpsGrid;
-import experimental.compgraph.channels.collections.OpsList;
-import experimental.compgraph.channels.rai.ImgAlgebraTestDriven.MyMoreComplexFunction;
+import experimental.compgraph.channel.OpsChannel;
+import experimental.compgraph.channel.collection.OpsCollection;
+import experimental.compgraph.channel.collection.OpsElement;
+import experimental.compgraph.channel.collection.OpsGrid;
+import experimental.compgraph.channel.collection.OpsList;
+import experimental.compgraph.channel.collection.foreach.OpsCollectionForEach;
+import experimental.compgraph.channel.collection.foreach.OpsNestedGridThatUsesAForEach;
+import experimental.compgraph.channel.collection.nested.OpsNestedCollection;
+import experimental.compgraph.channel.collection.nested.OpsNestedGrid;
+import experimental.compgraph.channel.collection.rai.OpsRai;
+import experimental.compgraph.channel.collection.tiling.ImgAlgebraTestDriven.MyMoreComplexFunction;
 
 public class ImgAlgebraTestDriven {
 
@@ -35,18 +39,57 @@ public class ImgAlgebraTestDriven {
 
 	public <T extends RealType<T> & NativeType<T>> void funWithImages() {
 
-		/* fun with input elements */
-		final OpsRaiElement<T> in = null;
-		/* 0: Working with partitioned */
+		// == Reference Workflow: ==
 
-		final OpsTilingCollection<DoubleType> out1 = in.tile(null, null).mapTile(
-			new MyMoreComplexFunction<T, DoubleType>());
+		// Input image
+		final OpsRai<T> in = null;
 
-		final OpsCollection<OpsGrid<Histogram1d<DoubleType>>> out2 = out1.mapTileTo((tile) -> new Histogram1d<DoubleType>(
+		// Tile
+		final OpsTiling<T> tiled = in.tile(null, null);
+
+		// Gauss
+		final OpsTiling<DoubleType> filtered = tiled.mapTile(new MyMoreComplexFunction<T, DoubleType>());
+
+		// Calc histogram per tile
+		final OpsGrid<Histogram1d<DoubleType>> histos = filtered.map((t) -> new Histogram1d<DoubleType>(
 			(Histogram1d<DoubleType>) null));
 
+		// Merge histograms
+		final OpsElement<Histogram1d<DoubleType>> merged = histos.treeReduce((h1, h2) -> new Histogram1d<DoubleType>(
+			(Histogram1d<DoubleType>) null));
+
+		// Threshold from histogram
+		final OpsElement<DoubleType> thresh = merged.map((h) -> new DoubleType());
+
+		// Join filtered image and threshold:
+		final OpsGrid<OpsGrid<Pair<DoubleType, DoubleType>>> joined = filtered.cartesianEach(thresh);
+
+		// Apply threshold:
+		final OpsGrid<OpsGrid<BitType>> applied = joined.map((tile) -> tile.map((p) -> new BitType(p.getA().get() >= p
+			.getB().get())));
+
+		// Some helper to view as tiling again? (or let OpsTiling.cartesianEach(..) produce a tiling in the first place)
+		final OpsTiling<BitType> applied2 = toTiling(applied);
+
+		// TODO: CCA & Feature Extraction
+
+		// ====
+
+		// == Some test of the foreach-approach: ==
+
+		final OpsNestedGridThatUsesAForEach<T, OpsCollection<T>, OpsCollectionForEach<T>> tiling = null;
+
+		// what we want to replace:
+		tiling.mapEach((pixel) -> pixel);
+		// which equals:
+		tiling.map((tile) -> tile.map((pixel) -> pixel));
+		// approach:
+		tiling.forEach().map((pixel) -> pixel).endForEach();
+
+		// ====
+
 		// TODO: flatten on nested
-		final OpsCollection<OpsElement<Histogram1d<DoubleType>>> out3 = out2.map((tiling) -> tiling.treeReduce((a,
+		final OpsCollection<OpsElement<Histogram1d<DoubleType>>> out3 = histos.map((tiling) -> tiling.treeReduce((a,
 			b) -> new Histogram1d<DoubleType>((Histogram1d<DoubleType>) null)));
 
 		final OpsCollection<OpsElement<DoubleType>> out4 = out3.map((e) -> e.map((h) -> new DoubleType(0)));

@@ -38,13 +38,13 @@ public interface OpsCollection<I> extends OpsChannel<I>, Iterable<I> {
 
 	OpsCollection<I> concat(OpsCollection<I> c);
 
-	<I2> OpsCollection<Pair<I, I2>> join(OpsCollection<I2> c, BiPredicate<I, I2> f);
+	<I2> OpsCollection<? extends Pair<I, I2>> join(OpsCollection<I2> c, BiPredicate<I, I2> f);
 
-	<I2> OpsCollection<Pair<I, I2>> cartesian(OpsCollection<I2> c);
+	<I2> OpsCollection<? extends Pair<I, I2>> cartesian(OpsCollection<I2> c);
 
 	<O, C extends OpsCollection<O>> OpsCollection<C> partition(final Function<? super I, C> f);
 
-	<O, C extends OpsCollection<O>> OpsCollection<C> group(final Function<? super I, Integer> func);
+	<O, C extends OpsCollection<O>> OpsCollection<C> group(final Function<? super I, Integer> f);
 
 	/*
 	 * -- is this part of the algebra (?) --

@@ -13,15 +13,15 @@ import experimental.compgraph.channel.rai.OpsRai;
 import experimental.compgraph.channel.rai.OpsRaiCollection;
 import experimental.compgraph.channel.rai.OpsRaiGrid;
 
-public interface OpsTiling<T> extends OpsRaiGrid<T> {
+public interface OpsTiling_old<T> extends OpsRaiGrid<T> {
 
 	@Override
 	<O> OpsGrid<O> map(Function<? super OpsRai<T>, O> f);
 
-	<O> OpsTiling<O> tileMap(Function<? super OpsRai<T>, ? extends RandomAccessibleInterval<O>> f);
+	<O> OpsTiling_old<O> tileMap(Function<? super OpsRai<T>, ? extends RandomAccessibleInterval<O>> f);
 
 	@Override
-	OpsGrid<OpsTiling<T>> tile(long[] tilesPerDimension, long[] overlap);
+	OpsGrid<OpsTiling_old<T>> tile(long[] tilesPerDimension, long[] overlap);
 
 	@Override
 	<I2> OpsCollection<Pair<OpsRai<T>, I2>> cartesian(final OpsCollection<I2> c);
