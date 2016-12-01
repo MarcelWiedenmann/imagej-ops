@@ -45,7 +45,7 @@ public class ImgAlgebraTestDriven {
 		final OpsRai<T> in = null;
 
 		// Tile
-		final OpsTiling<T> tiled = in.tile(null, null);
+		final OpsTiling<T> tiled = in.toTiling(null, null);
 
 		// Gauss
 		final OpsTiling<DoubleType> filtered = tiled.mapTile(new MyMoreComplexFunction<T, DoubleType>());
@@ -62,29 +62,33 @@ public class ImgAlgebraTestDriven {
 		final OpsElement<DoubleType> thresh = merged.map((h) -> new DoubleType());
 
 		// Join filtered image and threshold:
-		final OpsGrid<OpsGrid<Pair<DoubleType, DoubleType>>> joined = filtered.cartesianEach(thresh);
+		final OpsGrid<OpsGrid<Pair<DoubleType, DoubleType>>> joined = filtered.map((element) -> element.cartesian(thresh));
 
 		// Apply threshold:
 		final OpsGrid<OpsGrid<BitType>> applied = joined.map((tile) -> tile.map((p) -> new BitType(p.getA().get() >= p
 			.getB().get())));
 
 		// Some helper to view as tiling again? (or let OpsTiling.cartesianEach(..) produce a tiling in the first place)
-		final OpsTiling<BitType> applied2 = toTiling(applied);
+		// final OpsTiling<BitType> applied2 = toTiling(applied);
 
 		// TODO: CCA & Feature Extraction
 
 		// ====
 
+		final OpsCollection<OpsRai<T>> rais = null;
+
+		final OpsChannel<OpsChannel<T>> map3 = rais.map((rai) -> rai.toRai((rai2) -> rai2));
+
 		// == Some test of the foreach-approach: ==
-
-		final OpsNestedGridThatUsesAForEach<T, OpsCollection<T>, OpsCollectionForEach<T>> tiling = null;
-
-		// what we want to replace:
-		tiling.mapEach((pixel) -> pixel);
-		// which equals:
-		tiling.map((tile) -> tile.map((pixel) -> pixel));
-		// approach:
-		tiling.forEach().map((pixel) -> pixel).endForEach();
+//
+//		final OpsNestedGridThatUsesAForEach<T, OpsCollection<T>, OpsCollectionForEach<T>> tiling = null;
+//
+//		// what we want to replace:
+//		tiling.mapEach((pixel) -> pixel);
+//		// which equals:
+//		tiling.map((tile) -> tile.map((pixel) -> pixel));
+//		// approach:
+//		tiling.forEach().map((pixel) -> pixel).endForEach();
 
 		// ====
 

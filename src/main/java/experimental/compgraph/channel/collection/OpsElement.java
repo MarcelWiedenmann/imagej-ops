@@ -1,15 +1,29 @@
 
 package experimental.compgraph.channel.collection;
 
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
-import net.imglib2.util.Pair;
+import experimental.compgraph.channel.OpsBoundedChannel;
 
-public interface OpsElement<I> extends OpsList<I> {
+public interface OpsElement<I> extends OpsBoundedChannel<I> {
+
+	// -- OpsChannel --
 
 	@Override
-	<O> OpsElement<O> map(Function<? super I, O> f);
+	<O> OpsElement<O> map(final Function<? super I, O> f);
 
 	@Override
-	<I2, C extends OpsGrid<I2>> OpsElement<Pair<I, I2>> join(final C g2);
+	<O> OpsElement<O> map(final BiConsumer<I, ? super Consumer<O>> f);
+
+	@Override
+	OpsElement<I> filter(final Predicate<? super I> f);
+
+	@Override
+	<O> OpsElement<? extends OpsBoundedChannel<O>> partition(final Function<? super I, O> f);
+
+	@Override
+	<O> OpsBoundedChannel<? extends OpsBoundedChannel<O>> group(final Function<? super I, Integer> f);
 }
