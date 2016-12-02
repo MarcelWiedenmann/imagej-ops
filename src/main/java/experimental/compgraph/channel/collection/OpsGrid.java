@@ -13,7 +13,7 @@ import net.imglib2.algorithm.neighborhood.Shape;
 import net.imglib2.util.Pair;
 
 import experimental.compgraph.channel.OpsBoundedChannel;
-import experimental.compgraph.channel.collection.rai.OpsIterableInterval;
+import experimental.compgraph.channel.collection.img.OpsIterableInterval;
 
 public interface OpsGrid<I> extends OpsList<I>, RandomAccessibleInterval<I> {
 
@@ -35,8 +35,10 @@ public interface OpsGrid<I> extends OpsList<I>, RandomAccessibleInterval<I> {
 	<O> OpsGrid<O> map(Function<? super I, O> f);
 
 	@Override
-	<O> OpsGrid<O> map(BiConsumer<I, ? super Consumer<O>> f);
+	<O> OpsGrid<O> map(BiConsumer<? super I, ? extends Consumer<O>> f);
 
+	// TODO: What means filtering a grid?
+	// If we want to preserve our grid structure, we'll have to define an 'empty cell value'.
 	@Override
 	OpsGrid<I> filter(Predicate<? super I> f);
 

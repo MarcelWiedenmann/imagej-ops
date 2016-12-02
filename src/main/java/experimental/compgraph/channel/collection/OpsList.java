@@ -25,7 +25,7 @@ public interface OpsList<I> extends OpsCollection<I> {
 	<O> OpsList<O> map(Function<? super I, O> f);
 
 	@Override
-	<O> OpsList<O> map(BiConsumer<I, ? super Consumer<O>> f);
+	<O> OpsList<O> map(BiConsumer<? super I, ? extends Consumer<O>> f);
 
 	@Override
 	OpsList<I> filter(Predicate<? super I> f);

@@ -43,7 +43,7 @@ public interface OpsCollection<I> extends OpsBoundedChannel<I>, Iterable<I> {
 	<O> OpsCollection<O> map(Function<? super I, O> f);
 
 	@Override
-	<O> OpsCollection<O> map(BiConsumer<I, ? super Consumer<O>> f);
+	<O> OpsCollection<O> map(BiConsumer<? super I, ? extends Consumer<O>> f);
 
 	@Override
 	OpsCollection<I> filter(Predicate<? super I> f);

@@ -12,7 +12,7 @@ public interface OpsChannel<I> {
 
 	<O> OpsChannel<O> map(Function<? super I, O> f);
 
-	<O> OpsChannel<O> map(BiConsumer<I, ? super Consumer<O>> f);
+	<O> OpsChannel<O> map(BiConsumer<? super I, ? extends Consumer<O>> f);
 
 	OpsChannel<I> filter(Predicate<? super I> f);
 

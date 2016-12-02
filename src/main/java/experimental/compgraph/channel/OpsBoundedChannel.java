@@ -21,7 +21,7 @@ public interface OpsBoundedChannel<I> extends OpsChannel<I> {
 	<O> OpsBoundedChannel<O> map(Function<? super I, O> f);
 
 	@Override
-	<O> OpsBoundedChannel<O> map(BiConsumer<I, ? super Consumer<O>> f);
+	<O> OpsBoundedChannel<O> map(BiConsumer<? super I, ? extends Consumer<O>> f);
 
 	@Override
 	OpsBoundedChannel<I> filter(Predicate<? super I> f);

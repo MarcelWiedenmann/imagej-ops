@@ -30,4 +30,6 @@ public class CompgraphNodeFactory {
 
 	// TODO: Change join?: [Two unary inputs & BiFunction --> One unary output] (simpler/"more natural" to implement,
 	// avoids pair collections/streams)
+
+	// TODO: add ALL the algebra!
 }

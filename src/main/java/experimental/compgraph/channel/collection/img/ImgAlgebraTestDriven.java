@@ -1,5 +1,5 @@
 
-package experimental.compgraph.channel.collection.tiling;
+package experimental.compgraph.channel.collection.img;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -26,7 +26,6 @@ import experimental.compgraph.channel.collection.foreach.OpsCollectionForEach;
 import experimental.compgraph.channel.collection.foreach.OpsNestedGridThatUsesAForEach;
 import experimental.compgraph.channel.collection.nested.OpsNestedCollection;
 import experimental.compgraph.channel.collection.nested.OpsNestedGrid;
-import experimental.compgraph.channel.collection.rai.OpsRai;
 import experimental.compgraph.channel.collection.tiling.ImgAlgebraTestDriven.MyMoreComplexFunction;
 
 public class ImgAlgebraTestDriven {

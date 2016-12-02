@@ -16,7 +16,7 @@ public interface OpsElement<I> extends OpsBoundedChannel<I> {
 	<O> OpsElement<O> map(final Function<? super I, O> f);
 
 	@Override
-	<O> OpsElement<O> map(final BiConsumer<I, ? super Consumer<O>> f);
+	<O> OpsElement<O> map(final BiConsumer<? super I, ? extends Consumer<O>> f);
 
 	@Override
 	OpsElement<I> filter(final Predicate<? super I> f);
