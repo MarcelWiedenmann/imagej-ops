@@ -15,7 +15,7 @@ import net.imglib2.util.Pair;
 import experimental.compgraph.channel.OpsBoundedChannel;
 import experimental.compgraph.channel.collection.img.OpsIterableInterval;
 
-public interface OpsGrid<I> extends OpsList<I>, RandomAccessibleInterval<I> {
+public interface OpsGrid<I> extends OpsOrderedCollection<I>, RandomAccessibleInterval<I> {
 
 	OpsGrid<I> interval(Interval i);
 
@@ -40,10 +40,10 @@ public interface OpsGrid<I> extends OpsList<I>, RandomAccessibleInterval<I> {
 	// TODO: What means filtering a grid?
 	// If we want to preserve our grid structure, we'll have to define an 'empty cell value'.
 	@Override
-	OpsGrid<I> filter(Predicate<? super I> f);
+	OpsIterableInterval<I> filter(Predicate<? super I> f);
 
 	@Override
-	<O> OpsGrid<? extends OpsBoundedChannel<O>> partition(Function<? super I, O> f);
+	<O> OpsGrid<? extends OpsBoundedChannel<O>> partition(BiConsumer<? super I, ? extends Consumer<O>> f);
 
 	// -- OpsCollection --
 

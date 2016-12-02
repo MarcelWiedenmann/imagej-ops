@@ -1,7 +1,7 @@
 package experimental.compgraph.channel.table;
 
 import experimental.compgraph.channel.collection.OpsCollection;
-import experimental.compgraph.channel.collection.OpsList;
+import experimental.compgraph.channel.collection.OpsOrderedCollection;
 import experimental.compgraph.channel.table.TableAlgebraTestDriven.KMeansPair;
 
 public class TableAlgebraTestDriven {

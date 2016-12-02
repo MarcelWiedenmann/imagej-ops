@@ -7,19 +7,29 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import experimental.compgraph.channel.OpsBoundedChannel;
 import experimental.compgraph.channel.OpsChannel;
 import experimental.compgraph.channel.collection.OpsCollection;
+import experimental.compgraph.channel.collection.OpsElement;
 
 public interface OpsUnboundedStream<I> extends OpsChannel<I> {
+
+	<O> OpsElement<O> reduce(O memo, BiFunction<O, ? super I, O> f, BiFunction<O, O, O> merge, int window);
+
+	// -- OpsChannel --
+
+	@Override
+	<O> OpsUnboundedStream<O> map(Function<? super I, O> f);
+
+	@Override
+	<O> OpsUnboundedStream<O> map(BiConsumer<? super I, ? extends Consumer<O>> f);
 
 	@Override
 	OpsUnboundedStream<I> filter(Predicate<? super I> f);
 
 	@Override
-	public <O> OpsUnboundedStream<O> map(Function<? super I, O> func);
+	<O> OpsUnboundedStream<? extends OpsBoundedChannel<O>> partition(BiConsumer<? super I, ? extends Consumer<O>> f);
 
 	@Override
-	public <O> OpsCollection<O> map(BiConsumer<? super I, Consumer<O>> f);
-
-	<O> OpsUnboundedStream<O> reduce(BiFunction<O, I, O> f, int window);
+	<O> OpsCollection<? extends OpsChannel<O>> group(Function<? super I, Integer> f); // TODO <--
 }

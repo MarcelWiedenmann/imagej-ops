@@ -22,7 +22,7 @@ public interface OpsElement<I> extends OpsBoundedChannel<I> {
 	OpsElement<I> filter(final Predicate<? super I> f);
 
 	@Override
-	<O> OpsElement<? extends OpsBoundedChannel<O>> partition(final Function<? super I, O> f);
+	<O> OpsElement<? extends OpsBoundedChannel<O>> partition(BiConsumer<? super I, ? extends Consumer<O>> f);
 
 	@Override
 	<O> OpsBoundedChannel<? extends OpsBoundedChannel<O>> group(final Function<? super I, Integer> f);

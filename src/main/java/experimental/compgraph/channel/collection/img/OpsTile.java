@@ -16,47 +16,47 @@ import net.imglib2.util.Pair;
 import experimental.compgraph.channel.OpsBoundedChannel;
 
 // tile only represents inner part of cropped image (but see todo below)
-public interface OpsTile<T> extends OpsRai<T>, Localizable {
+public interface OpsTile<I> extends OpsRai<I>, Localizable {
 
 	long[] getOverlap();
 
 	// gets the entire tile
 	// TODO: or change to getInnerInterval() and interpret OpsTile<T> as the entire tile?
 	// (use case: chaining of multiple filters (= convolutions), entire interval (incl. overlap) needs to be processed)
-	OpsRai<T> getOverlapInterval();
+	OpsRai<I> getOverlapInterval();
 
 	// -- OpsRai --
 
 	@Override
-	<O> OpsTile<O> toRai(Function<? super OpsRai<T>, RandomAccessibleInterval<O>> f);
+	<O> OpsTile<O> toRai(Function<? super OpsRai<I>, RandomAccessibleInterval<O>> f);
 
 	@Override
-	<O> OpsTile<O> toRai(Converter<T, O> c);
+	<O> OpsTile<O> toRai(Converter<I, O> c);
 
 	@Override
-	OpsTile<T> interval(Interval i);
+	OpsTile<I> interval(Interval i);
 
 	@Override
-	OpsTile<T> subsample(long... steps);
+	OpsTile<I> subsample(long... steps);
 
 	@Override
-	<I2> OpsTile<Pair<T, I2>> join(OpsBoundedChannel<I2> c, BiPredicate<? super T, ? super I2> f);
+	<I2> OpsTile<Pair<I, I2>> join(OpsBoundedChannel<I2> c, BiPredicate<? super I, ? super I2> f);
 
 	@Override
-	<I2> OpsTile<Pair<T, I2>> cartesian(OpsBoundedChannel<I2> c);
+	<I2> OpsTile<Pair<I, I2>> cartesian(OpsBoundedChannel<I2> c);
 
 	@Override
-	<O> OpsTile<O> map(Function<? super T, O> f);
+	<O> OpsTile<O> map(Function<? super I, O> f);
 
 	@Override
-	<O> OpsTile<O> map(BiConsumer<? super T, ? extends Consumer<O>> f);
+	<O> OpsTile<O> map(BiConsumer<? super I, ? extends Consumer<O>> f);
 
 	@Override
-	OpsTile<T> filter(Predicate<? super T> f);
+	OpsIterableInterval<I> filter(Predicate<? super I> f);
 
 	@Override
-	<O> OpsTile<? extends OpsBoundedChannel<O>> partition(Function<? super T, O> f);
+	<O> OpsTile<? extends OpsBoundedChannel<O>> partition(BiConsumer<? super I, ? extends Consumer<O>> f);
 
 	@Override
-	OpsTile<T> fixOrder();
+	OpsTile<I> fixOrder();
 }

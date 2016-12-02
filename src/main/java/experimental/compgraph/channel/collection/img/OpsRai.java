@@ -49,10 +49,10 @@ public interface OpsRai<I> extends OpsGrid<I> {
 	<O> OpsRai<O> map(BiConsumer<? super I, ? extends Consumer<O>> f);
 
 	@Override
-	OpsRai<I> filter(Predicate<? super I> f);
+	OpsIterableInterval<I> filter(Predicate<? super I> f);
 
 	@Override
-	<O> OpsRai<? extends OpsBoundedChannel<O>> partition(Function<? super I, O> f);
+	<O> OpsRai<? extends OpsBoundedChannel<O>> partition(BiConsumer<? super I, ? extends Consumer<O>> f);
 
 	@Override
 	OpsRai<I> fixOrder();

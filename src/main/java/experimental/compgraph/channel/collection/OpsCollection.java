@@ -22,9 +22,9 @@ public interface OpsCollection<I> extends OpsBoundedChannel<I>, Iterable<I> {
 
 	<O> OpsElement<O> treeReduce(BiFunction<O, O, O> f);
 
-	OpsList<I> fixOrder();
+	OpsOrderedCollection<I> fixOrder();
 
-	OpsList<I> sort(Comparator<I> f);
+	OpsOrderedCollection<I> sort(Comparator<I> f);
 
 	// NB: Use transform(..) internally.
 	OpsBoundedStream<I> stream();
@@ -49,7 +49,7 @@ public interface OpsCollection<I> extends OpsBoundedChannel<I>, Iterable<I> {
 	OpsCollection<I> filter(Predicate<? super I> f);
 
 	@Override
-	<O> OpsCollection<? extends OpsBoundedChannel<O>> partition(Function<? super I, O> f);
+	<O> OpsCollection<? extends OpsBoundedChannel<O>> partition(BiConsumer<? super I, ? extends Consumer<O>> f);
 
 	@Override
 	<O> OpsCollection<? extends OpsBoundedChannel<O>> group(Function<? super I, Integer> f);

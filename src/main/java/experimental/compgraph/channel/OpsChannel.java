@@ -16,7 +16,7 @@ public interface OpsChannel<I> {
 
 	OpsChannel<I> filter(Predicate<? super I> f);
 
-	<O> OpsChannel<? extends OpsBoundedChannel<O>> partition(Function<? super I, O> f);
+	<O> OpsChannel<? extends OpsBoundedChannel<O>> partition(BiConsumer<? super I, ? extends Consumer<O>> f);
 
-	<O> OpsChannel<? extends OpsBoundedChannel<O>> group(Function<? super I, Integer> f);
+	<O> OpsChannel<? extends OpsChannel<O>> group(Function<? super I, Integer> f);
 }
