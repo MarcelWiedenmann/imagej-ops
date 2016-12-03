@@ -11,7 +11,9 @@ import experimental.compgraph.body.Reduce;
 
 public class CompgraphNodeFactory {
 
-	public static <IN extends CompgraphEdge<I>, I, O, OUT extends CompgraphSingleEdge<O>>
+	// TODO: convert to service
+
+	public <IN extends CompgraphEdge<I>, I, O, OUT extends CompgraphSingleEdge<O>>
 		CompgraphNode<IN, ? extends Map<IN, I, O, OUT>, OUT> map(final IN in, final Function<? super I, O> f)
 	{
 		final DefaultCompgraphNode<IN, DefaultMap<IN, I, O, OUT>, OUT> n = new DefaultCompgraphNode<>(in, new DefaultMap<>(
@@ -19,7 +21,7 @@ public class CompgraphNodeFactory {
 		return n;
 	}
 
-	public static <IN extends CompgraphEdge<I>, I, O, OUT extends CompgraphSingleEdge<O>>
+	public <IN extends CompgraphEdge<I>, I, O, OUT extends CompgraphSingleEdge<O>>
 		CompgraphNode<IN, ? extends Reduce<IN, I, O, OUT>, OUT> reduce(final IN in, final O memo,
 			final BiFunction<O, ? super I, O> f, final BiFunction<O, O, O> merge)
 	{

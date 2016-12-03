@@ -6,7 +6,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public interface OpsChannel<I> {
+import experimental.compgraph.CompgraphSingleEdge;
+
+public interface OpsChannel<I> extends CompgraphSingleEdge<I> {
 
 	<O> OpsChannel<O> transform(Function<? super OpsChannel<I>, OpsChannel<O>> f);
 

@@ -1,7 +1,6 @@
 
 package experimental.compgraph.channel.collection;
 
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.function.BiConsumer;
@@ -10,10 +9,10 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import net.imglib2.util.Pair;
 
+import experimental.compgraph.CompgraphNode;
 import experimental.compgraph.channel.OpsBoundedChannel;
 import experimental.compgraph.channel.OpsChannel;
 import experimental.compgraph.channel.stream.DefaultOpsBoundedStream;
@@ -26,16 +25,10 @@ import experimental.compgraph.channel.stream.OpsBoundedStream;
 
 public class DefaultOpsCollection<I> implements OpsCollection<I> {
 
-	private final Stream<I> source;
+	private final CompgraphNode<?, ?, DefaultOpsCollection<I>> source;
 
-	public DefaultOpsCollection(final Collection<I> source) {
-		this(source.parallelStream());
-	}
-
-	public DefaultOpsCollection(Stream<I> source) {
-		if (!source.isParallel()) {
-			source = source.parallel();
-		}
+	public DefaultOpsCollection(final CompgraphNode<?, ?, DefaultOpsCollection<I>> source) {
+		source.setOutput(this);
 		this.source = source;
 	}
 
@@ -48,7 +41,8 @@ public class DefaultOpsCollection<I> implements OpsCollection<I> {
 
 	@Override
 	public Iterator<I> iterator() {
-		return source.iterator();
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -59,11 +53,11 @@ public class DefaultOpsCollection<I> implements OpsCollection<I> {
 
 	@Override
 	public <O> OpsElement<O> reduce(final O memo, final BiFunction<O, ? super I, O> f, final BiFunction<O, O, O> merge) {
-		return new DefaultOpsElement<>(source.reduce(memo, f, (o1, o2) -> merge.apply(o1, o2)));
+		return new DefaultOpsElement<>(source.factory().reduce(this, memo, f, merge));
 	}
 
 	@Override
-	public <O> OpsElement<O> treeReduce(final BiFunction<I, I, I> f) {
+	public OpsElement<I> treeReduce(final BiFunction<I, I, I> f) {
 		// TODO: How does this work? (BiFunction<O,O,O>)
 		return null;
 	}
@@ -101,7 +95,7 @@ public class DefaultOpsCollection<I> implements OpsCollection<I> {
 
 	@Override
 	public <O> OpsCollection<O> map(final Function<? super I, O> f) {
-		return new DefaultOpsCollection<>(source.map(f));
+		return new DefaultOpsCollection<>(source.factory().map(this, f));
 	}
 
 	@Override

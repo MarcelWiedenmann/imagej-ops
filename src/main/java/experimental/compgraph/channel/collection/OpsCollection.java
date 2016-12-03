@@ -20,7 +20,7 @@ public interface OpsCollection<I> extends OpsBoundedChannel<I>, Iterable<I> {
 
 	<O> OpsElement<O> reduce(O memo, BiFunction<O, ? super I, O> f, BiFunction<O, O, O> merge);
 
-	<O> OpsElement<O> treeReduce(BiFunction<O, O, O> f);
+	OpsElement<I> treeReduce(BiFunction<I, I, I> f);
 
 	OpsOrderedCollection<I> fixOrder();
 

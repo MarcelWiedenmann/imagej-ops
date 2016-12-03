@@ -11,8 +11,7 @@ public interface CompgraphDoubleEdge<INOUT1 extends CompgraphSingleEdge<?>, INOU
 
 	INOUT2 second();
 
-	// FIXME: typing
-	CompgraphNode<?, ? extends CompgraphNodeBody<?, INOUT1>, INOUT1> firstSource();
+	CompgraphNode<?, ?, INOUT1> firstSource();
 
-	CompgraphNode<?, ? extends CompgraphNodeBody<?, INOUT2>, INOUT2> secondSource();
+	CompgraphNode<?, ?, INOUT2> secondSource();
 }
