@@ -1,7 +1,8 @@
 
 package experimental.compgraph;
 
-public interface CompgraphNode<IN extends CompgraphEdge<?>, BODY extends CompgraphNodeBody<? super IN, OUT>, OUT extends CompgraphSingleEdge<?>> {
+// TODO: introduce 'I' and 'O' in class signature? (or remove it from CompgraphNodeBody's signature)
+public interface CompgraphNode<IN extends CompgraphEdge<?>, BODY extends CompgraphNodeBody<? super IN, ?, ?, OUT>, OUT extends CompgraphSingleEdge<?>> {
 
 	CompgraphNodeFactory factory();
 
