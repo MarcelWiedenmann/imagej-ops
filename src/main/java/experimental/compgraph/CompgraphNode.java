@@ -1,16 +1,13 @@
 
 package experimental.compgraph;
 
-// TODO: introduce 'I' and 'O' in class signature? (or remove it from CompgraphNodeBody's signature)
-public interface CompgraphNode<IN extends CompgraphEdge<?>, BODY extends CompgraphNodeBody<?, ?, ?, ?>, OUT extends CompgraphSingleEdge<?>> {
+public interface CompgraphNode<O, OUT extends DataHandle<O, ?>> {
 
 	CompgraphNodeFactory factory();
 
-	IN in();
+	CompgraphEdge<O> out();
 
-	BODY body();
+	void setOutEdge(CompgraphEdge<O> out);
 
-	OUT out();
-
-	void setOutput(OUT out);
+	OUT apply();
 }

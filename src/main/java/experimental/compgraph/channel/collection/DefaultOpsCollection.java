@@ -13,8 +13,7 @@ import java.util.function.Predicate;
 import net.imglib2.util.Pair;
 
 import experimental.compgraph.CompgraphNode;
-import experimental.compgraph.CompgraphSingleEdge;
-import experimental.compgraph.Dataflow;
+import experimental.compgraph.DataHandle;
 import experimental.compgraph.channel.OpsBoundedChannel;
 import experimental.compgraph.channel.OpsChannel;
 import experimental.compgraph.channel.stream.OpsBoundedStream;
@@ -26,10 +25,10 @@ import experimental.compgraph.channel.stream.OpsBoundedStream;
 
 public class DefaultOpsCollection<I> implements OpsCollection<I> {
 
-	private final CompgraphNode<?, ?, DefaultOpsCollection<I>> source;
+	private final CompgraphNode<I, ? extends DataHandle<I, ?>> source;
 
-	public DefaultOpsCollection(final CompgraphNode<?, ?, DefaultOpsCollection<I>> source) {
-		source.setOutput(this);
+	public DefaultOpsCollection(final CompgraphNode<I, ? extends DataHandle<I, ?>> source) {
+		source.setOutEdge(this);
 		this.source = source;
 	}
 
@@ -128,14 +127,15 @@ public class DefaultOpsCollection<I> implements OpsCollection<I> {
 		return null;
 	}
 
+	// -- CompgraphSingleEdge --
+
 	@Override
-	public CompgraphNode<?, ?, ? extends CompgraphSingleEdge<I>> source() {
+	public CompgraphNode<I, ? extends DataHandle<I, ?>> source() {
 		return source;
 	}
 
 	@Override
-	public Dataflow<I, ?> dataflow() {
-		// TODO: Pull mechanism!
-		return null;
+	public DataHandle<I, ?> dataflow() {
+		return source.apply();
 	}
 }

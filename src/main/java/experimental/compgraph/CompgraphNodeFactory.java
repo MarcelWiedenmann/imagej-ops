@@ -3,23 +3,19 @@ package experimental.compgraph;
 
 import java.util.function.Function;
 
-import experimental.compgraph.body.DefaultMap;
-import experimental.compgraph.body.Map;
+import experimental.compgraph.node.DefaultMap;
+import experimental.compgraph.node.Map;
 
 public class CompgraphNodeFactory {
-
 	// TODO: convert to service
 
-	public <IN extends CompgraphEdge<I>, I, O, OUT extends CompgraphSingleEdge<O>>
-		CompgraphNode<IN, ? extends Map<? extends Dataflow<I, ?>, I, O, ? extends Dataflow<O, ?>>, OUT> map(final IN in,
-			final Function<? super I, O> f)
+	public <IN extends CompgraphSingleEdge<I>, I, O> Map<? extends DataHandle<I, ?>, I, O, ? extends DataHandle<O, ?>>
+		map(final IN in, final Function<? super I, O> f)
 	{
-		// TODO: we need some Ops-like matching to match interfaces such as 'Map' and their respective implementations given
-		// the target execution environment ('DefaultMap' for local execution).
+		// TODO: We need some Ops-like matching to match interfaces such as 'Map' with their respective implementations
+		// given the target execution environment ('DefaultMap' for local execution).
 
-		final DefaultCompgraphDataflowNode<IN, I, DefaultMap<DefaultDataflow<I>, I, O, DefaultDataflow<O>>, O, OUT> n =
-			new DefaultCompgraphDataflowNode<>(in, new DefaultMap<>(f), this);
-		return n;
+		return new DefaultMap<>(f, in, this);
 	}
 
 //	public <IN extends CompgraphEdge<I>, I, O, OUT extends CompgraphSingleEdge<O>>
