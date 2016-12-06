@@ -3,11 +3,11 @@ package experimental.compgraph;
 
 import java.util.stream.Stream;
 
-public class DefaultDataflow<IO> implements Dataflow<IO, Stream<IO>> {
+public class LocalDataHandle<IO> implements DataHandle<IO, Stream<IO>> {
 
 	Stream<IO> inner;
 
-	public DefaultDataflow(final Stream<IO> inner) {
+	public LocalDataHandle(final Stream<IO> inner) {
 		this.inner = inner;
 	}
 

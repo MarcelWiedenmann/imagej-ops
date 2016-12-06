@@ -3,7 +3,7 @@ package experimental.compgraph;
 
 public interface CompgraphSingleEdge<IO> extends CompgraphEdge<IO> {
 
-	CompgraphNode<?, ?, ? extends CompgraphSingleEdge<IO>> source();
+	CompgraphNode<IO, ? extends DataHandle<IO, ?>> source();
 
-	Dataflow<IO, ?> dataflow();
+	DataHandle<IO, ?> dataflow();
 }
