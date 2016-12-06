@@ -7,13 +7,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,21 +30,18 @@
 
 package net.imagej.ops.special.function;
 
-import java.util.function.BiFunction;
-
 import net.imagej.ops.special.BinaryOp;
 import net.imagej.ops.special.computer.BinaryComputerOp;
 import net.imagej.ops.special.inplace.BinaryInplaceOp;
 
 /**
- * A binary <em>function</em> computes a result from two given inputs, returning
- * it as a new object. The contents of the inputs are not affected.
+ * A binary <em>function</em> computes a result from two given inputs, returning it as a new object. The contents of the
+ * inputs are not affected.
  * <p>
- * A binary function may be treated as a {@link UnaryFunctionOp} by holding the
- * second input constant, or treated as a {@link NullaryFunctionOp} by holding
- * both inputs constant.
+ * A binary function may be treated as a {@link UnaryFunctionOp} by holding the second input constant, or treated as a
+ * {@link NullaryFunctionOp} by holding both inputs constant.
  * </p>
- * 
+ *
  * @author Curtis Rueden
  * @param <I1> type of first input
  * @param <I2> type of second input
@@ -52,18 +49,20 @@ import net.imagej.ops.special.inplace.BinaryInplaceOp;
  * @see BinaryComputerOp
  * @see BinaryInplaceOp
  */
-public interface BinaryFunctionOp<I1, I2, O> extends BinaryOp<I1, I2, O>,
-	UnaryFunctionOp<I1, O>, BiFunction<I1, I2, O>
+public interface BinaryFunctionOp<I1, I2, O> extends BinaryOp<I1, I2, O>, UnaryFunctionOp<I1, O>
+/* , BiFunction<I1, I2, O> */
 {
 
+	/*
 	@Override
-	default O apply(I1 t, I2 u) {
-		return compute2(t,u);
+	default O apply(final I1 t, final I2 u) {
+		return compute2(t, u);
 	}
-	
+	*/
+
 	/**
 	 * Computes the output given two inputs.
-	 * 
+	 *
 	 * @param input1 first argument to the function
 	 * @param input2 second argument to the function
 	 * @return output result of the function
@@ -78,8 +77,7 @@ public interface BinaryFunctionOp<I1, I2, O> extends BinaryOp<I1, I2, O>,
 		if (input1 == null) throw new NullPointerException("input1 is null");
 		if (input2 == null) throw new NullPointerException("input2 is null");
 		if (output != null) {
-			throw new IllegalArgumentException(
-				"Function expects a null output reference");
+			throw new IllegalArgumentException("Function expects a null output reference");
 		}
 		// compute the result
 		return compute2(input1, input2);
@@ -101,5 +99,4 @@ public interface BinaryFunctionOp<I1, I2, O> extends BinaryOp<I1, I2, O>,
 		// have state (such as buffers) that cannot be shared across threads.
 		return this;
 	}
-
 }

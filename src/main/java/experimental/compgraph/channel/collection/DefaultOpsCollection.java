@@ -13,9 +13,10 @@ import java.util.function.Predicate;
 import net.imglib2.util.Pair;
 
 import experimental.compgraph.CompgraphNode;
+import experimental.compgraph.CompgraphSingleEdge;
+import experimental.compgraph.Dataflow;
 import experimental.compgraph.channel.OpsBoundedChannel;
 import experimental.compgraph.channel.OpsChannel;
-import experimental.compgraph.channel.stream.DefaultOpsBoundedStream;
 import experimental.compgraph.channel.stream.OpsBoundedStream;
 
 // TODO: Compare method signatures of our primitives and Java Stream primitives. E.g:
@@ -53,7 +54,8 @@ public class DefaultOpsCollection<I> implements OpsCollection<I> {
 
 	@Override
 	public <O> OpsElement<O> reduce(final O memo, final BiFunction<O, ? super I, O> f, final BiFunction<O, O, O> merge) {
-		return new DefaultOpsElement<>(source.factory().reduce(this, memo, f, merge));
+//		return new DefaultOpsElement<>(source.factory().reduce(this, memo, f, merge));
+		return null;
 	}
 
 	@Override
@@ -71,12 +73,14 @@ public class DefaultOpsCollection<I> implements OpsCollection<I> {
 
 	@Override
 	public OpsOrderedCollection<I> sort(final Comparator<I> f) {
-		return new DefaultOpsOrderedCollection<>(source.sorted(f));
+//		return new DefaultOpsOrderedCollection<>(source.sorted(f));
+		return null;
 	}
 
 	@Override
 	public OpsBoundedStream<I> stream() {
-		return new DefaultOpsBoundedStream<>(source);
+//		return new DefaultOpsBoundedStream<>(source);
+		return null;
 	}
 
 	@Override
@@ -106,7 +110,8 @@ public class DefaultOpsCollection<I> implements OpsCollection<I> {
 
 	@Override
 	public OpsCollection<I> filter(final Predicate<? super I> f) {
-		return new DefaultOpsCollection<>(source.filter(f));
+//		return new DefaultOpsCollection<>(source.filter(f));
+		return null;
 	}
 
 	@Override
@@ -120,6 +125,17 @@ public class DefaultOpsCollection<I> implements OpsCollection<I> {
 	@Override
 	public <O> OpsCollection<? extends OpsBoundedChannel<O>> group(final Function<? super I, Integer> f) {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public CompgraphNode<?, ?, ? extends CompgraphSingleEdge<I>> source() {
+		return source;
+	}
+
+	@Override
+	public Dataflow<I, ?> dataflow() {
+		// TODO: Pull mechanism!
 		return null;
 	}
 }

@@ -31,7 +31,7 @@ public interface OpsTiling<I> extends OpsGrid<OpsTile<I>> {
 	OpsTiling<I> subsample(long... steps);
 
 	@Override
-	OpsTiling<I> filter(Predicate<? super OpsTile<I>> f);
+	OpsIterableInterval<OpsTile<I>> filter(Predicate<? super OpsTile<I>> f);
 
 	@Override
 	OpsTiling<I> fixOrder();

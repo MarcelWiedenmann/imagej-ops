@@ -7,13 +7,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,13 +37,12 @@ import net.imagej.ops.special.computer.UnaryComputerOp;
 import net.imagej.ops.special.inplace.UnaryInplaceOp;
 
 /**
- * A unary <em>function</em> computes a result from the given input, returning
- * it as a new object. The contents of the input are not affected.
+ * A unary <em>function</em> computes a result from the given input, returning it as a new object. The contents of the
+ * input are not affected.
  * <p>
- * A unary function may be treated as a {@link NullaryFunctionOp} by holding the
- * input constant.
+ * A unary function may be treated as a {@link NullaryFunctionOp} by holding the input constant.
  * </p>
- * 
+ *
  * @author Christian Dietz (University of Konstanz)
  * @author Curtis Rueden
  * @param <I> type of input
@@ -51,18 +50,16 @@ import net.imagej.ops.special.inplace.UnaryInplaceOp;
  * @see UnaryComputerOp
  * @see UnaryInplaceOp
  */
-public interface UnaryFunctionOp<I, O> extends UnaryOp<I, O>,
-	NullaryFunctionOp<O>, Function<I,O>
-{
-	
+public interface UnaryFunctionOp<I, O> extends UnaryOp<I, O>, NullaryFunctionOp<O>, Function<I, O> {
+
 	@Override
-	default O apply(I t) {
+	default O apply(final I t) {
 		return compute1(t);
 	}
 
 	/**
 	 * Computes the output given some input.
-	 * 
+	 *
 	 * @param input Argument to the function
 	 * @return output Result of the function
 	 */
@@ -75,8 +72,7 @@ public interface UnaryFunctionOp<I, O> extends UnaryOp<I, O>,
 		// check function preconditions
 		if (input == null) throw new NullPointerException("input is null");
 		if (output != null) {
-			throw new IllegalArgumentException(
-				"Function expects a null output reference");
+			throw new IllegalArgumentException("Function expects a null output reference");
 		}
 		// compute the result
 		return compute1(input);

@@ -1,7 +1,7 @@
 
 package experimental.compgraph;
 
-public class DefaultCompgraphDataflowNode<IN extends CompgraphEdge<?>, BODY extends Compgraph<? super IN, OUT>, OUT extends CompgraphSingleEdge<?>>
+public class DefaultCompgraphDataflowNode<IN extends CompgraphEdge<I>, I, BODY extends CompgraphDataflowNodeBody<? extends Dataflow<I, ?>, I, O, ? extends Dataflow<O, ?>>, O, OUT extends CompgraphSingleEdge<O>>
 	implements CompgraphNode<IN, BODY, OUT>
 {
 
@@ -9,9 +9,13 @@ public class DefaultCompgraphDataflowNode<IN extends CompgraphEdge<?>, BODY exte
 	private final BODY body;
 	private OUT out;
 
-	public DefaultCompgraphDataflowNode(final IN in, final BODY body) {
+	// TODO: this could be a SciJava parameter.
+	private final CompgraphNodeFactory factory;
+
+	public DefaultCompgraphDataflowNode(final IN in, final BODY body, final CompgraphNodeFactory factory) {
 		this.in = in;
 		this.body = body;
+		this.factory = factory;
 	}
 
 	@Override
@@ -32,5 +36,10 @@ public class DefaultCompgraphDataflowNode<IN extends CompgraphEdge<?>, BODY exte
 	@Override
 	public void setOutput(final OUT out) {
 		this.out = out;
+	}
+
+	@Override
+	public CompgraphNodeFactory factory() {
+		return factory;
 	}
 }

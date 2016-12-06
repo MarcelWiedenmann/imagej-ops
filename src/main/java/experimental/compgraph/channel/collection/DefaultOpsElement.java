@@ -6,19 +6,21 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import net.imglib2.util.Pair;
 
+import experimental.compgraph.CompgraphNode;
+import experimental.compgraph.CompgraphSingleEdge;
+import experimental.compgraph.Dataflow;
 import experimental.compgraph.channel.OpsBoundedChannel;
 import experimental.compgraph.channel.OpsChannel;
 
 public class DefaultOpsElement<I> implements OpsElement<I> {
 
-	private final Stream<I> source;
+	private final CompgraphNode<?, ?, DefaultOpsElement<I>> source;
 
-	public DefaultOpsElement(final I source) {
-		this.source = Stream.of(source);
+	public DefaultOpsElement(final CompgraphNode<?, ?, DefaultOpsElement<I>> source) {
+		this.source = source;
 	}
 
 	// -- OpsElement --
@@ -71,6 +73,18 @@ public class DefaultOpsElement<I> implements OpsElement<I> {
 
 	@Override
 	public <O> OpsBoundedChannel<? extends OpsBoundedChannel<O>> group(final Function<? super I, Integer> f) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public CompgraphNode<?, ?, ? extends CompgraphSingleEdge<I>> source() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Dataflow<I, ?> dataflow() {
 		// TODO Auto-generated method stub
 		return null;
 	}
