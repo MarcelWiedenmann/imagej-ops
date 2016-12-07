@@ -1,22 +1,16 @@
 
-package experimental.compgraph;
+package experimental.compgraph.service;
 
 import java.util.function.Function;
 
-import experimental.compgraph.node.DefaultMap;
+import experimental.compgraph.CompgraphSingleEdge;
+import experimental.compgraph.DataHandle;
 import experimental.compgraph.node.Map;
 
-public class CompgraphNodeFactory {
-	// TODO: convert to service
+public interface CompgraphNodeFactory {
 
-	public <IN extends CompgraphSingleEdge<I>, I, O> Map<? extends DataHandle<I, ?>, I, O, ? extends DataHandle<O, ?>>
-		map(final IN in, final Function<? super I, O> f)
-	{
-		// TODO: We need some Ops-like matching to match interfaces such as 'Map' with their respective implementations
-		// given the target execution environment ('DefaultMap' for local execution).
-
-		return new DefaultMap<>(f, in, this);
-	}
+	public <IN extends CompgraphSingleEdge<I>, I, O> Map<I, ? extends DataHandle<I, ?>, O, ? extends DataHandle<O, ?>>
+		map(final IN in, final Function<? super I, O> f);
 
 //	public <IN extends CompgraphEdge<I>, I, O, OUT extends CompgraphSingleEdge<O>>
 //		CompgraphNode<IN, ? extends Reduce<IN, I, O, OUT>, OUT> reduce(final IN in, final O memo,

@@ -1,25 +1,22 @@
 
-package experimental.compgraph;
+package experimental.compgraph.service;
 
 import org.scijava.Priority;
 import org.scijava.plugin.Plugin;
-import org.scijava.service.AbstractService;
 
 @Plugin(type = CompgraphService.class, priority = Priority.NORMAL_PRIORITY)
-public class DefaultCompgraphService extends AbstractService implements CompgraphService {
+public class LocalCompgraphService extends AbstractCompgraphService {
 
-	@Override
-	public CompgraphNodeFactory factory() {
-		// TODO Auto-generated method stub
-		return null;
+	public LocalCompgraphService() {
+		super(new LocalCompgraphNodeFactory());
 	}
 
 //	TODO: test-driven
 //	public static void main(final String[] args) {
 //		final Context defContext = new Context();
 //
-//		// user selects invidiual
-//		final Context individual = new Context(Arrays.asList(DefaultCompgraphService.class), defContext.getPluginIndex());
+//		// user selects individual
+//		final Context individual = new Context(Arrays.asList(LocalCompgraphService.class), defContext.getPluginIndex());
 //
 //		// user passes this graph
 //		final CompgraphNode<O, DataHandle<O, ?>> sink;
@@ -27,8 +24,8 @@ public class DefaultCompgraphService extends AbstractService implements Compgrap
 //		// graph is optimized according to some rules which are generally applicable
 //		opti = optimize(graph);
 //
-//		// propgates context to all contextual nodes
-//		sink.setContext(indvidual);
+//		// propagates context to all contextual nodes
+//		sink.setContext(individual);
 //
 //		// now all nodes (e.g. Mapper have right context) and can be replaced by the actual implementation
 //		executableGraph = buildGraph(opti);

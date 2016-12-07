@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 
 public class LocalDataHandle<IO> implements DataHandle<IO, Stream<IO>> {
 
-	Stream<IO> inner;
+	private final Stream<IO> inner;
 
 	public LocalDataHandle(final Stream<IO> inner) {
 		this.inner = inner;

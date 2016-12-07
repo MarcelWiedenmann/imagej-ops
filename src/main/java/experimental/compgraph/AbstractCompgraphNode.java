@@ -1,31 +1,20 @@
 
 package experimental.compgraph;
 
-public abstract class AbstractCompgraphNode<O, OUT extends DataHandle<O, ?>> implements CompgraphNode<O, OUT> {
+import org.scijava.AbstractContextual;
+import org.scijava.plugin.Parameter;
 
-	// TODO: This could be a SciJava Parameter.
-	private final CompgraphNodeFactory factory;
+import experimental.compgraph.service.CompgraphService;
 
-	private CompgraphEdge<O> out;
+public abstract class AbstractCompgraphNode extends AbstractContextual implements CompgraphNode {
 
-	public AbstractCompgraphNode(final CompgraphNodeFactory factory) {
-		this.factory = factory;
-	}
+	@Parameter
+	private CompgraphService cgs;
 
 	// -- CompgraphNode --
 
 	@Override
-	public CompgraphNodeFactory factory() {
-		return factory;
-	}
-
-	@Override
-	public CompgraphEdge<O> out() {
-		return out;
-	}
-
-	@Override
-	public void setOutEdge(final CompgraphEdge<O> out) {
-		this.out = out;
+	public CompgraphService cgs() {
+		return cgs;
 	}
 }

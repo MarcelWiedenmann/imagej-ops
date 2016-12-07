@@ -4,27 +4,24 @@ package experimental.compgraph.node;
 import java.util.function.Function;
 
 import experimental.compgraph.AbstractCompgraphUnaryNode;
-import experimental.compgraph.CompgraphNodeFactory;
 import experimental.compgraph.CompgraphSingleEdge;
 import experimental.compgraph.LocalDataHandle;
 
-public class DefaultMap<IN extends LocalDataHandle<I>, I, O> extends
-	AbstractCompgraphUnaryNode<IN, I, O, LocalDataHandle<O>> implements Map<IN, I, O, LocalDataHandle<O>>
+public class LocalMap<I, O> extends AbstractCompgraphUnaryNode<I, LocalDataHandle<I>, O, LocalDataHandle<O>>
+	implements Map<I, LocalDataHandle<I>, O, LocalDataHandle<O>>
 {
 
 	private final Function<? super I, O> f;
 
-	public DefaultMap(final Function<? super I, O> f, final CompgraphSingleEdge<I> in,
-		final CompgraphNodeFactory factory)
-	{
-		super(in, factory);
+	public LocalMap(final Function<? super I, O> f, final CompgraphSingleEdge<I> in) {
+		super(in);
 		this.f = f;
 	}
 
 	// -- AbstractCompgraphUnaryNode --
 
 	@Override
-	protected LocalDataHandle<O> applyInternal(final IN inData) {
+	protected LocalDataHandle<O> applyInternal(final LocalDataHandle<I> inData) {
 		return new LocalDataHandle<>(inData.inner().map(f));
 	}
 

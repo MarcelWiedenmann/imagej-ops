@@ -1,11 +1,9 @@
 
 package experimental.compgraph;
 
-public interface CompgraphUnaryNode<IN extends DataHandle<I, ?>, I, O, OUT extends DataHandle<O, ?>> extends
-	CompgraphInnerNode<IN, I, O, OUT>
+public interface CompgraphUnaryNode<I, IN extends DataHandle<I, ?>, O, OUT extends DataHandle<O, ?>> extends
+	CompgraphInnerNode<I, IN, O, OUT>
 {
-
-	// -- CompgraphInnerNode --
 
 	@Override
 	CompgraphSingleEdge<I> in();

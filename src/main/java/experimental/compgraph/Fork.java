@@ -1,6 +1,8 @@
 
 package experimental.compgraph;
 
+// TODO: fork nodes
+
 public class Fork<I> {
 
 	// TODO: copy "I" on first (not "first") access etc.

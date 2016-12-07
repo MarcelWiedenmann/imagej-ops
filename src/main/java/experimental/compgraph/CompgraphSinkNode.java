@@ -1,9 +1,7 @@
 
 package experimental.compgraph;
 
-public interface CompgraphSinkNode<IN extends DataHandle<I, ?>, I, O, OUT extends DataHandle<O, ?>> extends
-	CompgraphUnaryNode<IN, I, O, OUT>
-{
+public interface CompgraphSinkNode<I, IN extends DataHandle<I, ?>, OUT> extends CompgraphInputNode<I, IN> {
 
-	// TODO
+	OUT get();
 }

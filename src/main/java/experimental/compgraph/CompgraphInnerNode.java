@@ -1,9 +1,8 @@
 
 package experimental.compgraph;
 
-public interface CompgraphInnerNode<IN extends DataHandle<I, ?>, I, O, OUT extends DataHandle<O, ?>> extends
-	CompgraphNode<O, OUT>
+public interface CompgraphInnerNode<I, IN extends DataHandle<I, ?>, O, OUT extends DataHandle<O, ?>> extends
+	CompgraphInputNode<I, IN>, CompgraphOutputNode<O, OUT>
 {
 
-	CompgraphEdge<I> in();
 }

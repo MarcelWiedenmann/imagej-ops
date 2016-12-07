@@ -3,13 +3,14 @@ package experimental.compgraph;
 
 import net.imglib2.util.Pair;
 
-public abstract class AbstractCompgraphBinaryNode<IN extends DataHandle<Pair<I1, I2>, ?>, I1, I2, O, OUT extends DataHandle<O, ?>>
-	extends AbstractCompgraphInnerNode<IN, Pair<I1, I2>, O, OUT> implements CompgraphBinaryNode<IN, I1, I2, O, OUT>
+public abstract class AbstractCompgraphBinaryNode<I1, I2, IN extends DataHandle<Pair<I1, I2>, ?>, O, OUT extends DataHandle<O, ?>>
+	extends AbstractCompgraphInnerNode<Pair<I1, I2>, IN, O, OUT> implements CompgraphBinaryNode<I1, I2, IN, O, OUT>
 {
 
-	public AbstractCompgraphBinaryNode(final CompgraphDoubleEdge<I1, I2> in, final CompgraphNodeFactory factory) {
-		super(in, factory);
-		// TODO Auto-generated constructor stub
+	// TODO: maybe this class is not needed at all because we merge double edge inputs to a single edge of pairs.
+
+	public AbstractCompgraphBinaryNode(final CompgraphDoubleEdge<I1, I2> in) {
+		super(in);
 	}
 
 	// protected abstract OUT applyInternal(IN inData);

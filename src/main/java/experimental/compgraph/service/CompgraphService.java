@@ -1,5 +1,5 @@
 
-package experimental.compgraph;
+package experimental.compgraph.service;
 
 import org.scijava.service.Service;
 

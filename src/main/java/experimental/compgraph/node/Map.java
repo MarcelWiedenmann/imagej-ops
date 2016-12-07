@@ -6,8 +6,8 @@ import java.util.function.Function;
 import experimental.compgraph.CompgraphUnaryNode;
 import experimental.compgraph.DataHandle;
 
-public interface Map<IN extends DataHandle<I, ?>, I, O, OUT extends DataHandle<O, ?>> extends
-	CompgraphUnaryNode<IN, I, O, OUT>
+public interface Map<I, IN extends DataHandle<I, ?>, O, OUT extends DataHandle<O, ?>> extends
+	CompgraphUnaryNode<I, IN, O, OUT>
 {
 
 	Function<? super I, O> func();

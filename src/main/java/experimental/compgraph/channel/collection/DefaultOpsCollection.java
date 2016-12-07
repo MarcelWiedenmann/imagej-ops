@@ -12,7 +12,7 @@ import java.util.function.Predicate;
 
 import net.imglib2.util.Pair;
 
-import experimental.compgraph.CompgraphNode;
+import experimental.compgraph.CompgraphOutputNode;
 import experimental.compgraph.DataHandle;
 import experimental.compgraph.channel.OpsBoundedChannel;
 import experimental.compgraph.channel.OpsChannel;
@@ -25,11 +25,11 @@ import experimental.compgraph.channel.stream.OpsBoundedStream;
 
 public class DefaultOpsCollection<I> implements OpsCollection<I> {
 
-	private final CompgraphNode<I, ? extends DataHandle<I, ?>> source;
+	private final CompgraphOutputNode<I, ? extends DataHandle<I, ?>> parent;
 
-	public DefaultOpsCollection(final CompgraphNode<I, ? extends DataHandle<I, ?>> source) {
-		source.setOutEdge(this);
-		this.source = source;
+	public DefaultOpsCollection(final CompgraphOutputNode<I, ? extends DataHandle<I, ?>> parent) {
+		parent.setOutEdge(this);
+		this.parent = parent;
 	}
 
 	// -- OpsCollection --
@@ -98,7 +98,7 @@ public class DefaultOpsCollection<I> implements OpsCollection<I> {
 
 	@Override
 	public <O> OpsCollection<O> map(final Function<? super I, O> f) {
-		return new DefaultOpsCollection<>(source.factory().map(this, f));
+		return new DefaultOpsCollection<>(parent.cgs().factory().map(this, f));
 	}
 
 	@Override
@@ -130,12 +130,12 @@ public class DefaultOpsCollection<I> implements OpsCollection<I> {
 	// -- CompgraphSingleEdge --
 
 	@Override
-	public CompgraphNode<I, ? extends DataHandle<I, ?>> source() {
-		return source;
+	public CompgraphOutputNode<I, ? extends DataHandle<I, ?>> parent() {
+		return parent;
 	}
 
 	@Override
 	public DataHandle<I, ?> dataflow() {
-		return source.apply();
+		return parent.apply();
 	}
 }
