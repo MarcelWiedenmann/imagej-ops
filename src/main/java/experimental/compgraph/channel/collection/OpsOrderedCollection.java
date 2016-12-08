@@ -13,15 +13,15 @@ import experimental.compgraph.channel.OpsBoundedChannel;
 
 public interface OpsOrderedCollection<I> extends OpsCollection<I> {
 
-	<I2> OpsOrderedCollection<Pair<I, I2>> join(OpsOrderedCollection<I2> c);
+	<I2> OpsOrderedCollection<? extends Pair<I, I2>> join(OpsOrderedCollection<I2> c);
 
 	// -- OpsCollection --
 
 	@Override
-	<I2> OpsOrderedCollection<Pair<I, I2>> join(OpsBoundedChannel<I2> c, BiPredicate<? super I, ? super I2> f);
+	<I2> OpsBoundedChannel<? extends Pair<I, I2>> join(OpsBoundedChannel<I2> c, BiPredicate<? super I, ? super I2> f);
 
 	@Override
-	<I2> OpsOrderedCollection<Pair<I, I2>> cartesian(OpsBoundedChannel<I2> c);
+	<I2> OpsBoundedChannel<? extends Pair<I, I2>> cartesian(OpsBoundedChannel<I2> c);
 
 	@Override
 	<O> OpsOrderedCollection<O> map(Function<? super I, O> f);

@@ -15,12 +15,12 @@ public interface OpsTiling<I> extends OpsGrid<OpsTile<I>> {
 	// NB: To get direct pixel level access.
 	OpsRai<I> toRai();
 
-	<O> OpsRai<O> toRai(Function<? super OpsTiling<I>, RandomAccessibleInterval<O>> f);
+	<O> OpsRai<O> toRai(Function<? super OpsTiling<I>, ? extends RandomAccessibleInterval<O>> f);
 
 	// NB: Use map(..) and transform(..).
-	<O> OpsTiling<O> toTiling(Converter<I, O> c);
+	<O> OpsTiling<O> toTiling(Converter<? super I, O> c);
 
-	<O> OpsTiling<O> mapTile(Function<? super OpsTile<I>, RandomAccessibleInterval<O>> f);
+	<O> OpsTiling<O> mapTile(Function<? super OpsTile<I>, ? extends RandomAccessibleInterval<O>> f);
 
 	// -- OpsGrid --
 

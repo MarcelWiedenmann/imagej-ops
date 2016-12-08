@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -18,13 +19,13 @@ public interface OpsCollection<I> extends OpsBoundedChannel<I>, Iterable<I> {
 
 	OpsCollection<I> concat(OpsCollection<I> c);
 
-	<O> OpsElement<O> reduce(O memo, BiFunction<O, ? super I, O> f, BiFunction<O, O, O> merge);
+	<O> OpsElement<O> reduce(O memo, BiFunction<O, ? super I, O> f, BinaryOperator<O> merge);
 
-	OpsElement<I> treeReduce(BiFunction<I, I, I> f);
+	OpsElement<I> treeReduce(BinaryOperator<I> f);
 
 	OpsOrderedCollection<I> fixOrder();
 
-	OpsOrderedCollection<I> sort(Comparator<I> f);
+	OpsOrderedCollection<I> sort(Comparator<? super I> f);
 
 	// NB: Use transform(..) internally.
 	OpsBoundedStream<I> stream();
@@ -32,12 +33,10 @@ public interface OpsCollection<I> extends OpsBoundedChannel<I>, Iterable<I> {
 	// -- OpsBoundedChannel --
 
 	@Override
-	<I2> OpsCollection<Pair<I, I2>> join(OpsBoundedChannel<I2> c, BiPredicate<? super I, ? super I2> f);
+	<I2> OpsBoundedChannel<? extends Pair<I, I2>> join(OpsBoundedChannel<I2> c, BiPredicate<? super I, ? super I2> f);
 
 	@Override
-	<I2> OpsCollection<Pair<I, I2>> cartesian(OpsBoundedChannel<I2> c);
-
-	// -- OpsChannel --
+	<I2> OpsBoundedChannel<? extends Pair<I, I2>> cartesian(OpsBoundedChannel<I2> c);
 
 	@Override
 	<O> OpsCollection<O> map(Function<? super I, O> f);

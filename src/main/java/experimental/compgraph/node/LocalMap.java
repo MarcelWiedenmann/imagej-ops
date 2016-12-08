@@ -7,13 +7,13 @@ import experimental.compgraph.AbstractCompgraphUnaryNode;
 import experimental.compgraph.CompgraphSingleEdge;
 import experimental.compgraph.LocalDataHandle;
 
-public class LocalMap<I, O> extends AbstractCompgraphUnaryNode<I, LocalDataHandle<I>, O, LocalDataHandle<O>>
-	implements Map<I, LocalDataHandle<I>, O, LocalDataHandle<O>>
+public class LocalMap<I, O> extends AbstractCompgraphUnaryNode<I, LocalDataHandle<I>, O, LocalDataHandle<O>> implements
+	Map<I, LocalDataHandle<I>, O, LocalDataHandle<O>>
 {
 
 	private final Function<? super I, O> f;
 
-	public LocalMap(final Function<? super I, O> f, final CompgraphSingleEdge<I> in) {
+	public LocalMap(final CompgraphSingleEdge<I> in, final Function<? super I, O> f) {
 		super(in);
 		this.f = f;
 	}

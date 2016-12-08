@@ -10,7 +10,9 @@ import experimental.compgraph.CompgraphSingleEdge;
 
 public interface OpsChannel<I> extends CompgraphSingleEdge<I> {
 
-	<O> OpsChannel<O> transform(Function<? super OpsChannel<I>, OpsChannel<O>> f);
+	default <O, OUT extends OpsChannel<O>> OUT transform(final Function<? super OpsChannel<I>, OUT> f) {
+		return f.apply(this);
+	}
 
 	<O> OpsChannel<O> map(Function<? super I, O> f);
 

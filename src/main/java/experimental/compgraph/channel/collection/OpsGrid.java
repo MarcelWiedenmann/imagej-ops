@@ -21,15 +21,15 @@ public interface OpsGrid<I> extends OpsOrderedCollection<I>, RandomAccessibleInt
 
 	OpsGrid<I> subsample(long... steps);
 
-	OpsGrid<OpsIterableInterval<I>> neighbors(Shape s);
+	OpsGrid<? extends OpsIterableInterval<I>> neighbors(Shape s);
 
 	// -- OpsList --
 
 	@Override
-	<I2> OpsGrid<Pair<I, I2>> join(OpsBoundedChannel<I2> c, BiPredicate<? super I, ? super I2> f);
+	<I2> OpsBoundedChannel<? extends Pair<I, I2>> join(OpsBoundedChannel<I2> c, BiPredicate<? super I, ? super I2> f);
 
 	@Override
-	<I2> OpsGrid<Pair<I, I2>> cartesian(OpsBoundedChannel<I2> c);
+	<I2> OpsBoundedChannel<? extends Pair<I, I2>> cartesian(OpsBoundedChannel<I2> c);
 
 	@Override
 	<O> OpsGrid<O> map(Function<? super I, O> f);

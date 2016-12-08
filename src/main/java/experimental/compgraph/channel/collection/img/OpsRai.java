@@ -20,10 +20,10 @@ public interface OpsRai<I> extends OpsGrid<I> {
 	// TODO: Further domain specific methods such as 'slice, stack, ...' (here or in OpsGrid)?
 
 	// NB: Use transform(..).
-	<O> OpsRai<O> toRai(Function<? super OpsRai<I>, RandomAccessibleInterval<O>> f);
+	<O> OpsRai<O> toRai(Function<? super OpsRai<I>, ? extends RandomAccessibleInterval<O>> f);
 
 	// NB: Use map(..) and transform(..) internally.
-	<O> OpsRai<O> toRai(Converter<I, O> c);
+	<O> OpsRai<O> toRai(Converter<? super I, O> c);
 
 	// NB: Use transform(..) or partition(..) internally.
 	OpsTiling<I> toTiling(long[] tilesPerDim, long[] overlap);
@@ -37,10 +37,10 @@ public interface OpsRai<I> extends OpsGrid<I> {
 	OpsRai<I> subsample(long... steps);
 
 	@Override
-	<I2> OpsRai<Pair<I, I2>> join(OpsBoundedChannel<I2> c, BiPredicate<? super I, ? super I2> f);
+	<I2> OpsBoundedChannel<? extends Pair<I, I2>> join(OpsBoundedChannel<I2> c, BiPredicate<? super I, ? super I2> f);
 
 	@Override
-	<I2> OpsRai<Pair<I, I2>> cartesian(OpsBoundedChannel<I2> c);
+	<I2> OpsBoundedChannel<? extends Pair<I, I2>> cartesian(OpsBoundedChannel<I2> c);
 
 	@Override
 	<O> OpsRai<O> map(Function<? super I, O> f);

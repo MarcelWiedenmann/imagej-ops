@@ -8,7 +8,10 @@ public interface CompgraphSingleEdge<IO> extends CompgraphEdge<IO> {
 
 	CompgraphOutputNode<IO, ? extends DataHandle<IO, ?>> parent();
 
-	DataHandle<IO, ?> dataflow();
+	// NB: Pull mechanism. Override if you want to introduce caching or the like.
+	default DataHandle<IO, ?> dataflow() {
+		return parent().apply();
+	}
 
 	// -- CompgraphEdge --
 

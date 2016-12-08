@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -15,13 +16,7 @@ import net.imglib2.util.Pair;
 import experimental.compgraph.CompgraphOutputNode;
 import experimental.compgraph.DataHandle;
 import experimental.compgraph.channel.OpsBoundedChannel;
-import experimental.compgraph.channel.OpsChannel;
 import experimental.compgraph.channel.stream.OpsBoundedStream;
-
-// TODO: Compare method signatures of our primitives and Java Stream primitives. E.g:
-// - Java's 'sort' expects a 'Comparator<? super I>' instead of our 'Comparator<I>'.
-// - Java's 'reduce' expects a 'BinaryOperator<O>' instead of our 'BiFunction<O,O,O>'.
-// ...
 
 public class DefaultOpsCollection<I> implements OpsCollection<I> {
 
@@ -35,30 +30,18 @@ public class DefaultOpsCollection<I> implements OpsCollection<I> {
 	// -- OpsCollection --
 
 	@Override
-	public <O> OpsChannel<O> transform(final Function<? super OpsChannel<I>, OpsChannel<O>> f) {
-		return f.apply(this);
-	}
-
-	@Override
-	public Iterator<I> iterator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public OpsCollection<I> concat(final OpsCollection<I> c) {
-		// TODO: Stream.concat(source, c); // We somehow need to expose the inner Java Stream ('source').
+		// TODO: Stream.concat(source, c); // We somehow need to expose the inner Java Stream.
 		return null;
 	}
 
 	@Override
-	public <O> OpsElement<O> reduce(final O memo, final BiFunction<O, ? super I, O> f, final BiFunction<O, O, O> merge) {
-//		return new DefaultOpsElement<>(source.factory().reduce(this, memo, f, merge));
-		return null;
+	public <O> OpsElement<O> reduce(final O memo, final BiFunction<O, ? super I, O> f, final BinaryOperator<O> merge) {
+		return new DefaultOpsElement<>(parent.cgs().factory().reduce(this, memo, f, merge));
 	}
 
 	@Override
-	public OpsElement<I> treeReduce(final BiFunction<I, I, I> f) {
+	public OpsElement<I> treeReduce(final BinaryOperator<I> f) {
 		// TODO: How does this work? (BiFunction<O,O,O>)
 		return null;
 	}
@@ -71,7 +54,7 @@ public class DefaultOpsCollection<I> implements OpsCollection<I> {
 	}
 
 	@Override
-	public OpsOrderedCollection<I> sort(final Comparator<I> f) {
+	public OpsOrderedCollection<I> sort(final Comparator<? super I> f) {
 //		return new DefaultOpsOrderedCollection<>(source.sorted(f));
 		return null;
 	}
@@ -83,7 +66,7 @@ public class DefaultOpsCollection<I> implements OpsCollection<I> {
 	}
 
 	@Override
-	public <I2> OpsCollection<Pair<I, I2>> join(final OpsBoundedChannel<I2> c,
+	public <I2> OpsBoundedChannel<? extends Pair<I, I2>> join(final OpsBoundedChannel<I2> c,
 		final BiPredicate<? super I, ? super I2> f)
 	{
 		// TODO Auto-generated method stub
@@ -91,7 +74,7 @@ public class DefaultOpsCollection<I> implements OpsCollection<I> {
 	}
 
 	@Override
-	public <I2> OpsCollection<Pair<I, I2>> cartesian(final OpsBoundedChannel<I2> c) {
+	public <I2> OpsBoundedChannel<? extends Pair<I, I2>> cartesian(final OpsBoundedChannel<I2> c) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -109,8 +92,7 @@ public class DefaultOpsCollection<I> implements OpsCollection<I> {
 
 	@Override
 	public OpsCollection<I> filter(final Predicate<? super I> f) {
-//		return new DefaultOpsCollection<>(source.filter(f));
-		return null;
+		return new DefaultOpsCollection<>(parent.cgs().factory().filter(this, f));
 	}
 
 	@Override
@@ -127,15 +109,18 @@ public class DefaultOpsCollection<I> implements OpsCollection<I> {
 		return null;
 	}
 
+	// -- Iterable --
+
+	@Override
+	public Iterator<I> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	// -- CompgraphSingleEdge --
 
 	@Override
 	public CompgraphOutputNode<I, ? extends DataHandle<I, ?>> parent() {
 		return parent;
-	}
-
-	@Override
-	public DataHandle<I, ?> dataflow() {
-		return parent.apply();
 	}
 }

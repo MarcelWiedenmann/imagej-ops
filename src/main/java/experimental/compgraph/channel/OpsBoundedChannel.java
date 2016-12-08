@@ -11,9 +11,9 @@ import net.imglib2.util.Pair;
 
 public interface OpsBoundedChannel<I> extends OpsChannel<I> {
 
-	<I2> OpsBoundedChannel<Pair<I, I2>> join(OpsBoundedChannel<I2> c, BiPredicate<? super I, ? super I2> f);
+	<I2> OpsBoundedChannel<? extends Pair<I, I2>> join(OpsBoundedChannel<I2> c, BiPredicate<? super I, ? super I2> f);
 
-	<I2> OpsBoundedChannel<Pair<I, I2>> cartesian(OpsBoundedChannel<I2> c);
+	<I2> OpsBoundedChannel<? extends Pair<I, I2>> cartesian(OpsBoundedChannel<I2> c);
 
 	// -- OpsChannel --
 

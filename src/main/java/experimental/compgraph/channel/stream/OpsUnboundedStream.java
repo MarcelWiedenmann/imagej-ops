@@ -3,6 +3,7 @@ package experimental.compgraph.channel.stream;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -14,7 +15,7 @@ import experimental.compgraph.channel.collection.OpsElement;
 
 public interface OpsUnboundedStream<I> extends OpsChannel<I> {
 
-	<O> OpsElement<O> reduce(O memo, BiFunction<O, ? super I, O> f, BiFunction<O, O, O> merge, int window);
+	<O> OpsElement<O> reduce(O memo, BiFunction<O, ? super I, O> f, BinaryOperator<O> merge, int window);
 
 	// -- OpsChannel --
 

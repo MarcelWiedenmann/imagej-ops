@@ -4,6 +4,7 @@ package experimental.compgraph.channel.stream;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -22,7 +23,7 @@ public interface OpsBoundedStream<I> extends OpsUnboundedStream<I>, OpsBoundedCh
 	// -- OpsUnboundedStream --
 
 	@Override
-	<O> OpsElement<O> reduce(O memo, BiFunction<O, ? super I, O> f, BiFunction<O, O, O> merge, int window);
+	<O> OpsElement<O> reduce(O memo, BiFunction<O, ? super I, O> f, BinaryOperator<O> merge, int window);
 
 	@Override
 	<O> OpsBoundedStream<O> map(Function<? super I, O> f);
@@ -42,8 +43,8 @@ public interface OpsBoundedStream<I> extends OpsUnboundedStream<I>, OpsBoundedCh
 	// -- OpsBoundedChannel --
 
 	@Override
-	<I2> OpsBoundedStream<Pair<I, I2>> join(OpsBoundedChannel<I2> c, BiPredicate<? super I, ? super I2> f);
+	<I2> OpsBoundedChannel<? extends Pair<I, I2>> join(OpsBoundedChannel<I2> c, BiPredicate<? super I, ? super I2> f);
 
 	@Override
-	<I2> OpsBoundedStream<Pair<I, I2>> cartesian(OpsBoundedChannel<I2> c);
+	<I2> OpsBoundedChannel<? extends Pair<I, I2>> cartesian(OpsBoundedChannel<I2> c);
 }

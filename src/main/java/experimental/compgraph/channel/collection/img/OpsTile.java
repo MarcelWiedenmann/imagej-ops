@@ -15,7 +15,7 @@ import net.imglib2.util.Pair;
 
 import experimental.compgraph.channel.OpsBoundedChannel;
 
-// tile only represents inner part of cropped image (but see todo below)
+// NB: Tile only represents inner part of cropped image (but see TODO below).
 public interface OpsTile<I> extends OpsRai<I>, Localizable {
 
 	long[] getOverlap();
@@ -28,10 +28,10 @@ public interface OpsTile<I> extends OpsRai<I>, Localizable {
 	// -- OpsRai --
 
 	@Override
-	<O> OpsTile<O> toRai(Function<? super OpsRai<I>, RandomAccessibleInterval<O>> f);
+	<O> OpsTile<O> toRai(Function<? super OpsRai<I>, ? extends RandomAccessibleInterval<O>> f);
 
 	@Override
-	<O> OpsTile<O> toRai(Converter<I, O> c);
+	<O> OpsTile<O> toRai(Converter<? super I, O> c);
 
 	@Override
 	OpsTile<I> interval(Interval i);
@@ -40,10 +40,10 @@ public interface OpsTile<I> extends OpsRai<I>, Localizable {
 	OpsTile<I> subsample(long... steps);
 
 	@Override
-	<I2> OpsTile<Pair<I, I2>> join(OpsBoundedChannel<I2> c, BiPredicate<? super I, ? super I2> f);
+	<I2> OpsBoundedChannel<? extends Pair<I, I2>> join(OpsBoundedChannel<I2> c, BiPredicate<? super I, ? super I2> f);
 
 	@Override
-	<I2> OpsTile<Pair<I, I2>> cartesian(OpsBoundedChannel<I2> c);
+	<I2> OpsBoundedChannel<? extends Pair<I, I2>> cartesian(OpsBoundedChannel<I2> c);
 
 	@Override
 	<O> OpsTile<O> map(Function<? super I, O> f);
