@@ -325,7 +325,9 @@ Wisconsin-Madison, University of Konstanz and Brian Northan.</license.copyrightO
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<useIncrementalCompilation>false</useIncrementalCompilation>
-				</configuration>
+					<source>1.8</source>
+          			<target>1.8</target>
+					</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
