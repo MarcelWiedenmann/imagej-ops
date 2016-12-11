@@ -1,20 +1,20 @@
 
 package experimental.compgraph;
 
-public abstract class AbstractCompgraphSourceNode<O, OUT extends DataHandle<O, ?>> extends
-	AbstractCompgraphOutputNode<O, OUT> implements CompgraphSourceNode<O, OUT>
+public abstract class AbstractCompgraphSourceNode<IO, INOUT extends DataHandle<IO, ?>> extends
+	AbstractCompgraphOutputNode<IO, INOUT> implements CompgraphSourceNode<IO, INOUT>
 {
 
-	private final OUT outData;
+	private final INOUT inData;
 
-	public AbstractCompgraphSourceNode(final OUT outData) {
-		this.outData = outData;
+	public AbstractCompgraphSourceNode(final INOUT inData) {
+		this.inData = inData;
 	}
 
 	// -- CompgraphNode --
 
 	@Override
-	public OUT apply() {
-		return outData;
+	public INOUT apply() {
+		return inData;
 	}
 }

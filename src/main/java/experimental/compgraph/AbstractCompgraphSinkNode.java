@@ -1,25 +1,25 @@
 
 package experimental.compgraph;
 
-public abstract class AbstractCompgraphSinkNode<I, IN extends DataHandle<I, ?>, OUT> extends
-	AbstractCompgraphInputNode<I, IN> implements CompgraphSinkNode<I, IN, OUT>
+public abstract class AbstractCompgraphSinkNode<IO, INOUT extends DataHandle<IO, ?>, OUT> extends
+	AbstractCompgraphInputNode<IO, INOUT> implements CompgraphSinkNode<IO, INOUT, OUT>
 {
 
-	public AbstractCompgraphSinkNode(final CompgraphEdge<I> in) {
+	public AbstractCompgraphSinkNode(final CompgraphEdge<IO> in) {
 		super(in);
 	}
 
-	protected abstract OUT getInternal(IN inData);
+	protected abstract OUT getInternal(INOUT inData);
 
 	// -- CompgraphSinkNode --
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public OUT get() {
-		final IN inData;
+		final INOUT inData;
 		try {
 			if (in() instanceof CompgraphSingleEdge) {
-				inData = (IN) ((CompgraphSingleEdge<I>) in()).dataflow();
+				inData = (INOUT) ((CompgraphSingleEdge<IO>) in()).dataflow();
 			}
 			else if (in() instanceof CompgraphDoubleEdge) {
 				throw new UnsupportedOperationException("Double edges are not yet supported in compgraph sink nodes.");

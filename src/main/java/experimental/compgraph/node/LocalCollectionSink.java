@@ -8,16 +8,16 @@ import experimental.compgraph.AbstractCompgraphSinkNode;
 import experimental.compgraph.CompgraphSingleEdge;
 import experimental.compgraph.LocalDataHandle;
 
-public class LocalCollectionSink<O> extends AbstractCompgraphSinkNode<O, LocalDataHandle<O>, Collection<O>> {
+public class LocalCollectionSink<IO> extends AbstractCompgraphSinkNode<IO, LocalDataHandle<IO>, Collection<IO>> {
 
-	public LocalCollectionSink(final CompgraphSingleEdge<O> in) {
+	public LocalCollectionSink(final CompgraphSingleEdge<IO> in) {
 		super(in);
 	}
 
 	// -- AbstractCompgraphSinkNode --
 
 	@Override
-	protected Collection<O> getInternal(final LocalDataHandle<O> inData) {
+	protected Collection<IO> getInternal(final LocalDataHandle<IO> inData) {
 		return inData.inner().collect(Collectors.toList());
 	}
 }
