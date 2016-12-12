@@ -24,4 +24,8 @@ public class LocalTilingSource<T> extends
 		final TilingSpliterator<T> spliterator = new TilingSpliterator<>(data);
 		return StreamSupport.stream(spliterator, true);
 	}
+
+	public static void main(final String[] args) {
+		LocalContextMap
+	}
 }
