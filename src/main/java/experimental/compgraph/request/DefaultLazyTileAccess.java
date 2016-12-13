@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.imglib2.Interval;
 import net.imglib2.Point;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
@@ -58,11 +59,23 @@ public class DefaultLazyTileAccess<T> extends Point implements LazyTileAccess<T>
 
 	private void request() {
 		final Map<Long, RandomAccessibleInterval<T>> requests = new HashMap<>();
-		
+
 		for (final IntervalRequest req : intervals) {
+			for (final TileInfo info : findTiles(req.key())) {
+				final Interval coverage = info.coverage;
+
+				RandomAccessibleInterval<T> answer = requests.get(info.idx);
+				if (answer != null) {
+					final RandomAccessibleInterval<T> randomAccessibleInterval = ;
+				}
+			}
 		}
 
 		// here I have to fill the tiles...
+	}
+
+	private Iterable<TileInfo> findTiles(final Interval key) {
+		return null;
 	}
 
 	@Override
@@ -73,6 +86,11 @@ public class DefaultLazyTileAccess<T> extends Point implements LazyTileAccess<T>
 	@Override
 	public Sampler<RandomAccessible<T>> copy() {
 		return null;
+	}
+
+	private class TileInfo {
+		Interval coverage;
+		long idx;
 	}
 
 }
