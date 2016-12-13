@@ -4,9 +4,20 @@ package experimental.compgraph.tiling;
 import net.imglib2.RandomAccessibleInterval;
 
 import experimental.compgraph.DataHandle;
-import experimental.compgraph.request.RequestableRai;
+import experimental.compgraph.request.TilingRequestable;
 
-public interface TilingDataHandle<IO> extends DataHandle<RandomAccessibleInterval<IO>, RequestableRai<IO>> {
+public class TilingDataHandle<IO> implements DataHandle<RandomAccessibleInterval<IO>, TilingRequestable<IO>> {
 
-	// NB: Marker interface for data handles between tiling nodes.
+	private final TilingRequestable<IO> inner;
+
+	public TilingDataHandle(final TilingRequestable<IO> inner) {
+		this.inner = inner;
+	}
+
+	// -- DataHandle --
+
+	@Override
+	public TilingRequestable<IO> inner() {
+		return inner;
+	}
 }

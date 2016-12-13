@@ -9,7 +9,7 @@ public abstract class AbstractCompgraphUnaryNode<I, IN extends DataHandle<I, ?>,
 		super(in);
 	}
 
-	protected abstract OUT applyInternal(IN inData);
+	protected abstract OUT applyInternal(IN inHandle);
 
 	// -- AbstractCompgraphInnerNode --
 
@@ -23,13 +23,13 @@ public abstract class AbstractCompgraphUnaryNode<I, IN extends DataHandle<I, ?>,
 	@SuppressWarnings("unchecked")
 	@Override
 	public OUT apply() {
-		final IN inData;
+		final IN inHandle;
 		try {
-			inData = (IN) in().dataflow();
+			inHandle = (IN) in().dataflow();
 		}
 		catch (final ClassCastException ex) {
 			throw new UnsupportedOperationException("Wrong input data handle type in inner compgraph node.", ex);
 		}
-		return applyInternal(inData);
+		return applyInternal(inHandle);
 	}
 }

@@ -1,12 +1,14 @@
 
 package experimental.compgraph.tiling;
 
+import java.util.List;
+
 import net.imglib2.RandomAccessibleInterval;
 
 import experimental.compgraph.AbstractCompgraphUnaryNode;
 import experimental.compgraph.CompgraphSingleEdge;
-import experimental.compgraph.request.IntervalTransformRequest;
-import experimental.compgraph.request.RequestableRai;
+import experimental.compgraph.request.IntervalRequest;
+import experimental.compgraph.request.TilingRequestable;
 
 public class LocalTilingCache<IO> extends
 	AbstractCompgraphUnaryNode<RandomAccessibleInterval<IO>, TilingDataHandle<IO>, RandomAccessibleInterval<IO>, TilingDataHandle<IO>>
@@ -18,22 +20,16 @@ public class LocalTilingCache<IO> extends
 	}
 
 	@Override
-	protected TilingDataHandle<IO> applyInternal(final TilingDataHandle<IO> inData) {
-		return new TilingDataHandle<IO>() {
+	protected TilingDataHandle<IO> applyInternal(final TilingDataHandle<IO> inHandle) {
+		return new TilingDataHandle<IO>(new TilingRequestable<IO>() {
 
 			@Override
-			public RequestableRai<IO> inner() {
-				return new RequestableRai<IO>() {
+			public List<RandomAccessibleInterval<IO>> request(final List<IntervalRequest> requests) {
 
-					@Override
-					public RandomAccessibleInterval<IO> request(final Iterable<IntervalTransformRequest> requests) {
+				// TODO: Christian :D
 
-						// TODO: Christian :D
-
-						return inData.inner().request(requests);
-					}
-				};
+				return inHandle.inner().request(requests);
 			}
-		};
+		});
 	}
 }
