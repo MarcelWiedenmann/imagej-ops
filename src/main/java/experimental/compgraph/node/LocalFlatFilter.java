@@ -7,13 +7,13 @@ import experimental.compgraph.AbstractCompgraphUnaryNode;
 import experimental.compgraph.CompgraphSingleEdge;
 import experimental.compgraph.LocalDataHandle;
 
-public class LocalFilter<I> extends AbstractCompgraphUnaryNode<I, LocalDataHandle<I>, I, LocalDataHandle<I>> implements
+public class LocalFlatFilter<I> extends AbstractCompgraphUnaryNode<I, LocalDataHandle<I>, I, LocalDataHandle<I>> implements
 	Filter<I, LocalDataHandle<I>>
 {
 
 	private final Predicate<? super I> f;
 
-	public LocalFilter(final CompgraphSingleEdge<I> in, final Predicate<? super I> f) {
+	public LocalFlatFilter(final CompgraphSingleEdge<I> in, final Predicate<? super I> f) {
 		super(in);
 		this.f = f;
 	}

@@ -9,11 +9,11 @@ import experimental.compgraph.AbstractCompgraphSourceNode;
 import experimental.compgraph.request.IntervalRequest;
 import experimental.compgraph.request.TilingRequestable;
 
-public class LocalTilingSource<T> extends AbstractCompgraphSourceNode<RandomAccessibleInterval<T>, TilingDataHandle<T>>
-	implements TilingOutputNode<T>
+public class LocalTilingSource<IO> extends AbstractCompgraphSourceNode<RandomAccessibleInterval<IO>, TilingDataHandle<IO>>
+	implements TilingOutputNode<IO>
 {
 
-	public LocalTilingSource(final RandomAccessibleInterval<? extends RandomAccessibleInterval<T>> inData) {
+	public LocalTilingSource(final RandomAccessibleInterval<? extends RandomAccessibleInterval<IO>> inData) {
 		super(createDataHandle(inData));
 	}
 

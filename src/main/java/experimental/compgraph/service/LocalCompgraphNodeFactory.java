@@ -9,9 +9,9 @@ import java.util.function.Predicate;
 import experimental.compgraph.CompgraphSingleEdge;
 import experimental.compgraph.DataHandle;
 import experimental.compgraph.node.Filter;
-import experimental.compgraph.node.LocalFilter;
-import experimental.compgraph.node.LocalMap;
-import experimental.compgraph.node.LocalReduce;
+import experimental.compgraph.node.LocalFlatFilter;
+import experimental.compgraph.node.LocalFlatMap;
+import experimental.compgraph.node.LocalFlatReduce;
 import experimental.compgraph.node.Map;
 import experimental.compgraph.node.Reduce;
 
@@ -23,7 +23,7 @@ public class LocalCompgraphNodeFactory implements CompgraphNodeFactory {
 	public <I, O> Map<I, ? extends DataHandle<I, ?>, O, ? extends DataHandle<O, ?>> map(final CompgraphSingleEdge<I> in,
 		final Function<? super I, O> f)
 	{
-		final LocalMap<I, O> map = new LocalMap<>(in, f);
+		final LocalFlatMap<I, O> map = new LocalFlatMap<>(in, f);
 		in.parent().context().inject(map);
 		return map;
 	}
@@ -32,7 +32,7 @@ public class LocalCompgraphNodeFactory implements CompgraphNodeFactory {
 	public <I, O> Reduce<I, ? extends DataHandle<I, ?>, O, ? extends DataHandle<O, ?>> reduce(
 		final CompgraphSingleEdge<I> in, final O memo, final BiFunction<O, ? super I, O> f, final BinaryOperator<O> merge)
 	{
-		final LocalReduce<I, O> reduce = new LocalReduce<>(in, memo, f, merge);
+		final LocalFlatReduce<I, O> reduce = new LocalFlatReduce<>(in, memo, f, merge);
 		in.parent().context().inject(reduce);
 		return reduce;
 	}
@@ -41,7 +41,7 @@ public class LocalCompgraphNodeFactory implements CompgraphNodeFactory {
 	public <I> Filter<I, ? extends DataHandle<I, ?>> filter(final CompgraphSingleEdge<I> in,
 		final Predicate<? super I> f)
 	{
-		final LocalFilter<I> filter = new LocalFilter<>(in, f);
+		final LocalFlatFilter<I> filter = new LocalFlatFilter<>(in, f);
 		in.parent().context().inject(filter);
 		return filter;
 	}

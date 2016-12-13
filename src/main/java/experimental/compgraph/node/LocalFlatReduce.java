@@ -9,7 +9,7 @@ import experimental.compgraph.AbstractCompgraphUnaryNode;
 import experimental.compgraph.CompgraphSingleEdge;
 import experimental.compgraph.LocalDataHandle;
 
-public class LocalReduce<I, O> extends AbstractCompgraphUnaryNode<I, LocalDataHandle<I>, O, LocalDataHandle<O>>
+public class LocalFlatReduce<I, O> extends AbstractCompgraphUnaryNode<I, LocalDataHandle<I>, O, LocalDataHandle<O>>
 	implements Reduce<I, LocalDataHandle<I>, O, LocalDataHandle<O>>
 {
 
@@ -17,7 +17,7 @@ public class LocalReduce<I, O> extends AbstractCompgraphUnaryNode<I, LocalDataHa
 	private final BiFunction<O, ? super I, O> f;
 	private final BinaryOperator<O> merge;
 
-	public LocalReduce(final CompgraphSingleEdge<I> in, final O memo, final BiFunction<O, ? super I, O> f,
+	public LocalFlatReduce(final CompgraphSingleEdge<I> in, final O memo, final BiFunction<O, ? super I, O> f,
 		final BinaryOperator<O> merge)
 	{
 		super(in);
