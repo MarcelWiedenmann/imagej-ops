@@ -1,7 +1,7 @@
 
 package experimental.compgraph.request;
 
-public interface Request {
+public interface Request<K> {
 
-	long index();
+	K key();
 }

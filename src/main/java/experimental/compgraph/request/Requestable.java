@@ -1,9 +1,7 @@
 
 package experimental.compgraph.request;
 
-import experimental.compgraph.DataHandle;
+public interface Requestable<K, R extends Request<K>, V> {
 
-public interface Requestable<R extends Request, V> extends DataHandle<V, Requestable<R, V>> {
-
-	V request(Requests<R> r);
+	V request(Iterable<R> requests);
 }

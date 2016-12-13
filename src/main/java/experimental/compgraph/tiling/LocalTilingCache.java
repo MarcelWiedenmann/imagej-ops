@@ -1,34 +1,38 @@
 
 package experimental.compgraph.tiling;
 
+import net.imglib2.RandomAccessibleInterval;
+
 import experimental.compgraph.AbstractCompgraphUnaryNode;
 import experimental.compgraph.CompgraphSingleEdge;
-import experimental.compgraph.request.Requestable;
-import experimental.compgraph.request.Requests;
+import experimental.compgraph.request.IntervalTransformRequest;
+import experimental.compgraph.request.RequestableRai;
 
 public class LocalTilingCache<IO> extends
-	AbstractCompgraphUnaryNode<Tiling<IO>, RequestableTiling<IO>, Tiling<IO>, RequestableTiling<IO>> implements
-	TilingUnaryNode<IO, RequestableTiling<IO>, IO, RequestableTiling<IO>>
+	AbstractCompgraphUnaryNode<RandomAccessibleInterval<IO>, TilingDataHandle<IO>, RandomAccessibleInterval<IO>, TilingDataHandle<IO>>
+	implements TilingUnaryNode<IO, IO>
 {
 
-	public LocalTilingCache(final CompgraphSingleEdge<Tiling<IO>> in) {
+	public LocalTilingCache(final CompgraphSingleEdge<RandomAccessibleInterval<IO>> in) {
 		super(in);
 	}
 
 	@Override
-	protected RequestableTiling<IO> applyInternal(final RequestableTiling<IO> inData) {
-		return new RequestableTiling<IO>() {
+	protected TilingDataHandle<IO> applyInternal(final TilingDataHandle<IO> inData) {
+		return new TilingDataHandle<IO>() {
 
 			@Override
-			public Tiling<IO> request(final Requests<TilingRequest> r) {
-				// TODO: Christian :D
-				return null;
-			}
+			public RequestableRai<IO> inner() {
+				return new RequestableRai<IO>() {
 
-			@Override
-			public Requestable<TilingRequest, Tiling<IO>> inner() {
-				// TODO: hack, will be refactored
-				return this;
+					@Override
+					public RandomAccessibleInterval<IO> request(final Iterable<IntervalTransformRequest> requests) {
+
+						// TODO: Christian :D
+
+						return inData.inner().request(requests);
+					}
+				};
 			}
 		};
 	}

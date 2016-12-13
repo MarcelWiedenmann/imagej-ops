@@ -1,9 +1,11 @@
 
 package experimental.compgraph.tiling;
 
-import experimental.compgraph.CompgraphOutputNode;
-import experimental.compgraph.DataHandle;
+import net.imglib2.RandomAccessibleInterval;
 
-public interface TilingOutputNode<O, OUT extends DataHandle<Tiling<O>, ?>> extends CompgraphOutputNode<Tiling<O>, OUT> {
+import experimental.compgraph.CompgraphOutputNode;
+
+public interface TilingOutputNode<O> extends CompgraphOutputNode<RandomAccessibleInterval<O>, TilingDataHandle<O>> {
+
 	// NB: Marker interface.
 }

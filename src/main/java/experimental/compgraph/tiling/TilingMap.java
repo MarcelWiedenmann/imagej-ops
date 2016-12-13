@@ -1,10 +1,13 @@
 
 package experimental.compgraph.tiling;
 
-import experimental.compgraph.DataHandle;
+import net.imglib2.RandomAccessibleInterval;
 
-public interface TilingMap<I, IN extends DataHandle<Tiling<I>, ?>, O, OUT extends DataHandle<Tiling<O>, ?>> extends
-	TilingUnaryNode<I, IN, O, OUT>
+import experimental.compgraph.node.Map;
+
+public interface TilingMap<I, O> extends
+	Map<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<O>, TilingDataHandle<O>>
 {
+
 	// NB: Marker interface.
 }

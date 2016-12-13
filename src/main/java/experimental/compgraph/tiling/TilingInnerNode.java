@@ -1,11 +1,12 @@
 
 package experimental.compgraph.tiling;
 
-import experimental.compgraph.CompgraphInnerNode;
-import experimental.compgraph.DataHandle;
+import net.imglib2.RandomAccessibleInterval;
 
-public interface TilingInnerNode<I, IN extends DataHandle<Tiling<I>, ?>, O, OUT extends DataHandle<Tiling<O>, ?>>
-	extends TilingInputNode<I, IN>, TilingOutputNode<O, OUT>, CompgraphInnerNode<Tiling<I>, IN, Tiling<O>, OUT>
+import experimental.compgraph.CompgraphInnerNode;
+
+public interface TilingInnerNode<I, O> extends TilingInputNode<I>, TilingOutputNode<O>,
+	CompgraphInnerNode<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<O>, TilingDataHandle<O>>
 {
 	// NB: Marker interface.
 }
