@@ -5,29 +5,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.view.Views;
+import net.imglib2.util.Pair;
 
 import experimental.compgraph.AbstractCompgraphUnaryNode;
 import experimental.compgraph.CompgraphSingleEdge;
 import experimental.compgraph.node.Map;
-import experimental.compgraph.request.BinaryInvertibleIntervalMapper;
-import experimental.compgraph.request.DefaultIntervalRequest;
-import experimental.compgraph.request.IntervalRequest;
+import experimental.compgraph.request.TileRequest;
 import experimental.compgraph.request.TilingRequestable;
 import experimental.compgraph.request.UnaryInvertibleIntervalMapper;
 
 public class LocalTilingMap<I, O> extends
-	AbstractCompgraphUnaryNode<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<O>, TilingDataHandle<O>>
-	implements Map<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<O>, TilingDataHandle<O>>,
-	TilingUnaryNode<I, O>
-{
+		AbstractCompgraphUnaryNode<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<O>, TilingDataHandle<O>>
+		implements
+		Map<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<O>, TilingDataHandle<O>>,
+		TilingUnaryNode<I, O> {
 
 	private final Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> f;
 
 	public LocalTilingMap(final CompgraphSingleEdge<RandomAccessibleInterval<I>> in,
-		final Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> f)
-	{
+			final Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> f) {
 		super(in);
 		this.f = f;
 	}
@@ -36,45 +34,34 @@ public class LocalTilingMap<I, O> extends
 
 	@Override
 	protected TilingDataHandle<O> applyInternal(final TilingDataHandle<I> inHandle) {
-		return new TilingDataHandle<O>(new TilingRequestable<O>() {
+		return new TilingDataHandle<>(new TilingRequestable<O>() {
 
 			@Override
-			public List<RandomAccessibleInterval<O>> request(final List<IntervalRequest> requests) {
-				final List<IntervalRequest> myRequests;
+			public LazyTile<O> request(final TileRequest requests) {
+
+				// contains information of what is required
+
+				// 0: not required
+				// 1: required completely
+				// 2: partially required
+				final Interval key = requests.key();
+				final TilingMask mask = null;
+
 				if (f instanceof UnaryInvertibleIntervalMapper) {
-					myRequests = new ArrayList<>(requests.size());
 					final UnaryInvertibleIntervalMapper fAsInvertible = (UnaryInvertibleIntervalMapper) f;
-					for (final IntervalRequest req : requests) {
-						myRequests.add(new DefaultIntervalRequest(fAsInvertible.invert(req.key())));
-					}
-				}
-				else if (f instanceof BinaryInvertibleIntervalMapper) {
-					throw new UnsupportedOperationException("not yet implemented");
-				}
-				else {
-					myRequests = requests;
-				}
-				final List<RandomAccessibleInterval<I>> in = inHandle.inner().request(myRequests);
-
-				assert myRequests.size() == requests.size();
-				assert myRequests.size() == in.size();
-
-				final List<RandomAccessibleInterval<O>> results = new ArrayList<>(requests.size());
-				if (f instanceof UnaryInvertibleIntervalMapper) {
-					for (int i = 0; i < in.size(); i++) {
-						final RandomAccessibleInterval<O> res = Views.interval(f.apply(in.get(i)), myRequests.get(i).key());
-						results.add(res);
-					}
-				}
-				else {
-					for (final RandomAccessibleInterval<I> i : in) {
-						results.add(f.apply(i));
-					}
+					fAsInvertible.invert(key, mask);
 				}
 
-				assert results.size() == in.size();
+				final List<LazyTile<I>> results = new ArrayList<>();
 
-				return results;
+				// TODO activator.mask() or just give a fuck.
+				for (final Pair<Long, Interval> v : mask) {
+					// think about "bulk-request"
+					results.add(inHandle.inner().request((TileRequest) mask));
+				}
+
+				// TODO merge results from lazyTiling
+				return null/* = new LazyTile(results, f); */;
 			}
 		});
 	}

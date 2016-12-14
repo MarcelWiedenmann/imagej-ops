@@ -3,7 +3,7 @@ package experimental.compgraph.request;
 
 import net.imglib2.Interval;
 
-public class DefaultIntervalRequest implements IntervalRequest {
+public class DefaultIntervalRequest implements TileRequest {
 
 	private final Interval key;
 
