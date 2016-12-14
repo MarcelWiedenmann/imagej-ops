@@ -7,8 +7,6 @@ public abstract class AbstractCompgraphBinaryNode<I1, I2, IN extends DataHandle<
 	extends AbstractCompgraphInnerNode<Pair<I1, I2>, IN, O, OUT> implements CompgraphBinaryNode<I1, I2, IN, O, OUT>
 {
 
-	// TODO: maybe this class is not needed at all because we merge double edge inputs to a single edge of pairs.
-
 	public AbstractCompgraphBinaryNode(final CompgraphDoubleEdge<I1, I2> in) {
 		super(in);
 	}
