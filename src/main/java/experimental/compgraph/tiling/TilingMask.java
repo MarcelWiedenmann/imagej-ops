@@ -1,3 +1,4 @@
+
 package experimental.compgraph.tiling;
 
 import net.imglib2.AbstractInterval;
@@ -14,7 +15,7 @@ public class TilingMask<T> extends AbstractInterval implements RandomAccessible<
 
 	long[] tileDims;
 
-	public TilingMask(int n) {
+	public TilingMask(final int n) {
 		super(n);
 	}
 
@@ -24,7 +25,7 @@ public class TilingMask<T> extends AbstractInterval implements RandomAccessible<
 	}
 
 	@Override
-	public RandomAccess<T> randomAccess(Interval interval) {
+	public RandomAccess<T> randomAccess(final Interval interval) {
 		return null;
 	}
 
@@ -36,13 +37,13 @@ public class TilingMask<T> extends AbstractInterval implements RandomAccessible<
 
 		long numElements = 1;
 
-		final long[] tmpSpans = new long[span.length];
+		final long[] tmpGridSpans = new long[span.length];
 		final long[] subGridDims = new long[span.length];
 
 		for (int d = 0; d < tileDims.length; d++) {
 			if (span[d] != 0) {
-				tmpSpans[d] = ((span[d] / tileDims[d]) + 1);
-				subGridDims[d] = tmpSpans[d] * 2 + 1;
+				tmpGridSpans[d] = span[d] / tileDims[d] + 1;
+				subGridDims[d] = tmpGridSpans[d] * 2 + 1;
 				numElements *= subGridDims[d];
 			}
 		}
@@ -50,50 +51,53 @@ public class TilingMask<T> extends AbstractInterval implements RandomAccessible<
 		final TileInfo[] infos = new TileInfo[(int) numElements];
 		if (numElements == 1) {
 			infos[0] = new TileInfo(tile.flatIndex());
-		} else {
+		}
+		else {
 
 			final long[] centerPos = new long[span.length];
 			final long[] tmp = new long[span.length];
 			IntervalIndexer.indexToPosition(tile.flatIndex(), gridDims, centerPos);
 
-			long[] tileMin = new long[tmpSpans.length];
-			long[] tileMax = tileDims.clone();
+			final long[] tileMin = new long[tmpGridSpans.length];
+			final long[] tileMax = tileDims.clone();
 			for (int d = 0; d < tileMax.length; d++) {
 				tileMax[d]--;
 			}
 
 			// TODO make use of symmetry of grid
 			for (int i = 0; i < numElements; i++) {
-				if (i == (numElements + 1 / 2)) {
+				if (i == (numElements + 1) / 2) {
 					infos[0] = new TileInfo(tile.flatIndex());
-				} else {
+				}
+				else {
 					IntervalIndexer.indexToPosition(i, subGridDims, tmp);
 
 					for (int d = 0; d < tmp.length; d++) {
 						if (tmp[d] == 0 || tmp[d] == subGridDims[d] - 1) {
-							long[] global = tmp.clone();
+							final long[] global = tmp.clone();
 							for (int dd = 0; dd < global.length; dd++) {
 								global[dd] += centerPos[dd];
 							}
 							final TileInfo info;
 							if (tmp[d] != 0) {
-								long[] tmpTileMin = tileMin.clone();
+								final long[] tmpTileMin = tileMin.clone();
 								tmpTileMin[d] = tileMax[d] - span[d];
-								info = new TileInfo(IntervalIndexer.positionToIndex(global, gridDims), tmpTileMin,
-										tileMax);
-							} else {
-								long[] tmpTileMax = tileMax.clone();
+								info = new TileInfo(IntervalIndexer.positionToIndex(global, gridDims), tmpTileMin, tileMax);
+							}
+							else {
+								final long[] tmpTileMax = tileMax.clone();
 								tmpTileMax[d] = span[d];
-								info = new TileInfo(IntervalIndexer.positionToIndex(global, gridDims), tileMin,
-										tmpTileMax);
+								info = new TileInfo(IntervalIndexer.positionToIndex(global, gridDims), tileMin, tmpTileMax);
 							}
 
 							if (infos[i] != null) {
 								infos[i].merge(info);
-							} else {
+							}
+							else {
 								infos[i] = info;
 							}
-						} else {
+						}
+						else {
 							// TODO
 							infos[i] = new TileInfo(i);
 						}
@@ -112,22 +116,23 @@ public class TilingMask<T> extends AbstractInterval implements RandomAccessible<
 
 		final long[] min, max;
 
-		public TileInfo(long position) {
+		public TileInfo(final long position) {
 			this(position, null, null);
 		}
 
-		public void merge(TileInfo tileInfo) {
+		public void merge(final TileInfo tileInfo) {
 			// TODO Auto-generated method stub
 
 		}
 
-		public TileInfo(long position, final long[] min, final long[] max) {
+		public TileInfo(final long position, final long[] min, final long[] max) {
 			this.position = position;
 			if (min == null || max == null) {
 				type = 0;
 				this.min = null;
 				this.max = null;
-			} else {
+			}
+			else {
 				this.min = min;
 				this.max = max;
 				type = 1;
