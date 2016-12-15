@@ -45,7 +45,7 @@ public class LocalTilingMap<I, O> extends
 				// 1: required completely
 				// 2: partially required
 				final Interval key = requests.key();
-				final TilingMask mask = null;
+				final TilingMask<I> mask = null;
 
 				if (f instanceof UnaryInvertibleIntervalMapper) {
 					final UnaryInvertibleIntervalMapper fAsInvertible = (UnaryInvertibleIntervalMapper) f;
@@ -67,7 +67,6 @@ public class LocalTilingMap<I, O> extends
 	}
 
 	// -- Map --
-
 	@Override
 	public Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> func() {
 		return f;
