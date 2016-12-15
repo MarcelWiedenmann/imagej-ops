@@ -6,7 +6,7 @@ import net.imglib2.RandomAccessibleInterval;
 import experimental.compgraph.DataHandle;
 import experimental.compgraph.request.TilingRequestable;
 
-public class TilingDataHandle<IO> implements DataHandle<LazyTile<IO>, TilingRequestable<IO>> {
+public class TilingDataHandle<IO> implements DataHandle<RandomAccessibleInterval<IO>, TilingRequestable<IO>> {
 
 	private final TilingRequestable<IO> inner;
 
