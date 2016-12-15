@@ -8,7 +8,7 @@ import net.imglib2.util.IntervalIndexer;
 
 import experimental.compgraph.request.Tile;
 
-public class TilingMask<T> extends AbstractInterval implements RandomAccessible<T> {
+public class TilingMask<T> extends AbstractInterval implements RandomAccessible<T>, Iterable<Tile> {
 
 	long[] gridDims;
 

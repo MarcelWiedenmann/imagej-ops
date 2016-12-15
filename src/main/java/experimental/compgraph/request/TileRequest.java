@@ -1,7 +1,9 @@
 
 package experimental.compgraph.request;
 
-public interface TileRequest extends Request<Tile> {
+import java.util.List;
+
+public interface TileRequest extends Request<List<Tile>> {
 
 	// NB: This is the interval in global coordinates, specifying the request.
 	@Override

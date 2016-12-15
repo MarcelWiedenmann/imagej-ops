@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.util.Pair;
 
 import experimental.compgraph.AbstractCompgraphUnaryNode;
 import experimental.compgraph.CompgraphSingleEdge;
 import experimental.compgraph.node.Map;
+import experimental.compgraph.request.Tile;
 import experimental.compgraph.request.TileRequest;
 import experimental.compgraph.request.TilingRequestable;
 import experimental.compgraph.request.UnaryInvertibleIntervalMapper;
@@ -28,6 +27,10 @@ public class LocalTilingMap<I, O> extends
 			final Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> f) {
 		super(in);
 		this.f = f;
+
+		// global mask
+		// properties
+		this.mask = new TilingMask();
 	}
 
 	// -- AbstractCompgraphUnaryNode --
@@ -38,30 +41,30 @@ public class LocalTilingMap<I, O> extends
 
 			@Override
 			public LazyTile<O> request(final TileRequest requests) {
+				final TilingRequestable<I> inner = inHandle.inner();
 
-				// contains information of what is required
+				List<LazyTile<O>> mask(requests.key(), fAsInvertible, requestable);
+				
+				for (Tile tile : requests) {
 
-				// 0: not required
-				// 1: required completely
-				// 2: partially required
-				final Interval key = requests.key();
-				final TilingMask<I> mask = null;
+					// goal one forward requests to requestable and receive
+					// something back!
 
-				if (f instanceof UnaryInvertibleIntervalMapper) {
-					final UnaryInvertibleIntervalMapper fAsInvertible = (UnaryInvertibleIntervalMapper) f;
-					fAsInvertible.invert(key, mask);
+					ContextualLazyTile ctx = mask.require(key, );
+
+					// (a) smart way to do it
+
+					ContextualLazyTile ctx = new ContextualLazyTile(key, mask);
 				}
+				// (b) NAIVE WAY TO DO IT
+				// final ArrayList<Tile> list = new ArrayList<>();
+				// for (final Tile t : mask) {
+				// list.add(inner.request((TileRequest) null));
+				// }
+				//
+				// list to LazyTile
 
-				final List<LazyTile<I>> results = new ArrayList<>();
-
-				// TODO activator.mask() or just give a fuck.
-				for (final Pair<Long, Interval> v : mask) {
-					// think about "bulk-request"
-					results.add(inHandle.inner().request((TileRequest) mask));
-				}
-
-				// TODO merge results from lazyTiling
-				return null/* = new LazyTile(results, f); */;
+				return ctx;
 			}
 		});
 	}
