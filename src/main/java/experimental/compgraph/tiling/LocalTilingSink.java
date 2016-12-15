@@ -55,7 +55,7 @@ public class LocalTilingSink<IO>
 			public RandomAccessibleInterval<IO> get() {
 
 				Tile i = getTile(position);
-				
+
 				TileRequest r = new TileRequest() {
 
 					@Override
@@ -63,7 +63,7 @@ public class LocalTilingSink<IO>
 						return i;
 					}
 				};
-				
+
 				LazyTile<IO> result = sink.get().request(r);
 				return result;
 			}
