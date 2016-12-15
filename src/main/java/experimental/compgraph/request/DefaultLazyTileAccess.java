@@ -15,7 +15,7 @@ import net.imglib2.Sampler;
 public class DefaultLazyTileAccess<T> extends Point implements LazyTileAccess<T> {
 
 	private final TilingRequestable<T> req;
-	private final List<TileRequest> intervals;
+	private final List<TilesRequest> intervals;
 
 	private boolean requested = false;
 
@@ -26,7 +26,7 @@ public class DefaultLazyTileAccess<T> extends Point implements LazyTileAccess<T>
 	// TODO use LONG list here!!!
 	private final List<RandomAccessible<T>> tiles;
 
-	public DefaultLazyTileAccess(final TileRequest intervals, final TilingRequestable<T> req, final long[] dims,
+	public DefaultLazyTileAccess(final TilesRequest intervals, final TilingRequestable<T> req, final long[] dims,
 			final long[] tileDims) {
 		super(1);
 
@@ -60,7 +60,7 @@ public class DefaultLazyTileAccess<T> extends Point implements LazyTileAccess<T>
 	private void request() {
 		final Map<Long, RandomAccessibleInterval<T>> requests = new HashMap<>();
 
-		for (final TileRequest req : intervals) {
+		for (final TilesRequest req : intervals) {
 			for (final TileInfo info : findTiles(req.key())) {
 				final Interval coverage = info.coverage;
 

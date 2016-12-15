@@ -6,7 +6,7 @@ import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.view.experimental.TiledView;
 
-import experimental.compgraph.request.DefaultTileRequest;
+import experimental.compgraph.request.DefaultTilesRequest;
 import experimental.compgraph.request.TilingRequestable;
 
 public class TiledComputationResultsView<T> extends TiledView<T> {
@@ -67,7 +67,7 @@ public class TiledComputationResultsView<T> extends TiledView<T> {
 					tempMax[d] = source.max(d);
 				}
 			}
-			final DefaultTileRequest r = new DefaultTileRequest(new FinalInterval(tempMin, tempMax));
+			final DefaultTilesRequest r = new DefaultTilesRequest(new FinalInterval(tempMin, tempMax));
 			return supplier.request(r);
 		}
 

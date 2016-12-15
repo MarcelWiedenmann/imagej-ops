@@ -1,142 +1,72 @@
 
 package experimental.compgraph.tiling;
 
-import net.imglib2.AbstractInterval;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
-import net.imglib2.util.IntervalIndexer;
+import net.imglib2.RandomAccessibleInterval;
 
 import experimental.compgraph.request.Tile;
+import experimental.compgraph.request.TilesRequest;
+import experimental.compgraph.request.TilingRequestable;
+import experimental.compgraph.request.UnaryInvertibleIntervalFunction;
 
-public class TilingMask<T> extends AbstractInterval implements RandomAccessible<T>, Iterable<Tile> {
+public class TilingMask<T> implements RandomAccessible<T> {
 
-	long[] gridDims;
+	HashMap<Long, Tile> tiles = new HashMap<>();
 
-	long[] tileDims;
+	public void mark(final Tile tile) {
 
-	public TilingMask(final int n) {
-		super(n);
+	}
+
+	public <
+		I, O, F extends UnaryInvertibleIntervalFunction & Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>>>
+		List<LazyTile<O>> apply(final F f, final TilingRequestable<I> requestable, final TilesRequest r)
+	{
+		final List<Tile> key = r.key();
+		for (final Tile t : key) {
+			// Individual mask for each requested tile.
+			final TilingActivator ta = new TilingActivator(this);
+			final Interval i = f.invert(t, ta);
+			// final List<Tile> req =
+
+			// (1) for tile remember / recogn. which tiles have been activated.
+			// (2) remember tile-indices and merge requests with existing requests on tile-indices
+		}
+		// (3) fire request for all tiles to requestable.
+		// (4) Collect Requests and put the corresponding LazyTiles at the right position in the grid.
+		// (5) Make view for each tile which was requested FROM me (e.g. Views.interval(this, key.getInterval()))
+		// (6) return list of views (which is <I>) LazyTile<O> = <I> + 'f' -> LazyTile(View<I>, F<I,O>), see (5).
+	}
+
+	public <
+		I1, I2, O, F extends BinaryInvertibleIntervalMapper & BiFunction<? super RandomAccessibleInterval<I1>, ? super RandomAccessibleInterval<I2>, RandomAccessibleInterval<O>>>
+		List<LazyTile<O>> apply(final F f, final TilingRequestable<I1> requestable1,
+			final TilingRequestable<I2> requestable2)
+	{
+		throw new UnsupportedOperationException("not yet implemented");
 	}
 
 	@Override
-	public RandomAccess<T> randomAccess() {
-		return null;
+	public Iterator<Tile> iterator() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("not yet implemented");
 	}
 
 	@Override
-	public RandomAccess<T> randomAccess(final Interval interval) {
-		return null;
+	public RandomAccess<Tile> randomAccess() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("not yet implemented");
 	}
 
-	public TileInfo[] request(final Tile tile) {
-		return request(tile, 0);
-	}
-
-	public TileInfo[] request(final Tile tile, final long[] span) {
-
-		long numElements = 1;
-
-		final long[] tmpGridSpans = new long[span.length];
-		final long[] subGridDims = new long[span.length];
-
-		for (int d = 0; d < tileDims.length; d++) {
-			if (span[d] != 0) {
-				tmpGridSpans[d] = span[d] / tileDims[d] + 1;
-				subGridDims[d] = tmpGridSpans[d] * 2 + 1;
-				numElements *= subGridDims[d];
-			}
-		}
-
-		final TileInfo[] infos = new TileInfo[(int) numElements];
-		if (numElements == 1) {
-			infos[0] = new TileInfo(tile.flatIndex());
-		}
-		else {
-
-			final long[] centerPos = new long[span.length];
-			final long[] tmp = new long[span.length];
-			IntervalIndexer.indexToPosition(tile.flatIndex(), gridDims, centerPos);
-
-			final long[] tileMin = new long[tmpGridSpans.length];
-			final long[] tileMax = tileDims.clone();
-			for (int d = 0; d < tileMax.length; d++) {
-				tileMax[d]--;
-			}
-
-			// TODO make use of symmetry of grid
-			for (int i = 0; i < numElements; i++) {
-				if (i == (numElements + 1) / 2) {
-					infos[0] = new TileInfo(tile.flatIndex());
-				}
-				else {
-					IntervalIndexer.indexToPosition(i, subGridDims, tmp);
-
-					for (int d = 0; d < tmp.length; d++) {
-						if (tmp[d] == 0 || tmp[d] == subGridDims[d] - 1) {
-							final long[] global = tmp.clone();
-							for (int dd = 0; dd < global.length; dd++) {
-								global[dd] += centerPos[dd];
-							}
-							final TileInfo info;
-							if (tmp[d] != 0) {
-								final long[] tmpTileMin = tileMin.clone();
-								tmpTileMin[d] = tileMax[d] - span[d];
-								info = new TileInfo(IntervalIndexer.positionToIndex(global, gridDims), tmpTileMin, tileMax);
-							}
-							else {
-								final long[] tmpTileMax = tileMax.clone();
-								tmpTileMax[d] = span[d];
-								info = new TileInfo(IntervalIndexer.positionToIndex(global, gridDims), tileMin, tmpTileMax);
-							}
-
-							if (infos[i] != null) {
-								infos[i].merge(info);
-							}
-							else {
-								infos[i] = info;
-							}
-						}
-						else {
-							// TODO
-							infos[i] = new TileInfo(i);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	private static final class TileInfo {
-
-		// TODO introduce more funny type-patterns;-).
-		final byte type;
-
-		final long position;
-
-		final long[] min, max;
-
-		public TileInfo(final long position) {
-			this(position, null, null);
-		}
-
-		public void merge(final TileInfo tileInfo) {
-			// TODO Auto-generated method stub
-
-		}
-
-		public TileInfo(final long position, final long[] min, final long[] max) {
-			this.position = position;
-			if (min == null || max == null) {
-				type = 0;
-				this.min = null;
-				this.max = null;
-			}
-			else {
-				this.min = min;
-				this.max = max;
-				type = 1;
-			}
-		}
+	@Override
+	public RandomAccess<Tile> randomAccess(final Interval interval) {
+		return randomAccess();
 	}
 }

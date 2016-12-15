@@ -1,10 +1,15 @@
 
 package experimental.compgraph.tiling;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 
 import experimental.compgraph.AbstractCompgraphSourceNode;
-import experimental.compgraph.request.TileRequest;
+import experimental.compgraph.request.Tile;
+import experimental.compgraph.request.TilesRequest;
 import experimental.compgraph.request.TilingRequestable;
 
 public class LocalTilingSource<IO> extends
@@ -18,12 +23,18 @@ public class LocalTilingSource<IO> extends
 	private static <T> TilingDataHandle<T> createDataHandle(
 		final RandomAccessibleInterval<? extends RandomAccessibleInterval<T>> inData)
 	{
+		final RandomAccess<? extends RandomAccessibleInterval<T>> inDataRA = inData.randomAccess();
 		return new TilingDataHandle<T>(new TilingRequestable<T>() {
 
 			@Override
-			public LazyTile<T> request(final TileRequest request) {
-				// TODO Auto-generated method stub
-				return null;
+			public List<LazyTile<T>> request(final TilesRequest request) {
+				final List<Tile> requests = request.key();
+				final ArrayList<LazyTile<T>> requesteds = new ArrayList<>(requests.size());
+				for (final Tile t : requests) {
+					inDataRA.setPosition(t.index());
+					requesteds.add(new DefaultLazyTile<>(inDataRA.get(), t));
+				}
+				return requesteds;
 			}
 		});
 	}

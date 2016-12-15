@@ -7,7 +7,7 @@ import net.imglib2.RandomAccessibleInterval;
 
 import experimental.compgraph.AbstractCompgraphUnaryNode;
 import experimental.compgraph.CompgraphSingleEdge;
-import experimental.compgraph.request.TileRequest;
+import experimental.compgraph.request.TilesRequest;
 import experimental.compgraph.request.TilingRequestable;
 
 public class LocalTilingCache<IO> extends
@@ -24,7 +24,7 @@ public class LocalTilingCache<IO> extends
 		return new TilingDataHandle<IO>(new TilingRequestable<IO>() {
 
 			@Override
-			public List<RandomAccessibleInterval<IO>> request(final TileRequest requests) {
+			public List<RandomAccessibleInterval<IO>> request(final TilesRequest requests) {
 
 				// TODO: Christian :D
 

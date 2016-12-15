@@ -5,7 +5,7 @@ import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.view.experimental.CombinedView;
 
-import experimental.compgraph.request.DefaultTileRequest;
+import experimental.compgraph.request.DefaultTilesRequest;
 import experimental.compgraph.request.TilingRequestable;
 
 public class CombinedTiledComputationResultsView<T> extends CombinedView<T> {
@@ -63,7 +63,7 @@ public class CombinedTiledComputationResultsView<T> extends CombinedView<T> {
 			// changes. however, note that - right now and until we gain more insight w.r.t. threading etc. - requests are to
 			// be considered immutable.
 			if (intervalChanged) {
-				requested = supplier.request(new DefaultTileRequest(interval));
+				requested = supplier.request(new DefaultTilesRequest(interval));
 				requestedRA = requested.randomAccess();
 			}
 			// !

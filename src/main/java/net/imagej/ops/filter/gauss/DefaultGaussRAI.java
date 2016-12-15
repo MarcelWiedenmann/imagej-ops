@@ -7,13 +7,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -49,17 +49,21 @@ import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.thread.ThreadService;
 
+import experimental.compgraph.request.Tile;
+import experimental.compgraph.request.DefaultTilesRequest;
+import experimental.compgraph.request.UnaryInvertibleIntervalFunction;
+
 /**
  * Gaussian filter, wrapping {@link Gauss3} of imglib2-algorithms.
- * 
+ *
  * @author Christian Dietz (University of Konstanz)
  * @param <T> type of input and output
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
 @Plugin(type = Ops.Filter.Gauss.class, priority = 1.0)
 public class DefaultGaussRAI<T extends RealType<T> & NativeType<T>> extends
-	AbstractUnaryHybridCF<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>>
-	implements Ops.Filter.Gauss
+	AbstractUnaryHybridCF<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>> implements Ops.Filter.Gauss,
+	UnaryInvertibleIntervalFunction
 {
 
 	@Parameter
@@ -72,31 +76,30 @@ public class DefaultGaussRAI<T extends RealType<T> & NativeType<T>> extends
 	private OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds;
 
 	@Override
-	public void compute1(final RandomAccessibleInterval<T> input,
-		final RandomAccessibleInterval<T> output)
-	{
+	public void compute1(final RandomAccessibleInterval<T> input, final RandomAccessibleInterval<T> output) {
 
-		if (outOfBounds == null) outOfBounds =
-			new OutOfBoundsMirrorFactory<>(
-				Boundary.SINGLE);
+		if (outOfBounds == null) outOfBounds = new OutOfBoundsMirrorFactory<>(Boundary.SINGLE);
 
-		final RandomAccessible<FloatType> eIn =
-			(RandomAccessible) Views.extend(input, outOfBounds);
+		final RandomAccessible<FloatType> eIn = (RandomAccessible) Views.extend(input, outOfBounds);
 
 		try {
-			SeparableSymmetricConvolution.convolve(Gauss3.halfkernels(sigmas), eIn,
-				output, threads.getExecutorService());
+			SeparableSymmetricConvolution.convolve(Gauss3.halfkernels(sigmas), eIn, output, threads.getExecutorService());
 		}
-		catch (IncompatibleTypeException e) {
+		catch (final IncompatibleTypeException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public RandomAccessibleInterval<T> createOutput(
-		final RandomAccessibleInterval<T> input)
-	{
+	public RandomAccessibleInterval<T> createOutput(final RandomAccessibleInterval<T> input) {
 		return ops().create().img(input);
 	}
 
+	// -- UnaryInvertibleIntervalMapper --
+
+	@Override
+	public void invert(final Tile t, final DefaultTilesRequest mask) {
+
+		mask.markWithOverlap(t, Gauss3.halfkernelsizes(sigmas));
+	}
 }
