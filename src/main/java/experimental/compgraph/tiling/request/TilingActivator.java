@@ -1,10 +1,10 @@
 
-package experimental.compgraph.tiling;
+package experimental.compgraph.tiling.request;
 
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 
-import experimental.compgraph.request.Tile;
+import experimental.compgraph.tiling.Tile;
 
 public final class TilingActivator {
 

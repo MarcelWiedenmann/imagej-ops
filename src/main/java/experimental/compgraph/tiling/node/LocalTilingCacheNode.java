@@ -1,5 +1,5 @@
 
-package experimental.compgraph.tiling;
+package experimental.compgraph.tiling.node;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,18 +13,21 @@ import org.scijava.cache.CacheService;
 
 import experimental.compgraph.AbstractCompgraphUnaryNode;
 import experimental.compgraph.CompgraphSingleEdge;
-import experimental.compgraph.request.Tile;
-import experimental.compgraph.request.TilesRequest;
-import experimental.compgraph.request.TilingRequestable;
+import experimental.compgraph.tiling.LazyTile;
+import experimental.compgraph.tiling.Tile;
+import experimental.compgraph.tiling.TilingDataHandle;
+import experimental.compgraph.tiling.request.TilesRequest;
+import experimental.compgraph.tiling.request.TilingBulkRequestable;
+import experimental.compgraph.tiling.request.TilingRequestable;
 
-public class LocalTilingCache<I> extends
+public class LocalTilingCacheNode<I> extends
 		AbstractCompgraphUnaryNode<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<I>, TilingDataHandle<I>>
 		implements TilingUnaryNode<I, I> {
 
 	private CacheService cache;
 	private final long hashHint;
 
-	public LocalTilingCache(final CacheService cache, final CompgraphSingleEdge<RandomAccessibleInterval<I>> in) {
+	public LocalTilingCacheNode(final CacheService cache, final CompgraphSingleEdge<RandomAccessibleInterval<I>> in) {
 		super(in);
 		this.cache = cache;
 		this.hashHint = hashCode() * 31;

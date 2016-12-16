@@ -1,5 +1,5 @@
 
-package experimental.compgraph.tiling;
+package experimental.compgraph.tiling.request;
 
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -9,10 +9,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.imglib2.Interval;
 import net.imglib2.util.IntervalIndexer;
 
-import experimental.compgraph.request.DefaultTile;
-import experimental.compgraph.request.Tile;
-import experimental.compgraph.request.TilesRequest;
-import experimental.compgraph.request.TilingRequestable;
+import experimental.compgraph.tiling.DefaultTile;
+import experimental.compgraph.tiling.LazyTile;
+import experimental.compgraph.tiling.Tile;
 
 public class TilingBulkRequestable<I, O> {
 

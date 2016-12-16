@@ -50,9 +50,9 @@ import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.thread.ThreadService;
 
-import experimental.compgraph.request.Tile;
 import experimental.compgraph.request.UnaryInvertibleIntervalFunction;
-import experimental.compgraph.tiling.TilingActivator;
+import experimental.compgraph.tiling.Tile;
+import experimental.compgraph.tiling.request.TilingActivator;
 
 /**
  * Gaussian filter, wrapping {@link Gauss3} of imglib2-algorithms.

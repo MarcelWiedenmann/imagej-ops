@@ -1,5 +1,5 @@
 
-package experimental.compgraph.tiling;
+package experimental.compgraph.tiling.node;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +9,12 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.view.Views;
 
 import experimental.compgraph.AbstractCompgraphSourceNode;
-import experimental.compgraph.request.Tile;
-import experimental.compgraph.request.TilesRequest;
-import experimental.compgraph.request.TilingRequestable;
+import experimental.compgraph.tiling.DefaultLazyTile;
+import experimental.compgraph.tiling.LazyTile;
+import experimental.compgraph.tiling.Tile;
+import experimental.compgraph.tiling.TilingDataHandle;
+import experimental.compgraph.tiling.request.TilesRequest;
+import experimental.compgraph.tiling.request.TilingRequestable;
 
 public class LocalTilingSource<IO> extends
 	AbstractCompgraphSourceNode<RandomAccessibleInterval<IO>, TilingDataHandle<IO>> implements TilingOutputNode<IO>

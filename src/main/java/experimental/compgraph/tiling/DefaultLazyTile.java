@@ -10,8 +10,6 @@ import net.imglib2.RandomAccessibleInterval;
 
 import org.scijava.cache.CacheService;
 
-import experimental.compgraph.request.Tile;
-
 public class DefaultLazyTile<I, O> extends AbstractInterval implements LazyTile<O> {
 
 	// TODO: this is where we do threading

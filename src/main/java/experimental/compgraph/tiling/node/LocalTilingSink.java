@@ -1,11 +1,12 @@
 
-package experimental.compgraph.tiling;
+package experimental.compgraph.tiling.node;
 
 import net.imglib2.RandomAccessibleInterval;
 
 import experimental.compgraph.AbstractCompgraphSinkNode;
 import experimental.compgraph.CompgraphEdge;
-import experimental.compgraph.request.TilingRequestable;
+import experimental.compgraph.tiling.TilingDataHandle;
+import experimental.compgraph.tiling.request.TilingRequestable;
 
 public class LocalTilingSink<IO> extends
 	AbstractCompgraphSinkNode<RandomAccessibleInterval<IO>, TilingDataHandle<IO>, TilingRequestable<IO>>

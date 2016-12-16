@@ -1,5 +1,5 @@
 
-package experimental.compgraph.tiling;
+package experimental.compgraph.tiling.node;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,12 +16,18 @@ import net.imglib2.view.experimental.CombinedView;
 import experimental.compgraph.AbstractCompgraphUnaryNode;
 import experimental.compgraph.CompgraphSingleEdge;
 import experimental.compgraph.node.Map;
-import experimental.compgraph.request.Tile;
-import experimental.compgraph.request.TilesRequest;
-import experimental.compgraph.request.TilingRequestable;
 import experimental.compgraph.request.UnaryInvertibleIntervalFunction;
+import experimental.compgraph.tiling.DefaultLazyTile;
+import experimental.compgraph.tiling.LazyTile;
+import experimental.compgraph.tiling.Tile;
+import experimental.compgraph.tiling.TilingDataHandle;
+import experimental.compgraph.tiling.TilingMask;
+import experimental.compgraph.tiling.request.TilesRequest;
+import experimental.compgraph.tiling.request.TilingActivator;
+import experimental.compgraph.tiling.request.TilingBulkRequestable;
+import experimental.compgraph.tiling.request.TilingRequestable;
 
-public class LocalTilingMap<I, O> extends
+public class LocalTilingMapNode<I, O> extends
 	AbstractCompgraphUnaryNode<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<O>, TilingDataHandle<O>>
 	implements Map<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<O>, TilingDataHandle<O>>,
 	TilingUnaryNode<I, O>
@@ -29,7 +35,7 @@ public class LocalTilingMap<I, O> extends
 
 	private final Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> f;
 
-	public LocalTilingMap(final CompgraphSingleEdge<RandomAccessibleInterval<I>> in,
+	public LocalTilingMapNode(final CompgraphSingleEdge<RandomAccessibleInterval<I>> in,
 		final Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> f)
 	{
 		super(in);
