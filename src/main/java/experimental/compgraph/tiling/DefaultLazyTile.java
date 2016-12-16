@@ -12,9 +12,6 @@ import org.scijava.cache.CacheService;
 
 public class DefaultLazyTile<I, O> extends AbstractInterval implements LazyTile<O> {
 
-	// TODO: this is where we do threading
-	// TODO: partial tiles have to be handled here!
-
 	private Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> func;
 
 	private RandomAccessibleInterval<I> source;
@@ -38,11 +35,19 @@ public class DefaultLazyTile<I, O> extends AbstractInterval implements LazyTile<
 	// -- RandomAccessibleInterval --
 	@Override
 	public RandomAccess<O> randomAccess() {
-		@SuppressWarnings("unchecked")
-		final RandomAccessibleInterval<O> o = (RandomAccessibleInterval<O>) cache
-				.get(((hashCode + 1) * 31) ^ tile.flatIndex());
+		return getObject().randomAccess();
+	}
 
-		return (o == null) ? func.apply(source).randomAccess() : o.randomAccess();
+	public RandomAccessibleInterval<O> getObject() {
+		@SuppressWarnings("unchecked")
+		RandomAccessibleInterval<O> o = (RandomAccessibleInterval<O>) cache.get(((hashCode * 31) ^ tile.flatIndex()));
+
+		if (o == null) {
+			o = func.apply(source);
+			cache.put(hashCode ^ tile.flatIndex(), o);
+		}
+
+		return o;
 	}
 
 	@Override
@@ -55,5 +60,15 @@ public class DefaultLazyTile<I, O> extends AbstractInterval implements LazyTile<
 	@Override
 	public long flatIndex() {
 		return tile.flatIndex();
+	}
+
+	@Override
+	public long[] min() {
+		return tile.min();
+	}
+
+	@Override
+	public long[] max() {
+		return tile.max();
 	}
 }
