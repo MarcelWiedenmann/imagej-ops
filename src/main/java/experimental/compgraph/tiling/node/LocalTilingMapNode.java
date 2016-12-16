@@ -8,7 +8,6 @@ import java.util.function.Function;
 
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.util.Pair;
 import net.imglib2.util.ValuePair;
 import net.imglib2.view.Views;
@@ -16,6 +15,7 @@ import net.imglib2.view.experimental.CombinedView;
 
 import experimental.compgraph.AbstractCompgraphUnaryNode;
 import experimental.compgraph.CompgraphSingleEdge;
+import experimental.compgraph.channel.collection.img.DefaultOpsTile;
 import experimental.compgraph.channel.collection.img.OpsTile;
 import experimental.compgraph.node.Map;
 import experimental.compgraph.request.UnaryInvertibleIntervalFunction;
@@ -29,17 +29,14 @@ import experimental.compgraph.tiling.request.TilingActivator;
 import experimental.compgraph.tiling.request.TilingBulkRequestable;
 import experimental.compgraph.tiling.request.TilingRequestable;
 
-public class LocalTilingMapNode<I, O> extends
-<<<<<<< HEAD
-	AbstractCompgraphUnaryNode<OpsTile<I>, TilingDataHandle<I>, OpsTile<O>, TilingDataHandle<O>> implements
-	Map<OpsTile<I>, TilingDataHandle<I>, OpsTile<O>, TilingDataHandle<O>>, TilingUnaryNode<I, O>
-{
+public class LocalTilingMapNode<I, O>
+		extends AbstractCompgraphUnaryNode<OpsTile<I>, TilingDataHandle<I>, OpsTile<O>, TilingDataHandle<O>>
+		implements Map<OpsTile<I>, TilingDataHandle<I>, OpsTile<O>, TilingDataHandle<O>>, TilingUnaryNode<I, O> {
 
 	private final Function<? super OpsTile<I>, OpsTile<O>> f;
 
 	public LocalTilingMapNode(final CompgraphSingleEdge<OpsTile<I>> in,
-		final Function<? super OpsTile<I>, OpsTile<O>> f)
-	{
+			final Function<? super OpsTile<I>, OpsTile<O>> f) {
 		super(in);
 		this.f = f;
 	}
@@ -79,7 +76,9 @@ public class LocalTilingMapNode<I, O> extends
 
 				final List<LazyTile<O>> results = new ArrayList<>();
 				for (final Pair<Tile, Interval> i : queue) {
-					results.add(new DefaultLazyTile<>(f, Views.interval(view, i.getB()), i.getA()));
+					// TODO object creation?! wrap, wrap, wrap
+					results.add(
+							new DefaultLazyTile<>(f, new DefaultOpsTile<>(Views.interval(view, i.getB())), i.getA()));
 				}
 				queue.clear();
 				return results.iterator();
@@ -90,7 +89,7 @@ public class LocalTilingMapNode<I, O> extends
 	// -- Map --
 
 	@Override
-	public Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> func() {
+	public Function<? super OpsTile<I>, OpsTile<O>> func() {
 		return f;
 	}
 }

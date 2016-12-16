@@ -1,7 +1,6 @@
 
 package experimental.compgraph.tiling.node;
 
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileFloatAccess;
 import net.imglib2.type.numeric.real.FloatType;
 
@@ -9,14 +8,15 @@ import bdv.viewer.render.CompGraphImg;
 import experimental.cache.loader.CompGraphImgLoader;
 import experimental.compgraph.AbstractCompgraphSinkNode;
 import experimental.compgraph.CompgraphEdge;
+import experimental.compgraph.channel.collection.img.OpsTile;
 import experimental.compgraph.tiling.TilingDataHandle;
 import experimental.compgraph.tiling.request.TilingBulkRequestable;
 import experimental.compgraph.tiling.request.TilingRequestable;
 
 public class LocalTilingSink<IO> extends
-		AbstractCompgraphSinkNode<RandomAccessibleInterval<IO>, TilingDataHandle<IO>, CompGraphImg<FloatType, VolatileFloatAccess>> {
+		AbstractCompgraphSinkNode<OpsTile<IO>, TilingDataHandle<IO>, CompGraphImg<FloatType, VolatileFloatAccess>> {
 
-	public LocalTilingSink(final CompgraphEdge<RandomAccessibleInterval<IO>> in) {
+	public LocalTilingSink(final CompgraphEdge<OpsTile<IO>> in) {
 		super(in);
 	}
 

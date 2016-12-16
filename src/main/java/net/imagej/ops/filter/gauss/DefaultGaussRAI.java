@@ -58,14 +58,14 @@ import experimental.compgraph.tiling.request.TilingActivator;
  * Gaussian filter, wrapping {@link Gauss3} of imglib2-algorithms.
  *
  * @author Christian Dietz (University of Konstanz)
- * @param <T> type of input and output
+ * @param <T>
+ *            type of input and output
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
 @Plugin(type = Ops.Filter.Gauss.class, priority = 1.0)
-public class DefaultGaussRAI<T extends RealType<T> & NativeType<T>> extends
-	AbstractUnaryHybridCF<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>> implements Ops.Filter.Gauss,
-	UnaryInvertibleIntervalFunction
-{
+public class DefaultGaussRAI<T extends RealType<T> & NativeType<T>>
+		extends AbstractUnaryHybridCF<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>> implements
+		Ops.Filter.Gauss, UnaryInvertibleIntervalFunction<RandomAccessibleInterval<T>, RandomAccessibleInterval<T>> {
 
 	@Parameter
 	private ThreadService threads;
@@ -79,14 +79,15 @@ public class DefaultGaussRAI<T extends RealType<T> & NativeType<T>> extends
 	@Override
 	public void compute1(final RandomAccessibleInterval<T> input, final RandomAccessibleInterval<T> output) {
 
-		if (outOfBounds == null) outOfBounds = new OutOfBoundsMirrorFactory<>(Boundary.SINGLE);
+		if (outOfBounds == null)
+			outOfBounds = new OutOfBoundsMirrorFactory<>(Boundary.SINGLE);
 
 		final RandomAccessible<FloatType> eIn = (RandomAccessible) Views.extend(input, outOfBounds);
 
 		try {
-			SeparableSymmetricConvolution.convolve(Gauss3.halfkernels(sigmas), eIn, output, threads.getExecutorService());
-		}
-		catch (final IncompatibleTypeException e) {
+			SeparableSymmetricConvolution.convolve(Gauss3.halfkernels(sigmas), eIn, output,
+					threads.getExecutorService());
+		} catch (final IncompatibleTypeException e) {
 			throw new RuntimeException(e);
 		}
 	}

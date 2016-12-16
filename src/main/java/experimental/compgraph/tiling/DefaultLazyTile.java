@@ -11,21 +11,22 @@ import net.imglib2.RandomAccessibleInterval;
 import org.scijava.cache.CacheService;
 
 import experimental.cache.loader.CacheHack;
+import experimental.compgraph.channel.collection.img.OpsTile;
 
 public class DefaultLazyTile<I, O> extends AbstractInterval implements LazyTile<O> {
 
 	private CacheService cache = CacheHack.getCacheService();
 
-	private Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> func;
+	private Function<? super OpsTile<I>, OpsTile<O>> func;
 
-	private RandomAccessibleInterval<I> source;
+	private OpsTile<I> source;
 
 	private Tile tile;
 
 	private int hashCode;
 
-	public DefaultLazyTile(final Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> func,
-			final RandomAccessibleInterval<I> source, final Tile tile) {
+	public DefaultLazyTile(final Function<? super OpsTile<I>, OpsTile<O>> func, final OpsTile<I> source,
+			final Tile tile) {
 		super(tile);
 		this.func = func;
 		this.source = source;
@@ -42,7 +43,7 @@ public class DefaultLazyTile<I, O> extends AbstractInterval implements LazyTile<
 	@Override
 	public RandomAccessibleInterval<O> get() {
 		@SuppressWarnings("unchecked")
-		RandomAccessibleInterval<O> o = (RandomAccessibleInterval<O>) cache.get(((hashCode * 31) ^ tile.flatIndex()));
+		OpsTile<O> o = (OpsTile<O>) cache.get(((hashCode * 31) ^ tile.flatIndex()));
 
 		if (o == null) {
 			o = func.apply(source);

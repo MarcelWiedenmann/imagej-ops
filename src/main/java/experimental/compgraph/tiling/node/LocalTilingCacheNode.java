@@ -7,13 +7,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.imglib2.RandomAccessibleInterval;
-
 import org.scijava.cache.CacheService;
 
 import experimental.cache.loader.CacheHack;
 import experimental.compgraph.AbstractCompgraphUnaryNode;
 import experimental.compgraph.CompgraphSingleEdge;
+import experimental.compgraph.channel.collection.img.OpsTile;
 import experimental.compgraph.tiling.LazyTile;
 import experimental.compgraph.tiling.Tile;
 import experimental.compgraph.tiling.TilingDataHandle;
@@ -21,15 +20,15 @@ import experimental.compgraph.tiling.request.TilesRequest;
 import experimental.compgraph.tiling.request.TilingBulkRequestable;
 import experimental.compgraph.tiling.request.TilingRequestable;
 
-public class LocalTilingCacheNode<I> extends
-		AbstractCompgraphUnaryNode<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<I>, TilingDataHandle<I>>
+public class LocalTilingCacheNode<I>
+		extends AbstractCompgraphUnaryNode<OpsTile<I>, TilingDataHandle<I>, OpsTile<I>, TilingDataHandle<I>>
 		implements TilingUnaryNode<I, I> {
 
 	private CacheService cache = CacheHack.getCacheService();
 
 	private final long hashHint;
 
-	public LocalTilingCacheNode(final CompgraphSingleEdge<RandomAccessibleInterval<I>> in) {
+	public LocalTilingCacheNode(final CompgraphSingleEdge<OpsTile<I>> in) {
 		super(in);
 		this.hashHint = hashCode() * 31;
 	}

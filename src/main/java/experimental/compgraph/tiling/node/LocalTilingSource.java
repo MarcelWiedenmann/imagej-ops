@@ -9,6 +9,7 @@ import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
 
 import experimental.compgraph.AbstractCompgraphSourceNode;
+import experimental.compgraph.channel.collection.img.OpsTile;
 import experimental.compgraph.tiling.LazyTile;
 import experimental.compgraph.tiling.SourceLazyTile;
 import experimental.compgraph.tiling.Tile;
@@ -16,8 +17,7 @@ import experimental.compgraph.tiling.TilingDataHandle;
 import experimental.compgraph.tiling.request.TilesRequest;
 import experimental.compgraph.tiling.request.TilingRequestable;
 
-public class LocalTilingSource<IO>
-		extends AbstractCompgraphSourceNode<RandomAccessibleInterval<IO>, TilingDataHandle<IO>>
+public class LocalTilingSource<IO> extends AbstractCompgraphSourceNode<OpsTile<IO>, TilingDataHandle<IO>>
 		implements TilingOutputNode<IO> {
 
 	public LocalTilingSource(final RandomAccessibleInterval<IO> inData) {
