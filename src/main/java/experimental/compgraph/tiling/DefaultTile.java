@@ -9,14 +9,14 @@ import net.imglib2.RealPositionable;
 public class DefaultTile extends AbstractEuclideanSpace implements Tile {
 
 	private final long flatIndex;
-	private long[] max;
-	private long[] min;
+	private long[] sourceMax;
+	private long[] sourceMin;
 
 	public DefaultTile(final long[] min, final long[] max, final long flatIndex) {
 		super(min.length);
 		this.flatIndex = flatIndex;
-		this.min = min;
-		this.max = max;
+		this.sourceMin = min;
+		this.sourceMax = max;
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class DefaultTile extends AbstractEuclideanSpace implements Tile {
 
 	@Override
 	public long min(int d) {
-		return min[d];
+		return sourceMin[d];
 	}
 
 	@Override
@@ -36,12 +36,12 @@ public class DefaultTile extends AbstractEuclideanSpace implements Tile {
 
 	@Override
 	public void min(Positionable min) {
-		min.setPosition(this.min);
+		min.setPosition(this.sourceMin);
 	}
 
 	@Override
 	public long max(int d) {
-		return max[d];
+		return sourceMax[d];
 	}
 
 	@Override
@@ -51,52 +51,52 @@ public class DefaultTile extends AbstractEuclideanSpace implements Tile {
 
 	@Override
 	public void max(Positionable max) {
-		max.setPosition(this.max);
+		max.setPosition(this.sourceMax);
 	}
 
 	@Override
 	public double realMin(int d) {
-		return min[d];
+		return sourceMin[d];
 	}
 
 	@Override
 	public void realMin(double[] min) {
 		for (int d = 0; d < min.length; d++) {
-			min[d] = this.min[d];
+			min[d] = this.sourceMin[d];
 		}
 	}
 
 	@Override
 	public void realMin(RealPositionable min) {
-		min.setPosition(this.min);
+		min.setPosition(this.sourceMin);
 	}
 
 	@Override
 	public double realMax(int d) {
-		return max[d];
+		return sourceMax[d];
 	}
 
 	@Override
 	public void realMax(double[] max) {
 		for (int d = 0; d < max.length; d++) {
-			max[d] = this.max[d];
+			max[d] = this.sourceMax[d];
 		}
 	}
 
 	@Override
 	public void realMax(RealPositionable max) {
-		max.setPosition(this.max);
+		max.setPosition(this.sourceMax);
 	}
 
 	@Override
 	public void dimensions(long[] dimensions) {
 		for (int d = 0; d < dimensions.length; d++) {
-			dimensions[d] = max[d] - min[d] + 1;
+			dimensions[d] = sourceMax[d] - sourceMin[d] + 1;
 		}
 	}
 
 	@Override
 	public long dimension(int d) {
-		return max[d] - min[d] + 1;
+		return sourceMax[d] - sourceMin[d] + 1;
 	}
 }

@@ -16,19 +16,18 @@ import experimental.compgraph.tiling.TilingDataHandle;
 import experimental.compgraph.tiling.request.TilesRequest;
 import experimental.compgraph.tiling.request.TilingRequestable;
 
-public class LocalTilingSource<IO> extends
-	AbstractCompgraphSourceNode<RandomAccessibleInterval<IO>, TilingDataHandle<IO>> implements TilingOutputNode<IO>
-{
+public class LocalTilingSource<IO>
+		extends AbstractCompgraphSourceNode<RandomAccessibleInterval<IO>, TilingDataHandle<IO>>
+		implements TilingOutputNode<IO> {
 
 	public LocalTilingSource(final RandomAccessibleInterval<? extends RandomAccessibleInterval<IO>> inData) {
 		super(createDataHandle(inData));
 	}
 
 	private static <T> TilingDataHandle<T> createDataHandle(
-		final RandomAccessibleInterval<? extends RandomAccessibleInterval<T>> inData)
-	{
+			final RandomAccessibleInterval<? extends RandomAccessibleInterval<T>> inData) {
 		final RandomAccess<? extends RandomAccessibleInterval<T>> inDataRA = Views.extendMirrorSingle(inData)
-			.randomAccess();
+				.randomAccess();
 		return new TilingDataHandle<T>(new TilingRequestable<T>() {
 
 			@Override

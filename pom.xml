@@ -280,6 +280,11 @@ Wisconsin-Madison, University of Konstanz and Brian Northan.</license.copyrightO
 			<artifactId>ij</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>bigdataviewer-core</artifactId>
+			<version>3.0.4-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>

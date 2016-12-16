@@ -2,7 +2,6 @@ package experimental.cache.loader;
 
 import net.imglib2.type.NativeType;
 
-import experimental.compgraph.tiling.Tiling;
 import mpicbg.spim.data.generic.sequence.BasicImgLoader;
 import mpicbg.spim.data.generic.sequence.BasicSetupImgLoader;
 

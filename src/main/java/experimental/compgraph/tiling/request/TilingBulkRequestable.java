@@ -92,4 +92,8 @@ public class TilingBulkRequestable<I, O> {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void request(long idx) {
+		
+	}
 }
