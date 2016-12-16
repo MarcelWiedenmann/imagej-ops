@@ -72,8 +72,7 @@ public class TilingBulkRequestable<I, O> {
 		Tile t;
 		if ((t = queue.get(index)) == null) {
 			t = enqueue(index, min, max);
-		}
-		else {
+		} else {
 			if (!t.isComplete()) {
 				// TODO check overlap and enqueue if needed
 			}

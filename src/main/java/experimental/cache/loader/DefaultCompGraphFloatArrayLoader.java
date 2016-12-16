@@ -17,13 +17,13 @@ import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
 
-import bdv.img.cache.CacheArrayLoader;
+import bdv.viewer.render.CompGraphFloatArrayLoader;
 import experimental.compgraph.tiling.DefaultLazyTile;
 import experimental.compgraph.tiling.LazyTile;
 import experimental.compgraph.tiling.request.TilingBulkRequestable;
 
-public class CompGraphFloatArrayLoader<T extends NativeType<T> & RealType<T>>
-		implements CacheArrayLoader<VolatileFloatArray> {
+public class DefaultCompGraphFloatArrayLoader<T extends NativeType<T> & RealType<T>>
+		implements CompGraphFloatArrayLoader<T> {
 
 	private VolatileFloatArray theEmptyArray;
 	private TilingBulkRequestable<?, T> req;
@@ -36,7 +36,7 @@ public class CompGraphFloatArrayLoader<T extends NativeType<T> & RealType<T>>
 
 	private boolean staged = false;
 
-	public CompGraphFloatArrayLoader(final TilingBulkRequestable<?, T> bulk) {
+	public DefaultCompGraphFloatArrayLoader(final TilingBulkRequestable<?, T> bulk) {
 		this.req = bulk;
 		this.gridDims = req.getGridDims();
 		this.tileDims = new int[gridDims.length];

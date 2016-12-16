@@ -10,18 +10,14 @@ import mpicbg.spim.data.generic.sequence.BasicSetupImgLoader;
 public class CompGraphImgLoader<T extends NativeType<T> & RealType<T>> implements BasicImgLoader {
 
 	private TilingBulkRequestable<?, T> bulk;
-	private long[] dimensions;
-	private int[] tileSize;
 
-	public CompGraphImgLoader(final TilingBulkRequestable<?, T> bulk, final int[] tileSize, final long[] dimensions) {
-		this.tileSize = tileSize;
-		this.dimensions = dimensions;
+	public CompGraphImgLoader(final TilingBulkRequestable<?, T> bulk) {
 		this.bulk = bulk;
 	}
 
 	@Override
 	public BasicSetupImgLoader<?> getSetupImgLoader(final int setupId) {
-		return new CompGraphSetupImgLoader<>(bulk, dimensions, tileSize);
+		return new CompGraphSetupImgLoader<>(bulk);
 	}
 
 }
