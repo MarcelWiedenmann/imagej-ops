@@ -8,12 +8,15 @@ import java.util.function.Predicate;
 
 import experimental.compgraph.CompgraphSingleEdge;
 import experimental.compgraph.DataHandle;
+import experimental.compgraph.channel.collection.img.OpsTile;
+import experimental.compgraph.channel.collection.img.OpsTiling;
 import experimental.compgraph.node.Filter;
 import experimental.compgraph.node.LocalFlatFilter;
 import experimental.compgraph.node.LocalFlatMap;
 import experimental.compgraph.node.LocalFlatReduce;
 import experimental.compgraph.node.Map;
 import experimental.compgraph.node.Reduce;
+import experimental.compgraph.tiling.node.LocalTilingMapNode;
 
 public class LocalCompgraphNodeFactory implements CompgraphNodeFactory {
 
@@ -24,6 +27,16 @@ public class LocalCompgraphNodeFactory implements CompgraphNodeFactory {
 		final Function<? super I, O> f)
 	{
 		final LocalFlatMap<I, O> map = new LocalFlatMap<>(in, f);
+		in.parent().context().inject(map);
+		return map;
+	}
+
+	@Override
+	public <I, O> LocalTilingMapNode<I, O> mapTile(final OpsTiling<I> in,
+		final Function<? super OpsTile<I>, OpsTile<O>> f)
+	{
+
+		final Object map = new LocalTilingMapNode<I, O>(in, f);
 		in.parent().context().inject(map);
 		return map;
 	}

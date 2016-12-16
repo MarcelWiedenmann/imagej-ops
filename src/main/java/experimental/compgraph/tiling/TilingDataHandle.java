@@ -1,12 +1,11 @@
 
 package experimental.compgraph.tiling;
 
-import net.imglib2.RandomAccessibleInterval;
-
 import experimental.compgraph.DataHandle;
+import experimental.compgraph.channel.collection.img.OpsTile;
 import experimental.compgraph.tiling.request.TilingRequestable;
 
-public class TilingDataHandle<IO> implements DataHandle<RandomAccessibleInterval<IO>, TilingRequestable<IO>> {
+public class TilingDataHandle<IO> implements DataHandle<OpsTile<IO>, TilingRequestable<IO>> {
 
 	private final TilingRequestable<IO> inner;
 

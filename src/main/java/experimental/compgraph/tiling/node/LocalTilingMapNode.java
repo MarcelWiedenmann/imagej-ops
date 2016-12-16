@@ -15,6 +15,7 @@ import net.imglib2.view.experimental.CombinedView;
 
 import experimental.compgraph.AbstractCompgraphUnaryNode;
 import experimental.compgraph.CompgraphSingleEdge;
+import experimental.compgraph.channel.collection.img.OpsTile;
 import experimental.compgraph.node.Map;
 import experimental.compgraph.request.UnaryInvertibleIntervalFunction;
 import experimental.compgraph.tiling.DefaultLazyTile;
@@ -28,15 +29,14 @@ import experimental.compgraph.tiling.request.TilingBulkRequestable;
 import experimental.compgraph.tiling.request.TilingRequestable;
 
 public class LocalTilingMapNode<I, O> extends
-	AbstractCompgraphUnaryNode<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<O>, TilingDataHandle<O>>
-	implements Map<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<O>, TilingDataHandle<O>>,
-	TilingUnaryNode<I, O>
+	AbstractCompgraphUnaryNode<OpsTile<I>, TilingDataHandle<I>, OpsTile<O>, TilingDataHandle<O>> implements
+	Map<OpsTile<I>, TilingDataHandle<I>, OpsTile<O>, TilingDataHandle<O>>, TilingUnaryNode<I, O>
 {
 
-	private final Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> f;
+	private final Function<? super OpsTile<I>, OpsTile<O>> f;
 
-	public LocalTilingMapNode(final CompgraphSingleEdge<RandomAccessibleInterval<I>> in,
-		final Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> f)
+	public LocalTilingMapNode(final CompgraphSingleEdge<OpsTile<I>> in,
+		final Function<? super OpsTile<I>, OpsTile<O>> f)
 	{
 		super(in);
 		this.f = f;

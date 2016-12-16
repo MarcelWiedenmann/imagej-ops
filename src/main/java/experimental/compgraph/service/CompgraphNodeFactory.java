@@ -8,14 +8,19 @@ import java.util.function.Predicate;
 
 import experimental.compgraph.CompgraphSingleEdge;
 import experimental.compgraph.DataHandle;
+import experimental.compgraph.channel.collection.img.OpsTile;
+import experimental.compgraph.channel.collection.img.OpsTiling;
 import experimental.compgraph.node.Filter;
 import experimental.compgraph.node.Map;
 import experimental.compgraph.node.Reduce;
+import experimental.compgraph.tiling.node.LocalTilingMapNode;
 
 public interface CompgraphNodeFactory {
 
 	<I, O> Map<I, ? extends DataHandle<I, ?>, O, ? extends DataHandle<O, ?>> map(CompgraphSingleEdge<I> in,
 		Function<? super I, O> f);
+
+	<I, O> LocalTilingMapNode<I, O> mapTile(OpsTiling<I> in, Function<? super OpsTile<I>, OpsTile<O>> f);
 
 	<I, O> Reduce<I, ? extends DataHandle<I, ?>, O, ? extends DataHandle<O, ?>> reduce(CompgraphSingleEdge<I> in, O memo,
 		BiFunction<O, ? super I, O> f, BinaryOperator<O> merge);

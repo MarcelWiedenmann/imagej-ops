@@ -9,17 +9,17 @@ import experimental.compgraph.tiling.Tile;
 public final class TilingActivator {
 
 	private final TilingBulkRequestable<?, ?> target;
-	private final long[] gridDims;
-	private final long[] tileDims;
 
 	public TilingActivator(final TilingBulkRequestable<?, ?> target) {
 		this.target = target;
-		gridDims = target.getGridDims();
-		tileDims = target.getTileDims();
+	}
+
+	public void request(final Interval interval) {
+		target.request(interval);
 	}
 
 	public void request(final Tile tile) {
-		request(tile, 0);
+		target.request(tile);
 	}
 
 	public Interval request(final Tile tile, final int... overlap) {
