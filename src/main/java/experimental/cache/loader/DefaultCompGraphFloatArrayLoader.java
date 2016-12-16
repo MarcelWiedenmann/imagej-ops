@@ -115,6 +115,7 @@ public class DefaultCompGraphFloatArrayLoader<T extends NativeType<T> & RealType
 		return theEmptyArray;
 	}
 
+	@Override
 	public RandomAccess<?> getFakeCellRandomAccess(long[] globalDims) {
 		return new FakeRandomAccess(globalDims);
 	}

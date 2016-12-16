@@ -36,8 +36,7 @@ public class DefaultOpsTiling<I> extends AbstractInterval implements OpsTiling<I
 	private final long[] tileDims;
 
 	public DefaultOpsTiling(final CompgraphOutputNode<OpsTile<I>, ? extends DataHandle<OpsTile<I>, ?>> parent,
-		final long[] gridDims, final long[] tileDims)
-	{
+			final long[] gridDims, final long[] tileDims) {
 		super(gridDims);
 		parent.setOutEdge(this);
 		this.parent = parent;
@@ -52,8 +51,7 @@ public class DefaultOpsTiling<I> extends AbstractInterval implements OpsTiling<I
 
 	@Override
 	public <I2> OpsBoundedChannel<? extends Pair<OpsTile<I>, I2>> join(final OpsBoundedChannel<I2> c,
-		final BiPredicate<? super OpsTile<I>, ? super I2> f)
-	{
+			final BiPredicate<? super OpsTile<I>, ? super I2> f) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -78,8 +76,7 @@ public class DefaultOpsTiling<I> extends AbstractInterval implements OpsTiling<I
 
 	@Override
 	public <O> OpsGrid<? extends OpsBoundedChannel<O>> partition(
-		final BiConsumer<? super OpsTile<I>, ? extends Consumer<O>> f)
-	{
+			final BiConsumer<? super OpsTile<I>, ? extends Consumer<O>> f) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -98,8 +95,7 @@ public class DefaultOpsTiling<I> extends AbstractInterval implements OpsTiling<I
 
 	@Override
 	public <O> OpsElement<O> reduce(final O memo, final BiFunction<O, ? super OpsTile<I>, O> f,
-		final BinaryOperator<O> merge)
-	{
+			final BinaryOperator<O> merge) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -176,8 +172,8 @@ public class DefaultOpsTiling<I> extends AbstractInterval implements OpsTiling<I
 		// FIXME: hierarchical Ops* vs. DataHandle
 		final Function<? super OpsTile<I>, OpsTile<O>> fToTile = f.andThen((rai) -> new DefaultOpsTile<>(rai));
 
-		final Map<OpsTile<I>, ? extends DataHandle<OpsTile<I>, ?>, OpsTile<O>, ? extends DataHandle<OpsTile<O>, ?>> map =
-			parent.cgs().factory().mapTile(this, fToTile);
+		final Map<OpsTile<I>, ? extends DataHandle<OpsTile<I>, ?>, OpsTile<O>, ? extends DataHandle<OpsTile<O>, ?>> map = parent
+				.cgs().factory().mapTile(this, fToTile);
 
 		final long[] gridDims = new long[n];
 		dimensions(gridDims);

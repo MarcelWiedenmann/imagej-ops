@@ -51,9 +51,10 @@ public class CompGraphSetupImgLoader<T extends NativeType<T> & RealType<T>> impl
 		return new CompGraphImg<>(cells, c, floatLoader);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public T getImageType() {
-		// TODO hack
+		// TODO hack. At some point we have to be more general
 		return (T) new FloatType();
 	}
 

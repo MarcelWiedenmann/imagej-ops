@@ -20,12 +20,12 @@ import experimental.compgraph.tiling.node.LocalTilingMapNode;
 
 public class LocalCompgraphNodeFactory implements CompgraphNodeFactory {
 
-	// TODO: We may need some Ops-like matching system to match interfaces and their respective optimal implementation.
+	// TODO: We may need some Ops-like matching system to match interfaces and
+	// their respective optimal implementation.
 
 	@Override
 	public <I, O> Map<I, ? extends DataHandle<I, ?>, O, ? extends DataHandle<O, ?>> map(final CompgraphSingleEdge<I> in,
-		final Function<? super I, O> f)
-	{
+			final Function<? super I, O> f) {
 		final LocalFlatMap<I, O> map = new LocalFlatMap<>(in, f);
 		in.parent().context().inject(map);
 		return map;
@@ -33,18 +33,17 @@ public class LocalCompgraphNodeFactory implements CompgraphNodeFactory {
 
 	@Override
 	public <I, O> LocalTilingMapNode<I, O> mapTile(final OpsTiling<I> in,
-		final Function<? super OpsTile<I>, OpsTile<O>> f)
-	{
+			final Function<? super OpsTile<I>, OpsTile<O>> f) {
 
-		final Object map = new LocalTilingMapNode<I, O>(in, f);
+		final LocalTilingMapNode<I, O> map = new LocalTilingMapNode<>(in, f);
 		in.parent().context().inject(map);
 		return map;
 	}
 
 	@Override
 	public <I, O> Reduce<I, ? extends DataHandle<I, ?>, O, ? extends DataHandle<O, ?>> reduce(
-		final CompgraphSingleEdge<I> in, final O memo, final BiFunction<O, ? super I, O> f, final BinaryOperator<O> merge)
-	{
+			final CompgraphSingleEdge<I> in, final O memo, final BiFunction<O, ? super I, O> f,
+			final BinaryOperator<O> merge) {
 		final LocalFlatReduce<I, O> reduce = new LocalFlatReduce<>(in, memo, f, merge);
 		in.parent().context().inject(reduce);
 		return reduce;
@@ -52,8 +51,7 @@ public class LocalCompgraphNodeFactory implements CompgraphNodeFactory {
 
 	@Override
 	public <I> Filter<I, ? extends DataHandle<I, ?>> filter(final CompgraphSingleEdge<I> in,
-		final Predicate<? super I> f)
-	{
+			final Predicate<? super I> f) {
 		final LocalFlatFilter<I> filter = new LocalFlatFilter<>(in, f);
 		in.parent().context().inject(filter);
 		return filter;

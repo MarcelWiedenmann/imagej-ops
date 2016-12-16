@@ -4,7 +4,6 @@ import org.scijava.Context;
 import org.scijava.cache.CacheService;
 
 // will be replaced with proper cacheservice
-@Deprecated
 public class CacheHack {
 
 	private static CacheService cs;
