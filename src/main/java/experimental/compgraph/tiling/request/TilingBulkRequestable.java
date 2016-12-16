@@ -63,7 +63,7 @@ public class TilingBulkRequestable<I, O> {
 			minIndex[d] = interval.min(d) / tileDims[d];
 			maxIndex[d] = interval.max(d) / tileDims[d];
 			minOffset[d] = interval.min(d) % tileDims[d];
-			maxOffset[d] = interval.max(d) % tileDims[d];
+			maxOffset[d] = interval.max(d) % tileDims[d] != 0 ? interval.max(d) % tileDims[d] : fullTileMax[d];
 			minFlatIndex = minFlatIndex * gridDims[d] + minIndex[d];
 			maxFlatIndex = maxFlatIndex * gridDims[d] + maxIndex[d];
 		}
@@ -114,20 +114,18 @@ public class TilingBulkRequestable<I, O> {
 	private void requestAll(final long[] min, final long[] max, final long[] minOffset, final long[] maxOffset,
 		final long[] gridDims, final long[] fullTileMax, final int d, final long[] p)
 	{
-		for (long i = min[d]; i < max[d]; i++) {
+		for (long i = min[d]; i <= max[d]; i++) {
 			p[d] = i;
 			if (d == p.length - 1) {
 				// Request single tile. TODO: note this is super inefficient
 				long tileFlatIndex = 0;
 				final long[] tileMin = new long[p.length];
 				final long[] tileMax = new long[p.length];
-				for (int deh = 0; deh < p.length; deh++) {
+				for (int deh = p.length - 1; deh >= 0; --deh) {
 					tileFlatIndex = tileFlatIndex * gridDims[deh] + p[deh];
 					tileMin[deh] = p[deh] == min[deh] ? minOffset[d] : 0;
-					// FIXME
 					tileMax[deh] = p[deh] == max[deh] ? maxOffset[d] : fullTileMax[d];
 				}
-				requestInternal(tileFlatIndex, tileMin, tileMax);
 			}
 			else {
 				requestAll(min, max, minOffset, maxOffset, gridDims, fullTileMax, d + 1, p);
@@ -140,7 +138,8 @@ public class TilingBulkRequestable<I, O> {
 		Tile t;
 		if ((t = queue.get(index)) == null) {
 			t = enqueue(index, min, max);
-		} else {
+		}
+		else {
 			if (!t.isComplete()) {
 				// TODO check overlap and enqueue if needed
 			}
