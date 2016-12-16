@@ -32,6 +32,7 @@ package net.imagej.ops.filter.gauss;
 
 import net.imagej.ops.Ops;
 import net.imagej.ops.special.hybrid.AbstractUnaryHybridCF;
+import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.gauss3.Gauss3;
@@ -50,8 +51,8 @@ import org.scijava.plugin.Plugin;
 import org.scijava.thread.ThreadService;
 
 import experimental.compgraph.request.Tile;
-import experimental.compgraph.request.DefaultTilesRequest;
 import experimental.compgraph.request.UnaryInvertibleIntervalFunction;
+import experimental.compgraph.tiling.TilingActivator;
 
 /**
  * Gaussian filter, wrapping {@link Gauss3} of imglib2-algorithms.
@@ -98,8 +99,7 @@ public class DefaultGaussRAI<T extends RealType<T> & NativeType<T>> extends
 	// -- UnaryInvertibleIntervalMapper --
 
 	@Override
-	public void invert(final Tile t, final DefaultTilesRequest mask) {
-
-		mask.markWithOverlap(t, Gauss3.halfkernelsizes(sigmas));
+	public Interval invert(final Tile t, final TilingActivator a) {
+		return a.request(t, Gauss3.halfkernelsizes(sigmas));
 	}
 }

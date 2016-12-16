@@ -36,7 +36,7 @@ public class LocalTilingMap<I, O> extends
 			@Override
 			public List<LazyTile<O>> request(final TilesRequest request) {
 				final TilingRequestable<I> requestable = inHandle.inner();
-				final List<LazyTile<O>> requesteds = request.apply(f, requestable);
+				final List<LazyTile<O>> requesteds = request.createMask().apply(f, requestable);
 				return requesteds;
 			}
 		});

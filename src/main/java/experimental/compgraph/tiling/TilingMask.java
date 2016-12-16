@@ -1,72 +1,99 @@
 
 package experimental.compgraph.tiling;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
+import net.imglib2.AbstractEuclideanSpace;
 import net.imglib2.Interval;
+import net.imglib2.Point;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
-import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.util.IntervalIndexer;
+import net.imglib2.view.experimental.CombinedView;
 
+import experimental.compgraph.request.DefaultTile;
 import experimental.compgraph.request.Tile;
-import experimental.compgraph.request.TilesRequest;
-import experimental.compgraph.request.TilingRequestable;
-import experimental.compgraph.request.UnaryInvertibleIntervalFunction;
 
-public class TilingMask<T> implements RandomAccessible<T> {
+public class TilingMask<I, O> extends AbstractEuclideanSpace implements RandomAccessible<Tile> {
 
-	HashMap<Long, Tile> tiles = new HashMap<>();
+	private final TilingBulkRequestable source;
+	private final long[] tileSize;
+	private final long[] gridDims;
+	CombinedView<I> tiling;
 
-	public void mark(final Tile tile) {
+	public TilingMask(final TilingBulkRequestable source, final long[] tileSize, final long[] gridDims) {
+		super(gridDims.length);
+		this.tileSize = tileSize;
+		this.gridDims = gridDims;
 
-	}
-
-	public <
-		I, O, F extends UnaryInvertibleIntervalFunction & Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>>>
-		List<LazyTile<O>> apply(final F f, final TilingRequestable<I> requestable, final TilesRequest r)
-	{
-		final List<Tile> key = r.key();
-		for (final Tile t : key) {
-			// Individual mask for each requested tile.
-			final TilingActivator ta = new TilingActivator(this);
-			final Interval i = f.invert(t, ta);
-			// final List<Tile> req =
-
-			// (1) for tile remember / recogn. which tiles have been activated.
-			// (2) remember tile-indices and merge requests with existing requests on tile-indices
-		}
-		// (3) fire request for all tiles to requestable.
-		// (4) Collect Requests and put the corresponding LazyTiles at the right position in the grid.
-		// (5) Make view for each tile which was requested FROM me (e.g. Views.interval(this, key.getInterval()))
-		// (6) return list of views (which is <I>) LazyTile<O> = <I> + 'f' -> LazyTile(View<I>, F<I,O>), see (5).
-	}
-
-	public <
-		I1, I2, O, F extends BinaryInvertibleIntervalMapper & BiFunction<? super RandomAccessibleInterval<I1>, ? super RandomAccessibleInterval<I2>, RandomAccessibleInterval<O>>>
-		List<LazyTile<O>> apply(final F f, final TilingRequestable<I1> requestable1,
-			final TilingRequestable<I2> requestable2)
-	{
-		throw new UnsupportedOperationException("not yet implemented");
-	}
-
-	@Override
-	public Iterator<Tile> iterator() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("not yet implemented");
+		// TODO
+		tiling = new CombinedView<>(null);
 	}
 
 	@Override
 	public RandomAccess<Tile> randomAccess() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("not yet implemented");
+		return new TilingMaskRandomAccess();
 	}
 
 	@Override
 	public RandomAccess<Tile> randomAccess(final Interval interval) {
 		return randomAccess();
+	}
+
+	// -- Nested Classes --
+
+	public static class TilingMaskRandomAccess<O> extends Point implements RandomAccess<LazyTile<O>> {
+
+		private final TilingBulkRequestable<O> tiles;
+		private final long[] gridDims;
+		private final long[] tileDims;
+
+		public TilingMaskRandomAccess(final TilingBulkRequestable<O> tiles, final long[] gridDims, final long[] tileDims) {
+			this.tiles = tiles;
+			this.gridDims = gridDims;
+			this.tileDims = tileDims;
+		}
+
+		public TilingMaskRandomAccess(final TilingMaskRandomAccess<O> ra) {
+			this.tiles = ra.tiles;
+			this.gridDims = ra.gridDims;
+			this.tileDims = ra.tileDims;
+		}
+
+		public void stage() {
+			tiles.request(new CompleteTile(position, gridDims, tileDims));
+		}
+
+		public void stagePartially(final long[] min, final long[] max) {
+			final long i = IntervalIndexer.positionToIndex(position, gridDims);
+			final long[] globalMin = new long[min.length];
+			final long[] globalMax = new long[max.length];
+			for (int d = 0; d < n; d++) {
+				globalMin[d] = gridDims[d] * tileDims[d] + min[d];
+				globalMax[d] = globalMin[d] + tileDims[d] - 1 + max[d];
+			}
+			tiles.request(new DefaultTile(globalMin, globalMax, i));
+		}
+
+		@Override
+		public LazyTile<O> get() {
+			stage();
+			tiles.flush();
+			return tiles.request(position);
+		}
+
+		@Override
+		public TilingMaskRandomAccess<O> copy() {
+			return new TilingMaskRandomAccess<>(this);
+		}
+
+		@Override
+		public TilingMaskRandomAccess<O> copyRandomAccess() {
+			return copy();
+		}
+
+		// -- Nested Classes --
+
+		private static class CompleteTile implements Tile {
+			// TODO
+		}
 	}
 }
