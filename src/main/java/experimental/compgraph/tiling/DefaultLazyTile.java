@@ -56,9 +56,4 @@ public class DefaultLazyTile<I, O> extends AbstractInterval implements LazyTile<
 	public long flatIndex() {
 		return tile.flatIndex();
 	}
-
-	@Override
-	public boolean isComplete() {
-		return tile.isComplete();
-	}
 }
