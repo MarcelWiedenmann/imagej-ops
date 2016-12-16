@@ -9,10 +9,7 @@ public interface Tile extends Interval {
 
 	long flatIndex();
 
-	// TODO: which one's better?
+	long[] min();
 
-	// long[] index();
-
-	// NB: for convenience/efficiency - needed?
-	// boolean isPartialTile();
+	long[] max();
 }

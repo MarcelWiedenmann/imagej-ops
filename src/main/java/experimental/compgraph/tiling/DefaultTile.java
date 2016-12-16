@@ -9,15 +9,17 @@ import net.imglib2.RealPositionable;
 public class DefaultTile extends AbstractEuclideanSpace implements Tile {
 
 	private final long flatIndex;
-	private long[] sourceMax;
-	private long[] sourceMin;
+	private final long[] max;
+	private final long[] min;
 
 	public DefaultTile(final long[] min, final long[] max, final long flatIndex) {
 		super(min.length);
 		this.flatIndex = flatIndex;
-		this.sourceMin = min;
-		this.sourceMax = max;
+		this.min = min;
+		this.max = max;
 	}
+
+	// -- Tile --
 
 	@Override
 	public long flatIndex() {
@@ -25,78 +27,90 @@ public class DefaultTile extends AbstractEuclideanSpace implements Tile {
 	}
 
 	@Override
-	public long min(int d) {
-		return sourceMin[d];
+	public long[] min() {
+		return min;
 	}
 
 	@Override
-	public void min(long[] min) {
+	public long[] max() {
+		return max;
+	}
+
+	// -- Interval --
+
+	@Override
+	public long min(final int d) {
+		return min[d];
+	}
+
+	@Override
+	public void min(final long[] min) {
 		System.arraycopy(min, 0, min, 0, min.length);
 	}
 
 	@Override
-	public void min(Positionable min) {
-		min.setPosition(this.sourceMin);
+	public void min(final Positionable min) {
+		min.setPosition(this.min);
 	}
 
 	@Override
-	public long max(int d) {
-		return sourceMax[d];
+	public long max(final int d) {
+		return max[d];
 	}
 
 	@Override
-	public void max(long[] max) {
+	public void max(final long[] max) {
 		System.arraycopy(max, 0, max, 0, max.length);
 	}
 
 	@Override
-	public void max(Positionable max) {
-		max.setPosition(this.sourceMax);
+	public void max(final Positionable max) {
+		max.setPosition(this.max);
 	}
 
 	@Override
-	public double realMin(int d) {
-		return sourceMin[d];
+	public double realMin(final int d) {
+		return min[d];
 	}
 
 	@Override
-	public void realMin(double[] min) {
+	public void realMin(final double[] min) {
 		for (int d = 0; d < min.length; d++) {
-			min[d] = this.sourceMin[d];
+			min[d] = this.min[d];
 		}
 	}
 
 	@Override
-	public void realMin(RealPositionable min) {
-		min.setPosition(this.sourceMin);
+	public void realMin(final RealPositionable min) {
+		min.setPosition(this.min);
 	}
 
 	@Override
-	public double realMax(int d) {
-		return sourceMax[d];
+	public double realMax(final int d) {
+		return max[d];
 	}
 
 	@Override
-	public void realMax(double[] max) {
+	public void realMax(final double[] max) {
 		for (int d = 0; d < max.length; d++) {
-			max[d] = this.sourceMax[d];
+			max[d] = this.max[d];
 		}
 	}
 
 	@Override
-	public void realMax(RealPositionable max) {
-		max.setPosition(this.sourceMax);
+	public void realMax(final RealPositionable max) {
+		max.setPosition(this.max);
 	}
 
 	@Override
-	public void dimensions(long[] dimensions) {
+	public void dimensions(final long[] dimensions) {
 		for (int d = 0; d < dimensions.length; d++) {
-			dimensions[d] = sourceMax[d] - sourceMin[d] + 1;
+			dimensions[d] = max[d] - min[d] + 1;
 		}
 	}
 
 	@Override
-	public long dimension(int d) {
-		return sourceMax[d] - sourceMin[d] + 1;
+	public long dimension(final int d) {
+		return max[d] - min[d] + 1;
 	}
 }
