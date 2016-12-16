@@ -26,7 +26,7 @@ public class CompGraphFloatArrayLoader<T extends NativeType<T> & RealType<T>>
 		implements CacheArrayLoader<VolatileFloatArray> {
 
 	private VolatileFloatArray theEmptyArray;
-	private TilingBulkRequestable<T, T> req;
+	private TilingBulkRequestable<?, T> req;
 
 	// we could also cache here.. but we don't.. ;-) Next node will cache, too.
 	private Map<Long, LazyTile<T>> res;
@@ -36,7 +36,7 @@ public class CompGraphFloatArrayLoader<T extends NativeType<T> & RealType<T>>
 
 	private boolean staged = false;
 
-	public CompGraphFloatArrayLoader(final TilingBulkRequestable<T, T> bulk) {
+	public CompGraphFloatArrayLoader(final TilingBulkRequestable<?, T> bulk) {
 		this.req = bulk;
 		this.gridDims = req.getGridDims();
 		this.tileDims = new int[gridDims.length];

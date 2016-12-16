@@ -4,6 +4,7 @@ import net.imglib2.img.basictypeaccess.volatiles.VolatileAccess;
 import net.imglib2.img.cell.AbstractCellImg;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 
 import bdv.cache.CacheHints;
 import bdv.img.cache.CachedCellImg;
@@ -11,7 +12,7 @@ import bdv.img.cache.VolatileCell;
 import bdv.img.cache.VolatileImgCells;
 import bdv.img.cache.VolatileImgCells.CellCache;
 
-public class CompGraphImg<T extends NativeType<T>, A extends VolatileAccess>
+public class CompGraphImg<T extends NativeType<T> & RealType<T>, A extends VolatileAccess>
 		extends AbstractCellImg<T, A, VolatileCell<A>, CellImgFactory<T>> {
 
 	private final CellCache<A> cache;

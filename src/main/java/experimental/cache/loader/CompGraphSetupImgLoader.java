@@ -3,6 +3,7 @@ package experimental.cache.loader;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileFloatArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Fraction;
 
 import bdv.cache.CacheHints;
@@ -14,7 +15,7 @@ import experimental.compgraph.tiling.request.TilingBulkRequestable;
 import mpicbg.spim.data.generic.sequence.BasicSetupImgLoader;
 import mpicbg.spim.data.generic.sequence.ImgLoaderHint;
 
-public class CompGraphSetupImgLoader<T extends NativeType<T>> implements BasicSetupImgLoader<T> {
+public class CompGraphSetupImgLoader<T extends NativeType<T> & RealType<T>> implements BasicSetupImgLoader<T> {
 
 	private CompGraphFloatArrayLoader<T> floatLoader;
 	private VolatileGlobalCellCache cache;
