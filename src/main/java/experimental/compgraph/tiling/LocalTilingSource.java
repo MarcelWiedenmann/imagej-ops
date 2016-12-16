@@ -6,6 +6,7 @@ import java.util.List;
 
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.view.Views;
 
 import experimental.compgraph.AbstractCompgraphSourceNode;
 import experimental.compgraph.request.Tile;
@@ -23,7 +24,8 @@ public class LocalTilingSource<IO> extends
 	private static <T> TilingDataHandle<T> createDataHandle(
 		final RandomAccessibleInterval<? extends RandomAccessibleInterval<T>> inData)
 	{
-		final RandomAccess<? extends RandomAccessibleInterval<T>> inDataRA = inData.randomAccess();
+		final RandomAccess<? extends RandomAccessibleInterval<T>> inDataRA = Views.extendMirrorSingle(inData)
+			.randomAccess();
 		return new TilingDataHandle<T>(new TilingRequestable<T>() {
 
 			@Override

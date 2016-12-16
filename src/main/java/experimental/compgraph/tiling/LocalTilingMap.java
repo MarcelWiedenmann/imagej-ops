@@ -22,15 +22,16 @@ import experimental.compgraph.request.TilingRequestable;
 import experimental.compgraph.request.UnaryInvertibleIntervalFunction;
 
 public class LocalTilingMap<I, O> extends
-		AbstractCompgraphUnaryNode<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<O>, TilingDataHandle<O>>
-		implements
-		Map<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<O>, TilingDataHandle<O>>,
-		TilingUnaryNode<I, O> {
+	AbstractCompgraphUnaryNode<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<O>, TilingDataHandle<O>>
+	implements Map<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<O>, TilingDataHandle<O>>,
+	TilingUnaryNode<I, O>
+{
 
 	private final Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> f;
 
 	public LocalTilingMap(final CompgraphSingleEdge<RandomAccessibleInterval<I>> in,
-			final Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> f) {
+		final Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> f)
+	{
 		super(in);
 		this.f = f;
 	}
@@ -43,10 +44,8 @@ public class LocalTilingMap<I, O> extends
 
 			@Override
 			public Iterator<LazyTile<O>> request(final TilesRequest request) {
-
 				// TODO maybe the both are actually the same ..
 				final TilingBulkRequestable<I, O> bulk = new TilingBulkRequestable<>(inHandle.inner());
-
 				final TilingActivator act = new TilingActivator(bulk);
 
 				// TODO maybe list of pairs is more funny
@@ -57,14 +56,14 @@ public class LocalTilingMap<I, O> extends
 					final Tile tile = reqIt.next();
 					if (f instanceof UnaryInvertibleIntervalFunction) {
 						queue.add(new ValuePair<>(tile, ((UnaryInvertibleIntervalFunction<?, ?>) f).invert(tile, act)));
-					} else {
+					}
+					else {
 						throw new UnsupportedOperationException("");
 					}
 				}
-
 				// TODO need tile-size, tiling-dims and grid dims!!!
 				// TODO efficiency? ;-)
-				TilingMask<I> mask = new TilingMask<>(bulk.flush(), null, null);
+				final TilingMask<I> mask = new TilingMask<>(bulk.flush(), null, null);
 
 				final CombinedView<I> view = new CombinedView<>(Views.interval(mask, gridDims));
 
@@ -72,9 +71,7 @@ public class LocalTilingMap<I, O> extends
 				for (final Pair<Tile, Interval> i : queue) {
 					results.add(new DefaultLazyTile<>(f, Views.interval(view, i.getB()), i.getA()));
 				}
-
 				queue.clear();
-
 				return results.iterator();
 			}
 		});

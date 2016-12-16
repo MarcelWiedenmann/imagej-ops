@@ -42,8 +42,7 @@ public class TilingMask<O> extends AbstractEuclideanSpace implements RandomAcces
 		private final long[] tileDims;
 		private Map<Long, LazyTile<O>> source;
 
-		public TilingMaskRandomAccess(final Map<Long, LazyTile<O>> source, final long[] gridDims,
-				final long[] tileDims) {
+		public TilingMaskRandomAccess(final Map<Long, LazyTile<O>> source, final long[] gridDims, final long[] tileDims) {
 			this.source = source;
 			this.gridDims = gridDims;
 			this.tileDims = tileDims;

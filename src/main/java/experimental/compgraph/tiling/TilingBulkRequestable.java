@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.imglib2.Interval;
 import net.imglib2.util.IntervalIndexer;
 
 import experimental.compgraph.request.DefaultTile;
@@ -15,15 +16,15 @@ import experimental.compgraph.request.TilingRequestable;
 
 public class TilingBulkRequestable<I, O> {
 
-	private ConcurrentHashMap<Long, Tile> queue = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<Long, Tile> queue = new ConcurrentHashMap<>();
+	private final TilingRequestable<I> source;
 
-	private TilingRequestable<I> requestable;
+	public TilingBulkRequestable(final TilingRequestable<I> source) {
+		this.source = source;
+	}
 
-	private TilingActivator activator;
+	public void request(final Interval i) {
 
-	public TilingBulkRequestable(final TilingRequestable<I> req) {
-		this.requestable = req;
-		this.activator = new TilingActivator(this);
 	}
 
 	private void requestInternal(final long index, final long[] min, final long[] max) {
@@ -31,14 +32,15 @@ public class TilingBulkRequestable<I, O> {
 		Tile t;
 		if ((t = queue.get(index)) == null) {
 			t = enqueue(index, min, max);
-		} else {
+		}
+		else {
 			if (!t.isComplete()) {
 				// TODO check overlap and enqueue if needed
 			}
 		}
 	}
 
-	private Tile enqueue(long index, long[] min, long[] max) {
+	private Tile enqueue(final long index, final long[] min, final long[] max) {
 
 		final long i = IntervalIndexer.positionToIndex(position, gridDims);
 		final long[] globalMin = new long[min.length];
@@ -54,10 +56,10 @@ public class TilingBulkRequestable<I, O> {
 	}
 
 	public synchronized Map<Long, LazyTile<I>> flush() {
-		Map<Long, LazyTile<I>> res = new ConcurrentHashMap<>();
+		final Map<Long, LazyTile<I>> res = new ConcurrentHashMap<>();
 		final Enumeration<Long> keys = queue.keys();
 		while (keys.hasMoreElements()) {
-			Iterator<LazyTile<I>> request = requestable.request(new TilesRequest() {
+			final Iterator<LazyTile<I>> request = source.request(new TilesRequest() {
 
 				@Override
 				public Iterator<Tile> key() {
