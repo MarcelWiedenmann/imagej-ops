@@ -1,19 +1,14 @@
-
 package experimental.compgraph.tiling;
 
-import java.util.HashMap;
-
 import experimental.compgraph.request.Tile;
-import experimental.compgraph.request.TilingRequestable;
 
+// INTERNAL USAGE ONLY
 public class TilingActivator {
 
-	private final TilingMask mask;
+	private final TilingBulkRequestable<?, ?> req;
 
-	private HashMap<Long, Tile> tiles;
-
-	public TilingActivator(final TilingMask mask) {
-		this.mask = mask;
+	public TilingActivator(final TilingBulkRequestable<?, ?> req) {
+		this.req = req;
 	}
 
 	public void request(final Tile tile) {
@@ -29,16 +24,10 @@ public class TilingActivator {
 	}
 
 	public void request(final Tile tile, final long... overlap) {
-		// TODO: do complex and efficient stuff and occasionally call mark(..) ("Hey Mark, how you doin'?")
+		// TODO: do complex and efficient stuff and occasionally call
+		// mark(..)
+		// ("Hey Mark, how you doin'?").
+		// Translate to tiles.req;
 	}
 
-	private void mark(final Tile tile) {
-		tiles.put(tile.flatIndex(), tile);
-		mask.mark(tile);
-	}
-
-	public GridOfLazyTiles<I> createView(final TilingRequestable<I> requestable) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
