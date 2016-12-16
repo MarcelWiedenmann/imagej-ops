@@ -17,12 +17,12 @@ public class TilingBulkRequestable<I, O> {
 	private final ConcurrentHashMap<Long, Tile> queue = new ConcurrentHashMap<>();
 	private final TilingRequestable<I> source;
 	private final long[] gridDims;
-	private final long[] tileDims;
+	private final int[] tileDims;
 	// NB: Keep those internal! They must not be modified.
 	private final long[] fullTileMin;
 	private final long[] fullTileMax;
 
-	public TilingBulkRequestable(final TilingRequestable<I> source, final long[] gridDims, final long[] tileDims) {
+	public TilingBulkRequestable(final TilingRequestable<I> source, final long[] gridDims, final int[] tileDims) {
 		this.source = source;
 		this.gridDims = gridDims;
 		this.tileDims = tileDims;
@@ -38,7 +38,7 @@ public class TilingBulkRequestable<I, O> {
 		return gridDims;
 	}
 
-	public long[] getTileDims() {
+	public int[] getTileDims() {
 		return tileDims;
 	}
 

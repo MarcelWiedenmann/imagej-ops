@@ -89,7 +89,7 @@ public class CompGraphFloatArrayLoader<T extends NativeType<T> & RealType<T>>
 
 		// TODO UGLY! has to change!!
 		if (lazyTile instanceof DefaultLazyTile) {
-			RandomAccessibleInterval<T> object = ((DefaultLazyTile<?, T>) lazyTile).getObject();
+			RandomAccessibleInterval<T> object = ((DefaultLazyTile<?, T>) lazyTile).get();
 			if (object instanceof ArrayImg && ((ArrayImg) object).update(null) instanceof FloatArray) {
 				return new VolatileFloatArray(
 						((ArrayImg<FloatType, FloatArray>) (object)).update(null).getCurrentStorageArray(), true);
