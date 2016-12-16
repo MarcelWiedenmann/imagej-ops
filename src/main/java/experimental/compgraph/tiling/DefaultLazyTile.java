@@ -5,8 +5,10 @@ import java.util.function.Function;
 
 import net.imglib2.AbstractInterval;
 import net.imglib2.Interval;
-import net.imglib2.Point;
+import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
+
+import org.scijava.cache.CacheService;
 
 import experimental.compgraph.request.Tile;
 
@@ -15,21 +17,38 @@ public class DefaultLazyTile<I, O> extends AbstractInterval implements LazyTile<
 	// TODO: this is where we do threading
 	// TODO: partial tiles have to be handled here!
 
-	public DefaultLazyTile(final Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> f,
-			final RandomAccessibleInterval<I> source, final Tile interval) {
-		super(interval);
+	private Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> func;
+
+	private RandomAccessibleInterval<I> source;
+
+	private Tile tile;
+
+	private CacheService cache;
+
+	private int hashCode;
+
+	public DefaultLazyTile(final Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> func,
+			final RandomAccessibleInterval<I> source, final Tile tile, final CacheService cache) {
+		super(tile);
+		this.cache = cache;
+		this.func = func;
+		this.source = source;
+		this.hashCode = hashCode() * 31 + 1;
+		this.tile = tile;
 	}
 
 	// -- RandomAccessibleInterval --
-
 	@Override
-	public DefaultLazyTileRandomAccess<T> randomAccess() {
-		// TODO Auto-generated method stub
-		return null;
+	public RandomAccess<O> randomAccess() {
+		@SuppressWarnings("unchecked")
+		final RandomAccessibleInterval<O> o = (RandomAccessibleInterval<O>) cache
+				.get(((hashCode + 1) * 31) ^ tile.flatIndex());
+
+		return (o == null) ? func.apply(source).randomAccess() : o.randomAccess();
 	}
 
 	@Override
-	public DefaultLazyTileRandomAccess<T> randomAccess(final Interval interval) {
+	public RandomAccess<O> randomAccess(final Interval interval) {
 		return randomAccess();
 	}
 
@@ -37,44 +56,11 @@ public class DefaultLazyTile<I, O> extends AbstractInterval implements LazyTile<
 
 	@Override
 	public long flatIndex() {
-		// TODO Auto-generated method stub
-		return 0;
+		return tile.flatIndex();
 	}
 
 	@Override
-	public long[] index() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isPartialTile() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	// -- Nested Classes --
-
-	public static class DefaultLazyTileRandomAccess<T> extends Point implements LazyTileRandomAccess<T> {
-
-		// -- RandomAccess --
-
-		@Override
-		public T get() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public DefaultLazyTileRandomAccess<T> copy() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public DefaultLazyTileRandomAccess<T> copyRandomAccess() {
-			// TODO Auto-generated method stub
-			return null;
-		}
+	public boolean isComplete() {
+		return tile.isComplete();
 	}
 }

@@ -1,35 +1,92 @@
 
 package experimental.compgraph.tiling;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import net.imglib2.RandomAccessibleInterval;
 
+import org.scijava.cache.CacheService;
+
 import experimental.compgraph.AbstractCompgraphUnaryNode;
 import experimental.compgraph.CompgraphSingleEdge;
+import experimental.compgraph.request.Tile;
 import experimental.compgraph.request.TilesRequest;
 import experimental.compgraph.request.TilingRequestable;
 
-public class LocalTilingCache<IO> extends
-	AbstractCompgraphUnaryNode<RandomAccessibleInterval<IO>, TilingDataHandle<IO>, RandomAccessibleInterval<IO>, TilingDataHandle<IO>>
-	implements TilingUnaryNode<IO, IO>
-{
+public class LocalTilingCache<I> extends
+		AbstractCompgraphUnaryNode<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<I>, TilingDataHandle<I>>
+		implements TilingUnaryNode<I, I> {
 
-	public LocalTilingCache(final CompgraphSingleEdge<RandomAccessibleInterval<IO>> in) {
+	private CacheService cache;
+	private final long hashHint;
+
+	public LocalTilingCache(final CacheService cache, final CompgraphSingleEdge<RandomAccessibleInterval<I>> in) {
 		super(in);
+		this.cache = cache;
+		this.hashHint = hashCode() * 31;
 	}
 
+	// -- AbstractCompgraphUnaryNode --
+
 	@Override
-	protected TilingDataHandle<IO> applyInternal(final TilingDataHandle<IO> inHandle) {
-		return new TilingDataHandle<IO>(new TilingRequestable<IO>() {
+	protected TilingDataHandle<I> applyInternal(final TilingDataHandle<I> inHandle) {
+		return new TilingDataHandle<>(new TilingRequestable<I>() {
 
 			@Override
-			public List<RandomAccessibleInterval<IO>> request(final TilesRequest requests) {
+			public Iterator<LazyTile<I>> request(final TilesRequest request) {
+				final HashMap<Long, LazyTile<I>> res = new HashMap<>();
 
-				// TODO: Christian :D
+				final ArrayList<Long> indices = new ArrayList<>();
 
-				return inHandle.inner().request(requests);
+				final TilingBulkRequestable<I, I> bulk = new TilingBulkRequestable<>(inHandle.inner());
+
+				final Iterator<Tile> key = request.key();
+				while (key.hasNext()) {
+					final Tile next = key.next();
+					indices.add(next.flatIndex());
+					Object object = cache.get(hashHint ^ next.flatIndex());
+
+					if (object != null) {
+						@SuppressWarnings("unchecked")
+						LazyTile<I> lt = (LazyTile<I>) object;
+						// TODO check if big enough
+						// if not, act as if object was null, else stage object
+						res.put(lt.flatIndex(), lt);
+					} else {
+						bulk.request(next);
+					}
+				}
+
+				final Map<Long, LazyTile<I>> requested = bulk.flush();
+
+				// Cache and add to result
+				for (final Entry<Long, LazyTile<I>> entry : requested.entrySet()) {
+					res.put(entry.getKey(), entry.getValue());
+					cache.put(hashHint ^ entry.getKey(), entry.getValue());
+				}
+
+				res.putAll(requested);
+
+				return new Iterator<LazyTile<I>>() {
+
+					final Iterator<Long> it = indices.iterator();
+
+					@Override
+					public boolean hasNext() {
+						return it.hasNext();
+					}
+
+					@Override
+					public LazyTile<I> next() {
+						return res.get(it.next());
+					}
+				};
 			}
 		});
 	}
+
 }

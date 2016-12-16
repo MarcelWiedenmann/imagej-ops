@@ -55,7 +55,7 @@ public class TilingMask<O> extends AbstractEuclideanSpace implements RandomAcces
 		}
 
 		@Override
-		public LazyTile<O> get() {
+		public RandomAccessibleInterval<O> get() {
 			return source.get(IntervalIndexer.positionToIndex(position, gridDims));
 		}
 

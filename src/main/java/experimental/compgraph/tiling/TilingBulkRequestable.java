@@ -86,4 +86,9 @@ public class TilingBulkRequestable<I, O> {
 		queue.clear();
 		return res;
 	}
+
+	public void request(Tile next) {
+		// TODO Auto-generated method stub
+		
+	}
 }
