@@ -9,8 +9,6 @@ public interface Tile extends Interval {
 
 	long flatIndex();
 
-	boolean isComplete();
-
 	// TODO: which one's better?
 
 	// long[] index();
