@@ -13,7 +13,7 @@ public final class TilingActivator {
 	public TilingActivator(final TilingBulkRequestable<?, ?> target) {
 		this.target = target;
 	}
-
+	
 	public void request(final Interval interval) {
 		target.request(interval);
 	}

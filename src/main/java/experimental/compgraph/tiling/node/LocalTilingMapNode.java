@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
 
+import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.util.Pair;
@@ -29,6 +30,7 @@ import experimental.compgraph.tiling.request.TilingBulkRequestable;
 import experimental.compgraph.tiling.request.TilingRequestable;
 
 public class LocalTilingMapNode<I, O> extends
+<<<<<<< HEAD
 	AbstractCompgraphUnaryNode<OpsTile<I>, TilingDataHandle<I>, OpsTile<O>, TilingDataHandle<O>> implements
 	Map<OpsTile<I>, TilingDataHandle<I>, OpsTile<O>, TilingDataHandle<O>>, TilingUnaryNode<I, O>
 {
@@ -50,8 +52,10 @@ public class LocalTilingMapNode<I, O> extends
 
 			@Override
 			public Iterator<LazyTile<O>> request(final TilesRequest request) {
+
 				// TODO maybe the both are actually the same ..
-				final TilingBulkRequestable<I, O> bulk = new TilingBulkRequestable<>(inHandle.inner());
+				final TilingBulkRequestable<I, O> bulk = new TilingBulkRequestable<>(inHandle.inner(),
+						inHandle.getGridDims(), inHandle.getTileDims());
 				final TilingActivator act = new TilingActivator(bulk);
 
 				// TODO maybe list of pairs is more funny
@@ -62,8 +66,7 @@ public class LocalTilingMapNode<I, O> extends
 					final Tile tile = reqIt.next();
 					if (f instanceof UnaryInvertibleIntervalFunction) {
 						queue.add(new ValuePair<>(tile, ((UnaryInvertibleIntervalFunction<?, ?>) f).invert(tile, act)));
-					}
-					else {
+					} else {
 						throw new UnsupportedOperationException("");
 					}
 				}
@@ -71,7 +74,8 @@ public class LocalTilingMapNode<I, O> extends
 				// TODO efficiency? ;-)
 				final TilingMask<I> mask = new TilingMask<>(bulk.flush(), null, null);
 
-				final CombinedView<I> view = new CombinedView<>(Views.interval(mask, gridDims));
+				final CombinedView<I> view = new CombinedView<>(
+						Views.interval(mask, new FinalInterval(inHandle.getGridDims())));
 
 				final List<LazyTile<O>> results = new ArrayList<>();
 				for (final Pair<Tile, Interval> i : queue) {
@@ -80,7 +84,7 @@ public class LocalTilingMapNode<I, O> extends
 				queue.clear();
 				return results.iterator();
 			}
-		});
+		}, inHandle.getGridDims(), inHandle.getTileDims());
 	}
 
 	// -- Map --

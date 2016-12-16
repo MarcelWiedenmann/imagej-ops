@@ -1,22 +1,19 @@
 
 package experimental.compgraph.tiling;
 
-import java.util.function.Function;
-
 import net.imglib2.AbstractInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.view.Views;
 
 import org.scijava.cache.CacheService;
 
 import experimental.cache.loader.CacheHack;
 
-public class DefaultLazyTile<I, O> extends AbstractInterval implements LazyTile<O> {
+public class SourceLazyTile<I> extends AbstractInterval implements LazyTile<I> {
 
 	private CacheService cache = CacheHack.getCacheService();
-
-	private Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> func;
 
 	private RandomAccessibleInterval<I> source;
 
@@ -24,10 +21,8 @@ public class DefaultLazyTile<I, O> extends AbstractInterval implements LazyTile<
 
 	private int hashCode;
 
-	public DefaultLazyTile(final Function<? super RandomAccessibleInterval<I>, RandomAccessibleInterval<O>> func,
-			final RandomAccessibleInterval<I> source, final Tile tile) {
+	public SourceLazyTile(final RandomAccessibleInterval<I> source, final Tile tile) {
 		super(tile);
-		this.func = func;
 		this.source = source;
 		this.hashCode = hashCode() * 31 + 1;
 		this.tile = tile;
@@ -35,25 +30,12 @@ public class DefaultLazyTile<I, O> extends AbstractInterval implements LazyTile<
 
 	// -- RandomAccessibleInterval --
 	@Override
-	public RandomAccess<O> randomAccess() {
+	public RandomAccess<I> randomAccess() {
 		return get().randomAccess();
 	}
 
 	@Override
-	public RandomAccessibleInterval<O> get() {
-		@SuppressWarnings("unchecked")
-		RandomAccessibleInterval<O> o = (RandomAccessibleInterval<O>) cache.get(((hashCode * 31) ^ tile.flatIndex()));
-
-		if (o == null) {
-			o = func.apply(source);
-			cache.put(hashCode ^ tile.flatIndex(), o);
-		}
-
-		return o;
-	}
-
-	@Override
-	public RandomAccess<O> randomAccess(final Interval interval) {
+	public RandomAccess<I> randomAccess(final Interval interval) {
 		return randomAccess();
 	}
 
@@ -72,5 +54,18 @@ public class DefaultLazyTile<I, O> extends AbstractInterval implements LazyTile<
 	@Override
 	public long[] max() {
 		return tile.max();
+	}
+
+	@Override
+	public RandomAccessibleInterval<I> get() {
+		@SuppressWarnings("unchecked")
+		RandomAccessibleInterval<I> o = (RandomAccessibleInterval<I>) cache.get(((hashCode * 31) ^ tile.flatIndex()));
+
+		if (o == null) {
+			o = Views.interval(source, this);
+			cache.put(hashCode ^ tile.flatIndex(), o);
+		}
+
+		return o;
 	}
 }

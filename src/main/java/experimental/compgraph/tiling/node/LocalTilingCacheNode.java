@@ -11,6 +11,7 @@ import net.imglib2.RandomAccessibleInterval;
 
 import org.scijava.cache.CacheService;
 
+import experimental.cache.loader.CacheHack;
 import experimental.compgraph.AbstractCompgraphUnaryNode;
 import experimental.compgraph.CompgraphSingleEdge;
 import experimental.compgraph.tiling.LazyTile;
@@ -24,12 +25,12 @@ public class LocalTilingCacheNode<I> extends
 		AbstractCompgraphUnaryNode<RandomAccessibleInterval<I>, TilingDataHandle<I>, RandomAccessibleInterval<I>, TilingDataHandle<I>>
 		implements TilingUnaryNode<I, I> {
 
-	private CacheService cache;
+	private CacheService cache = CacheHack.getCacheService();
+
 	private final long hashHint;
 
-	public LocalTilingCacheNode(final CacheService cache, final CompgraphSingleEdge<RandomAccessibleInterval<I>> in) {
+	public LocalTilingCacheNode(final CompgraphSingleEdge<RandomAccessibleInterval<I>> in) {
 		super(in);
-		this.cache = cache;
 		this.hashHint = hashCode() * 31;
 	}
 
@@ -45,7 +46,7 @@ public class LocalTilingCacheNode<I> extends
 
 				final ArrayList<Long> indices = new ArrayList<>();
 
-				final TilingBulkRequestable<I, I> bulk = new TilingBulkRequestable<>(inHandle.inner());
+				final TilingBulkRequestable<I, I> bulk = new TilingBulkRequestable<>(inHandle.inner(), null, null);
 
 				final Iterator<Tile> key = request.key();
 				while (key.hasNext()) {
@@ -89,7 +90,7 @@ public class LocalTilingCacheNode<I> extends
 					}
 				};
 			}
-		});
+		}, inHandle.getGridDims(), inHandle.getTileDims());
 	}
 
 }

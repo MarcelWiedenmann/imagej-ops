@@ -285,6 +285,11 @@ Wisconsin-Madison, University of Konstanz and Brian Northan.</license.copyrightO
 			<artifactId>bigdataviewer-core</artifactId>
 			<version>3.0.4-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>bigdataviewer-vistools</artifactId>
+			<version>1.0.0-beta-5-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
