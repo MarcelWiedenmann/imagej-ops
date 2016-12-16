@@ -1,7 +1,22 @@
 
 package experimental.compgraph.service;
 
-public interface CompgraphCache {
+import org.scijava.Context;
+import org.scijava.cache.CacheService;
 
-	// TODO: will be part of our service (if managed manually).
+// TODO this is a hack
+public class CompgraphCache {
+	private static CacheService cs;
+
+	public static CacheService getCacheService() {
+		if (cs == null) {
+			cs = new Context().getService(CacheService.class);
+		}
+
+		return cs;
+	}
+
+	public static CacheService getCs() {
+		return cs;
+	}
 }

@@ -5,10 +5,10 @@ import net.imglib2.img.basictypeaccess.volatiles.VolatileFloatAccess;
 import net.imglib2.type.numeric.real.FloatType;
 
 import bdv.viewer.render.CompGraphImg;
-import experimental.cache.loader.CompGraphImgLoader;
 import experimental.compgraph.AbstractCompgraphSinkNode;
 import experimental.compgraph.CompgraphEdge;
 import experimental.compgraph.channel.collection.img.OpsTile;
+import experimental.compgraph.img.CompGraphImgLoader;
 import experimental.compgraph.tiling.TilingDataHandle;
 import experimental.compgraph.tiling.request.TilingBulkRequestable;
 import experimental.compgraph.tiling.request.TilingRequestable;

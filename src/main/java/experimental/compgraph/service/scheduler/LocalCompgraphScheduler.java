@@ -1,5 +1,5 @@
 
-package experimental.compgraph.service;
+package experimental.compgraph.service.scheduler;
 
 // TODO: we could try to do some benchmarking "our scheduler vs. Java 8 Streams" might be interesting
 // (include memory usage statistics)

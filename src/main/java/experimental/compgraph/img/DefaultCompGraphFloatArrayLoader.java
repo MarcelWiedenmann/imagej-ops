@@ -1,4 +1,4 @@
-package experimental.cache.loader;
+package experimental.compgraph.img;
 
 import java.util.Map;
 

@@ -1,5 +1,5 @@
 
-package experimental.compgraph.service;
+package experimental.compgraph.service.scheduler;
 
 public interface CompgraphScheduler {
 

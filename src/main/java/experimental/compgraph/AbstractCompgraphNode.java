@@ -4,7 +4,7 @@ package experimental.compgraph;
 import org.scijava.AbstractContextual;
 import org.scijava.plugin.Parameter;
 
-import experimental.compgraph.service.CompgraphService;
+import experimental.compgraph.service.compgraph.CompgraphService;
 
 public abstract class AbstractCompgraphNode extends AbstractContextual implements CompgraphNode {
 

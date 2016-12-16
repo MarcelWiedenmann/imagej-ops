@@ -9,10 +9,10 @@ import java.util.Map.Entry;
 
 import org.scijava.cache.CacheService;
 
-import experimental.cache.loader.CacheHack;
 import experimental.compgraph.AbstractCompgraphUnaryNode;
 import experimental.compgraph.CompgraphSingleEdge;
 import experimental.compgraph.channel.collection.img.OpsTile;
+import experimental.compgraph.service.CompgraphCache;
 import experimental.compgraph.tiling.LazyTile;
 import experimental.compgraph.tiling.Tile;
 import experimental.compgraph.tiling.TilingDataHandle;
@@ -24,7 +24,7 @@ public class LocalTilingCacheNode<I>
 		extends AbstractCompgraphUnaryNode<OpsTile<I>, TilingDataHandle<I>, OpsTile<I>, TilingDataHandle<I>>
 		implements TilingUnaryNode<I, I> {
 
-	private CacheService cache = CacheHack.getCacheService();
+	private CacheService cache = CompgraphCache.getCacheService();
 
 	private final long hashHint;
 

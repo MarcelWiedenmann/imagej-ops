@@ -177,7 +177,7 @@ public class DefaultOpsTiling<I> extends AbstractInterval implements OpsTiling<I
 
 		final long[] gridDims = new long[n];
 		dimensions(gridDims);
-		return new DefaultOpsTiling<O>(map, gridDims, tileDims);
+		return new DefaultOpsTiling<>(map, gridDims, tileDims);
 	}
 
 	@Override

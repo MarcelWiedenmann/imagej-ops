@@ -9,11 +9,11 @@ import net.imglib2.view.Views;
 
 import org.scijava.cache.CacheService;
 
-import experimental.cache.loader.CacheHack;
+import experimental.compgraph.service.CompgraphCache;
 
 public class SourceLazyTile<I> extends AbstractInterval implements LazyTile<I> {
 
-	private CacheService cache = CacheHack.getCacheService();
+	private CacheService cache = CompgraphCache.getCacheService();
 
 	private RandomAccessibleInterval<I> source;
 

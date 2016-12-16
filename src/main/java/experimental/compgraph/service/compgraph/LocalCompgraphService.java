@@ -1,5 +1,5 @@
 
-package experimental.compgraph.service;
+package experimental.compgraph.service.compgraph;
 
 import org.scijava.Priority;
 import org.scijava.plugin.Plugin;

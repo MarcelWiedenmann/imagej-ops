@@ -10,12 +10,12 @@ import net.imglib2.RandomAccessibleInterval;
 
 import org.scijava.cache.CacheService;
 
-import experimental.cache.loader.CacheHack;
 import experimental.compgraph.channel.collection.img.OpsTile;
+import experimental.compgraph.service.CompgraphCache;
 
 public class DefaultLazyTile<I, O> extends AbstractInterval implements LazyTile<O> {
 
-	private CacheService cache = CacheHack.getCacheService();
+	private CacheService cache = CompgraphCache.getCacheService();
 
 	private Function<? super OpsTile<I>, OpsTile<O>> func;
 

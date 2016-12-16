@@ -1,4 +1,4 @@
-package experimental.cache.loader;
+package experimental.compgraph.img;
 
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileFloatArray;

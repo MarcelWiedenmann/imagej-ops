@@ -1,4 +1,4 @@
-package experimental.cache.loader;
+package experimental.compgraph.img;
 
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;

@@ -1,5 +1,5 @@
 
-package experimental.compgraph.service;
+package experimental.compgraph.service.compgraph;
 
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;

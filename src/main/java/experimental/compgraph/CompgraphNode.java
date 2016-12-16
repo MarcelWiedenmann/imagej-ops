@@ -4,7 +4,7 @@ package experimental.compgraph;
 import org.scijava.Context;
 import org.scijava.Contextual;
 
-import experimental.compgraph.service.CompgraphService;
+import experimental.compgraph.service.compgraph.CompgraphService;
 
 public interface CompgraphNode extends Contextual {
 
