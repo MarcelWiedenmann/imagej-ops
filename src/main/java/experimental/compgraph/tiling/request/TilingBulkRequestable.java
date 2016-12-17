@@ -101,7 +101,7 @@ public class TilingBulkRequestable<I, O> {
 
 			while (requesteds.hasNext()) {
 				final LazyTile<I> next = requesteds.next();
-				if (res.containsKey(next.flatIndex())) {
+				if (!res.containsKey(next.flatIndex())) {
 					res.put(next.flatIndex(), next);
 				}
 			}
@@ -148,14 +148,6 @@ public class TilingBulkRequestable<I, O> {
 	}
 
 	private void enqueue(final long index, final long[] min, final long[] max) {
-		final long[] globalMin = new long[min.length];
-		final long[] globalMax = new long[max.length];
-
-		for (int d = 0; d < gridDims.length; d++) {
-			globalMin[d] = gridDims[d] * tileDims[d] + min[d];
-			globalMax[d] = globalMin[d] + tileDims[d] - 1 + max[d];
-		}
-
-		queue.put(index, new DefaultTile(index, globalMax, globalMin));
+		queue.put(index, new DefaultTile(index, min, max));
 	}
 }

@@ -1,5 +1,6 @@
 package experimental.compgraph.img;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import net.imglib2.Cursor;
@@ -7,18 +8,14 @@ import net.imglib2.Point;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Sampler;
-import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileFloatArray;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
 
 import bdv.viewer.render.CompGraphFloatArrayLoader;
-import experimental.compgraph.tiling.DefaultLazyTile;
 import experimental.compgraph.tiling.LazyTile;
 import experimental.compgraph.tiling.request.TilingBulkRequestable;
 
@@ -26,26 +23,27 @@ public class DefaultCompGraphFloatArrayLoader<T extends NativeType<T> & RealType
 		implements CompGraphFloatArrayLoader<T> {
 
 	private VolatileFloatArray theEmptyArray;
-	private TilingBulkRequestable<?, T> req;
+	private TilingBulkRequestable<T, T> req;
 
 	// we could also cache here.. but we don't.. ;-) Next node will cache, too.
-	private Map<Long, LazyTile<T>> res;
+	private final Map<Long, LazyTile<T>> res;
 
 	private final int[] tileDims;
 	private final long[] gridDims;
 
 	private boolean staged = false;
 
-	public DefaultCompGraphFloatArrayLoader(final TilingBulkRequestable<?, T> bulk) {
+	public DefaultCompGraphFloatArrayLoader(final TilingBulkRequestable<T, T> bulk) {
 		this.req = bulk;
+		this.res = new HashMap<>();
 		this.gridDims = req.getGridDims();
 		this.tileDims = new int[gridDims.length];
 
 		for (int d = 0; d < gridDims.length; d++) {
-			this.tileDims[d] = tileDims[d];
+			this.tileDims[d] = bulk.getTileDims()[d];
 		}
 
-		theEmptyArray = new VolatileFloatArray(64 * 64 * 64, false);
+		theEmptyArray = new VolatileFloatArray(32 * 32 * 32, false);
 	}
 
 	@Override
@@ -57,14 +55,16 @@ public class DefaultCompGraphFloatArrayLoader<T extends NativeType<T> & RealType
 		synchronized (res) {
 			req.request(idx);
 			staged = true;
+			System.out.println("Staged");
 		}
 	}
 
 	public void done() {
 		synchronized (res) {
 			if (staged != false) {
-				req.flush();
+				res.putAll(req.flush());
 				staged = false;
+				System.out.println("Done");
 			}
 		}
 	}
@@ -77,7 +77,6 @@ public class DefaultCompGraphFloatArrayLoader<T extends NativeType<T> & RealType
 		return gridDims;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public VolatileFloatArray loadArray(int timepoint, int setup, int level, int[] dimensions, long[] min)
 			throws InterruptedException {
@@ -85,23 +84,31 @@ public class DefaultCompGraphFloatArrayLoader<T extends NativeType<T> & RealType
 		for (int d = 0; d < min.length; d++) {
 			tmp[d] = min[d] / tileDims[d];
 		}
-		final LazyTile<T> lazyTile = res.get(IntervalIndexer.positionToIndex(tmp, gridDims));
+
+		long idx = IntervalIndexer.positionToIndex(tmp, gridDims);
+
+		// TODO
+		// We have to do this if we request something which didnt get through
+		// our staging process.
+		LazyTile<T> lazyTile = res.get(idx);
+		if (lazyTile == null) {
+			stage(idx);
+			done();
+			lazyTile = res.get(idx);
+		}
 
 		// TODO UGLY! has to change!!
-		if (lazyTile instanceof DefaultLazyTile) {
-			RandomAccessibleInterval<T> object = ((DefaultLazyTile<?, T>) lazyTile).get();
-			if (object instanceof ArrayImg && ((ArrayImg) object).update(null) instanceof FloatArray) {
-				return new VolatileFloatArray(
-						((ArrayImg<FloatType, FloatArray>) (object)).update(null).getCurrentStorageArray(), true);
-			}
-			final float[] data = new float[(int) Intervals.numElements(object)];
-			Cursor<T> cursor = Views.iterable(object).cursor();
-			for (int i = 0; i < data.length; i++) {
-				data[i] = cursor.next().getRealFloat();
-			}
-			return new VolatileFloatArray(data, true);
+		RandomAccessibleInterval<T> object = lazyTile.get();
+//		if (object instanceof ArrayImg && ((ArrayImg) object).update(null) instanceof FloatArray) {
+//			return new VolatileFloatArray(
+//					((ArrayImg<FloatType, FloatArray>) (object)).update(null).getCurrentStorageArray(), true);
+//		}
+		final float[] data = new float[(int) Intervals.numElements(object)];
+		Cursor<T> cursor = Views.iterable(object).cursor();
+		for (int i = 0; i < data.length; i++) {
+			data[i] = cursor.next().getRealFloat();
 		}
-		throw new UnsupportedOperationException("Not supported!");
+		return new VolatileFloatArray(data, true);
 
 	}
 

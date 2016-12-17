@@ -9,9 +9,9 @@ import mpicbg.spim.data.generic.sequence.BasicSetupImgLoader;
 
 public class CompGraphImgLoader<T extends NativeType<T> & RealType<T>> implements BasicImgLoader {
 
-	private TilingBulkRequestable<?, T> bulk;
+	private TilingBulkRequestable<T, T> bulk;
 
-	public CompGraphImgLoader(final TilingBulkRequestable<?, T> bulk) {
+	public CompGraphImgLoader(final TilingBulkRequestable<T, T> bulk) {
 		this.bulk = bulk;
 	}
 

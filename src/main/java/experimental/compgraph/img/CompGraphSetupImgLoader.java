@@ -22,9 +22,9 @@ public class CompGraphSetupImgLoader<T extends NativeType<T> & RealType<T>> impl
 
 	private CompGraphFloatArrayLoader<T> floatLoader;
 	private VolatileGlobalCellCache cache;
-	private TilingBulkRequestable<?, T> bulk;
+	private TilingBulkRequestable<T, T> bulk;
 
-	public CompGraphSetupImgLoader(final TilingBulkRequestable<?, T> bulk) {
+	public CompGraphSetupImgLoader(final TilingBulkRequestable<T, T> bulk) {
 		this.bulk = bulk;
 	}
 
@@ -34,7 +34,7 @@ public class CompGraphSetupImgLoader<T extends NativeType<T> & RealType<T>> impl
 		cache = new VolatileGlobalCellCache(1, 1);
 
 		final CellCache<VolatileFloatArray> c = cache.new VolatileCellCache<>(0, 0, 0,
-				new CacheHints(LoadingStrategy.BUDGETED, 0, false), floatLoader);
+				new CacheHints(LoadingStrategy.BLOCKING, 0, false), floatLoader);
 
 		// TODO this is not really correct, as we make the image always a bit
 		// bigger (potentially...)

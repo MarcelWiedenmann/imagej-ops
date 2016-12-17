@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
 
 import experimental.compgraph.AbstractCompgraphSourceNode;
@@ -31,10 +30,19 @@ public class LocalTilingSource<IO> extends AbstractCompgraphSourceNode<OpsTile<I
 		for (int d = 0; d < gridDims.length; d++) {
 			gridDims[d] = inData.dimension(d) / tileDims[d];
 		}
+
+		this.tileDims = tileDims;
 	}
 
 	private static <T> TilingDataHandle<T> createDataHandle(final RandomAccessibleInterval<T> inData,
 			final int[] tileDims) {
+
+		// TODO dont calc twice
+		long[] gridDims = new long[tileDims.length];
+		for (int d = 0; d < gridDims.length; d++) {
+			gridDims[d] = inData.dimension(d) / tileDims[d];
+		}
+
 		// TODO make it more flexible etc...
 		final RandomAccessibleInterval<T> extended = Views.interval(Views.extendMirrorSingle(inData), inData);
 		return new TilingDataHandle<>(new TilingRequestable<T>() {
@@ -50,7 +58,7 @@ public class LocalTilingSource<IO> extends AbstractCompgraphSourceNode<OpsTile<I
 				}
 				return requesteds.iterator();
 			}
-		}, Intervals.dimensionsAsLongArray(inData), tileDims);
+		}, gridDims, tileDims);
 	}
 
 	public DefaultOpsTiling<IO> create() {

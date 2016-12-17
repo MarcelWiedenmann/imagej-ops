@@ -8,14 +8,14 @@ import net.imglib2.RealPositionable;
 public class DefaultTile extends AbstractEuclideanSpace implements Tile {
 
 	private final long flatIndex;
-	private final long[] globalMax;
-	private final long[] globalMin;
+	private final long[] maxAsLong;
+	private final long[] minAsLong;
 
 	public DefaultTile(final long flatIndex, final long[] min, final long[] max) {
 		super(min.length);
 		this.flatIndex = flatIndex;
-		this.globalMin = min;
-		this.globalMax = max;
+		this.minAsLong = min;
+		this.maxAsLong = max;
 	}
 
 	// -- Tile --
@@ -27,89 +27,89 @@ public class DefaultTile extends AbstractEuclideanSpace implements Tile {
 
 	@Override
 	public long[] min() {
-		return globalMin;
+		return minAsLong;
 	}
 
 	@Override
 	public long[] max() {
-		return globalMax;
+		return maxAsLong;
 	}
 
 	// -- Interval --
 
 	@Override
 	public long min(final int d) {
-		return globalMin[d];
+		return minAsLong[d];
 	}
 
 	@Override
 	public void min(final long[] min) {
-		System.arraycopy(min, 0, min, 0, min.length);
+		System.arraycopy(minAsLong, 0, min, 0, min.length);
 	}
 
 	@Override
 	public void min(final Positionable min) {
-		min.setPosition(this.globalMin);
+		min.setPosition(this.minAsLong);
 	}
 
 	@Override
 	public long max(final int d) {
-		return globalMax[d];
+		return maxAsLong[d];
 	}
 
 	@Override
 	public void max(final long[] max) {
-		System.arraycopy(max, 0, max, 0, max.length);
+		System.arraycopy(maxAsLong, 0, max, 0, max.length);
 	}
 
 	@Override
 	public void max(final Positionable max) {
-		max.setPosition(this.globalMax);
+		max.setPosition(this.maxAsLong);
 	}
 
 	@Override
 	public double realMin(final int d) {
-		return globalMin[d];
+		return minAsLong[d];
 	}
 
 	@Override
 	public void realMin(final double[] min) {
 		for (int d = 0; d < min.length; d++) {
-			min[d] = this.globalMin[d];
+			min[d] = this.minAsLong[d];
 		}
 	}
 
 	@Override
 	public void realMin(final RealPositionable min) {
-		min.setPosition(this.globalMin);
+		min.setPosition(this.minAsLong);
 	}
 
 	@Override
 	public double realMax(final int d) {
-		return globalMax[d];
+		return maxAsLong[d];
 	}
 
 	@Override
 	public void realMax(final double[] max) {
 		for (int d = 0; d < max.length; d++) {
-			max[d] = this.globalMax[d];
+			max[d] = this.maxAsLong[d];
 		}
 	}
 
 	@Override
 	public void realMax(final RealPositionable max) {
-		max.setPosition(this.globalMax);
+		max.setPosition(this.maxAsLong);
 	}
 
 	@Override
 	public void dimensions(final long[] dimensions) {
 		for (int d = 0; d < dimensions.length; d++) {
-			dimensions[d] = globalMax[d] - globalMin[d] + 1;
+			dimensions[d] = maxAsLong[d] - minAsLong[d] + 1;
 		}
 	}
 
 	@Override
 	public long dimension(final int d) {
-		return globalMax[d] - globalMin[d] + 1;
+		return maxAsLong[d] - minAsLong[d] + 1;
 	}
 }
