@@ -21,11 +21,25 @@ public class SourceLazyTile<I> extends AbstractInterval implements LazyTile<I> {
 
 	private int hashCode;
 
-	public SourceLazyTile(final RandomAccessibleInterval<I> source, final Tile tile) {
+	private long[] globalMin;
+
+	private long[] globalMax;
+
+	public SourceLazyTile(final RandomAccessibleInterval<I> source, final Tile tile, final long[] gridPos) {
 		super(tile);
 		this.source = source;
 		this.hashCode = hashCode() * 31 + 1;
 		this.tile = tile;
+
+		// TODO avoid object creation!!!!
+		this.globalMin = new long[gridPos.length];
+		this.globalMax = new long[gridPos.length];
+
+		for (int i = 0; i < globalMin.length; i++) {
+			globalMin[i] = tile.min(i) + (tile.dimension(i) * gridPos[i]);
+			globalMax[i] = tile.max(i) + (tile.dimension(i) * gridPos[i]);
+		}
+
 	}
 
 	// -- RandomAccessibleInterval --
@@ -62,7 +76,7 @@ public class SourceLazyTile<I> extends AbstractInterval implements LazyTile<I> {
 		RandomAccessibleInterval<I> o = (RandomAccessibleInterval<I>) cache.get(((hashCode * 31) ^ tile.flatIndex()));
 
 		if (o == null) {
-			o = Views.interval(source, this);
+			o = Views.interval(source, globalMin, globalMax);
 			cache.put(hashCode ^ tile.flatIndex(), o);
 		}
 

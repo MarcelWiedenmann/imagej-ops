@@ -8,9 +8,12 @@ import net.imglib2.Point;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Sampler;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileFloatArray;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
@@ -92,6 +95,7 @@ public class DefaultCompGraphFloatArrayLoader<T extends NativeType<T> & RealType
 		// our staging process.
 		LazyTile<T> lazyTile = res.get(idx);
 		if (lazyTile == null) {
+			// TODO activate pre-staging
 			stage(idx);
 			done();
 			lazyTile = res.get(idx);
@@ -99,10 +103,10 @@ public class DefaultCompGraphFloatArrayLoader<T extends NativeType<T> & RealType
 
 		// TODO UGLY! has to change!!
 		RandomAccessibleInterval<T> object = lazyTile.get();
-//		if (object instanceof ArrayImg && ((ArrayImg) object).update(null) instanceof FloatArray) {
-//			return new VolatileFloatArray(
-//					((ArrayImg<FloatType, FloatArray>) (object)).update(null).getCurrentStorageArray(), true);
-//		}
+		if (object instanceof ArrayImg && ((ArrayImg) object).update(null) instanceof FloatArray) {
+			return new VolatileFloatArray(
+					((ArrayImg<FloatType, FloatArray>) (object)).update(null).getCurrentStorageArray(), true);
+		}
 		final float[] data = new float[(int) Intervals.numElements(object)];
 		Cursor<T> cursor = Views.iterable(object).cursor();
 		for (int i = 0; i < data.length; i++) {

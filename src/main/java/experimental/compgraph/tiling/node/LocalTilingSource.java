@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.util.IntervalIndexer;
 import net.imglib2.view.Views;
 
 import experimental.compgraph.AbstractCompgraphSourceNode;
@@ -54,7 +55,9 @@ public class LocalTilingSource<IO> extends AbstractCompgraphSourceNode<OpsTile<I
 
 				while (requests.hasNext()) {
 					Tile t = requests.next();
-					requesteds.add(new SourceLazyTile<>(extended, t));
+					long[] pos = new long[t.numDimensions()];
+					IntervalIndexer.indexToPosition(t.flatIndex(), gridDims, pos);
+					requesteds.add(new SourceLazyTile<>(extended, t, pos));
 				}
 				return requesteds.iterator();
 			}
