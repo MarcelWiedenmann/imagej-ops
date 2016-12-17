@@ -33,10 +33,10 @@ public class DefaultOpsTiling<I> extends AbstractInterval implements OpsTiling<I
 
 	private final CompgraphOutputNode<OpsTile<I>, ? extends DataHandle<OpsTile<I>, ?>> parent;
 
-	private final long[] tileDims;
+	private final int[] tileDims;
 
 	public DefaultOpsTiling(final CompgraphOutputNode<OpsTile<I>, ? extends DataHandle<OpsTile<I>, ?>> parent,
-			final long[] gridDims, final long[] tileDims) {
+			final long[] gridDims, final int[] tileDims) {
 		super(gridDims);
 		parent.setOutEdge(this);
 		this.parent = parent;
@@ -126,8 +126,7 @@ public class DefaultOpsTiling<I> extends AbstractInterval implements OpsTiling<I
 
 	@Override
 	public CompgraphOutputNode<OpsTile<I>, ? extends DataHandle<OpsTile<I>, ?>> parent() {
-		// TODO Auto-generated method stub
-		return null;
+		return parent;
 	}
 
 	@Override
@@ -168,13 +167,10 @@ public class DefaultOpsTiling<I> extends AbstractInterval implements OpsTiling<I
 
 	@Override
 	public <O> OpsTiling<O> mapTile(final Function<? super OpsTile<I>, ? extends RandomAccessibleInterval<O>> f) {
-
 		// FIXME: hierarchical Ops* vs. DataHandle
 		final Function<? super OpsTile<I>, OpsTile<O>> fToTile = f.andThen((rai) -> new DefaultOpsTile<>(rai));
-
 		final Map<OpsTile<I>, ? extends DataHandle<OpsTile<I>, ?>, OpsTile<O>, ? extends DataHandle<OpsTile<O>, ?>> map = parent
 				.cgs().factory().mapTile(this, fToTile);
-
 		final long[] gridDims = new long[n];
 		dimensions(gridDims);
 		return new DefaultOpsTiling<>(map, gridDims, tileDims);

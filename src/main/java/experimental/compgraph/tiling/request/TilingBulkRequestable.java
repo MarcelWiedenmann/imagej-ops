@@ -6,7 +6,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
+import net.imglib2.util.Intervals;
 
 import experimental.compgraph.request.DefaultTilesRequest;
 import experimental.compgraph.tiling.DefaultTile;
@@ -77,7 +79,7 @@ public class TilingBulkRequestable<I, O> {
 			return;
 		}
 		// Interval spans multiple tiles: traverse all covered tiles.
-		requestAll(minIndex, maxIndex, minOffset, maxOffset, gridDims, fullTileMax, 0, new long[n]);
+		requestAll(minIndex, maxIndex, minOffset, maxOffset, 0, new long[n]);
 	}
 
 	public synchronized Map<Long, LazyTile<I>> flush() {
@@ -112,8 +114,7 @@ public class TilingBulkRequestable<I, O> {
 
 	// NB: min/max are grid indices
 	private void requestAll(final long[] min, final long[] max, final long[] minOffset, final long[] maxOffset,
-		final long[] gridDims, final long[] fullTileMax, final int d, final long[] p)
-	{
+			final int d, final long[] p) {
 		for (long i = min[d]; i <= max[d]; i++) {
 			p[d] = i;
 			if (d == p.length - 1) {
@@ -123,39 +124,38 @@ public class TilingBulkRequestable<I, O> {
 				final long[] tileMax = new long[p.length];
 				for (int deh = p.length - 1; deh >= 0; --deh) {
 					tileFlatIndex = tileFlatIndex * gridDims[deh] + p[deh];
-					tileMin[deh] = p[deh] == min[deh] ? minOffset[d] : 0;
-					tileMax[deh] = p[deh] == max[deh] ? maxOffset[d] : fullTileMax[d];
+					tileMin[deh] = p[deh] == min[deh] ? minOffset[deh] : 0;
+					tileMax[deh] = p[deh] == max[deh] ? maxOffset[deh] : fullTileMax[deh];
 				}
-			}
-			else {
-				requestAll(min, max, minOffset, maxOffset, gridDims, fullTileMax, d + 1, p);
+			} else {
+				requestAll(min, max, minOffset, maxOffset, d + 1, p);
 			}
 		}
 	}
 
+	// TODO inefficient. avoid object creation
 	private void requestInternal(final long index, final long[] min, final long[] max) {
-		// (1) find tile or stage tiling request
 		Tile t;
 		if ((t = queue.get(index)) == null) {
-			t = enqueue(index, min, max);
-		}
-		else {
-			if (!t.isComplete()) {
-				// TODO check overlap and enqueue if needed
+			enqueue(index, min, max);
+		} else {
+			final FinalInterval interval = new FinalInterval(min, max);
+			if (!Intervals.contains(t, interval)) {
+				final FinalInterval union = Intervals.union(t, interval);
+				enqueue(index, Intervals.minAsLongArray(union), Intervals.maxAsLongArray(union));
 			}
 		}
 	}
 
-	private Tile enqueue(final long index, final long[] min, final long[] max) {
+	private void enqueue(final long index, final long[] min, final long[] max) {
 		final long[] globalMin = new long[min.length];
 		final long[] globalMax = new long[max.length];
-		for (int d = 0; d < n; d++) {
+
+		for (int d = 0; d < gridDims.length; d++) {
 			globalMin[d] = gridDims[d] * tileDims[d] + min[d];
 			globalMax[d] = globalMin[d] + tileDims[d] - 1 + max[d];
 		}
-		tiles.request(new DefaultTile(globalMin, globalMax, i));
-		// TODO return some representation of a tile, we don't really care
-		// TODO add to list
-		return null;
+
+		queue.put(index, new DefaultTile(index, globalMax, globalMin));
 	}
 }

@@ -11,7 +11,7 @@ public class DefaultTile extends AbstractEuclideanSpace implements Tile {
 	private final long[] globalMax;
 	private final long[] globalMin;
 
-	public DefaultTile(final long[] min, final long[] max, final long flatIndex) {
+	public DefaultTile(final long flatIndex, final long[] min, final long[] max) {
 		super(min.length);
 		this.flatIndex = flatIndex;
 		this.globalMin = min;

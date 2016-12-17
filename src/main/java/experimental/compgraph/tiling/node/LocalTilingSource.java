@@ -9,6 +9,7 @@ import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
 
 import experimental.compgraph.AbstractCompgraphSourceNode;
+import experimental.compgraph.channel.collection.img.DefaultOpsTiling;
 import experimental.compgraph.channel.collection.img.OpsTile;
 import experimental.compgraph.tiling.LazyTile;
 import experimental.compgraph.tiling.SourceLazyTile;
@@ -20,11 +21,20 @@ import experimental.compgraph.tiling.request.TilingRequestable;
 public class LocalTilingSource<IO> extends AbstractCompgraphSourceNode<OpsTile<IO>, TilingDataHandle<IO>>
 		implements TilingOutputNode<IO> {
 
-	public LocalTilingSource(final RandomAccessibleInterval<IO> inData) {
-		super(createDataHandle(inData));
+	private int[] tileDims;
+	private long[] gridDims;
+
+	public LocalTilingSource(final RandomAccessibleInterval<IO> inData, int[] tileDims) {
+		super(createDataHandle(inData, tileDims));
+		gridDims = new long[tileDims.length];
+
+		for (int d = 0; d < gridDims.length; d++) {
+			gridDims[d] = inData.dimension(d) / tileDims[d];
+		}
 	}
 
-	private static <T> TilingDataHandle<T> createDataHandle(final RandomAccessibleInterval<T> inData) {
+	private static <T> TilingDataHandle<T> createDataHandle(final RandomAccessibleInterval<T> inData,
+			final int[] tileDims) {
 		// TODO make it more flexible etc...
 		final RandomAccessibleInterval<T> extended = Views.interval(Views.extendMirrorSingle(inData), inData);
 		return new TilingDataHandle<>(new TilingRequestable<T>() {
@@ -40,6 +50,11 @@ public class LocalTilingSource<IO> extends AbstractCompgraphSourceNode<OpsTile<I
 				}
 				return requesteds.iterator();
 			}
-		}, Intervals.dimensionsAsLongArray(inData), new int[] { 32, 32 });
+		}, Intervals.dimensionsAsLongArray(inData), tileDims);
+	}
+
+	public DefaultOpsTiling<IO> create() {
+		return new DefaultOpsTiling<>(this, gridDims, tileDims);
+
 	}
 }
