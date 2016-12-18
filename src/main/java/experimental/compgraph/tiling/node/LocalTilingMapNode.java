@@ -69,7 +69,8 @@ public class LocalTilingMapNode<I, O>
 				}
 				// TODO need tile-size, tiling-dims and grid dims!!!
 				// TODO efficiency? ;-)
-				final TilingMask<I> mask = new TilingMask<>(bulk.flush(), null, null);
+				final TilingMask<I> mask = new TilingMask<>(bulk.flush(), inHandle.getGridDims(),
+						inHandle.getTileDims());
 
 				final CombinedView<I> view = new CombinedView<>(
 						Views.interval(mask, new FinalInterval(inHandle.getGridDims())));

@@ -13,11 +13,11 @@ import net.imglib2.util.IntervalIndexer;
 
 public class TilingMask<O> extends AbstractEuclideanSpace implements RandomAccessible<RandomAccessibleInterval<O>> {
 
-	private final long[] tileSize;
+	private final int[] tileSize;
 	private final long[] gridDims;
 	private final Map<Long, LazyTile<O>> source;
 
-	public TilingMask(final Map<Long, LazyTile<O>> source, final long[] tileSize, final long[] gridDims) {
+	public TilingMask(final Map<Long, LazyTile<O>> source, final long[] gridDims, final int[] tileSize) {
 		super(gridDims.length);
 		this.source = source;
 		this.tileSize = tileSize;
@@ -26,7 +26,7 @@ public class TilingMask<O> extends AbstractEuclideanSpace implements RandomAcces
 
 	@Override
 	public RandomAccess<RandomAccessibleInterval<O>> randomAccess() {
-		return new TilingMaskRandomAccess<>(source, tileSize, gridDims);
+		return new TilingMaskRandomAccess<>(source, gridDims, tileSize);
 	}
 
 	@Override
@@ -39,10 +39,12 @@ public class TilingMask<O> extends AbstractEuclideanSpace implements RandomAcces
 	private static class TilingMaskRandomAccess<O> extends Point implements RandomAccess<RandomAccessibleInterval<O>> {
 
 		private final long[] gridDims;
-		private final long[] tileDims;
+		private final int[] tileDims;
 		private Map<Long, LazyTile<O>> source;
 
-		public TilingMaskRandomAccess(final Map<Long, LazyTile<O>> source, final long[] gridDims, final long[] tileDims) {
+		public TilingMaskRandomAccess(final Map<Long, LazyTile<O>> source, final long[] gridDims,
+				final int[] tileDims) {
+			super(gridDims.length);
 			this.source = source;
 			this.gridDims = gridDims;
 			this.tileDims = tileDims;

@@ -101,6 +101,7 @@ public class DefaultGaussRAI<T extends RealType<T> & NativeType<T>>
 
 	@Override
 	public Interval invert(final Tile t, final TilingActivator a) {
+		// this maps local to "relative local" coords
 		return a.request(t, Gauss3.halfkernelsizes(sigmas));
 	}
 }

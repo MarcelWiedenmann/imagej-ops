@@ -45,14 +45,17 @@ public class TilingBulkRequestable<I, O> {
 		return tileDims;
 	}
 
+	// This is grid/local
 	public void request(final long flatIndex) {
 		requestInternal(flatIndex, fullTileMin, fullTileMax);
 	}
 
+	// This is grid/local
 	public void request(final Tile tile) {
 		requestInternal(tile.flatIndex(), tile.min(), tile.max());
 	}
 
+	// This is global to local
 	public void request(final Interval interval) {
 		final int n = interval.numDimensions();
 		final long[] minIndex = new long[n];
@@ -62,9 +65,10 @@ public class TilingBulkRequestable<I, O> {
 		long minFlatIndex = 0;
 		long maxFlatIndex = 0;
 		for (int d = n - 1; d >= 0; --d) {
-			minIndex[d] = interval.min(d) / tileDims[d];
+			// TODO this is a monster hack Math.max(0,x)
+			minIndex[d] = Math.max(interval.min(d), 0) / tileDims[d];
 			maxIndex[d] = interval.max(d) / tileDims[d];
-			minOffset[d] = interval.min(d) % tileDims[d];
+			minOffset[d] = Math.max(interval.min(d), 0) % tileDims[d];
 			maxOffset[d] = interval.max(d) % tileDims[d] != 0 ? interval.max(d) % tileDims[d] : fullTileMax[d];
 			minFlatIndex = minFlatIndex * gridDims[d] + minIndex[d];
 			maxFlatIndex = maxFlatIndex * gridDims[d] + maxIndex[d];
@@ -112,7 +116,7 @@ public class TilingBulkRequestable<I, O> {
 
 	// -- Private Methods --
 
-	// NB: min/max are grid indices
+	// NB: min/max are grid indices, so its local
 	private void requestAll(final long[] min, final long[] max, final long[] minOffset, final long[] maxOffset,
 			final int d, final long[] p) {
 		for (long i = min[d]; i <= max[d]; i++) {
@@ -126,6 +130,7 @@ public class TilingBulkRequestable<I, O> {
 					tileFlatIndex = tileFlatIndex * gridDims[deh] + p[deh];
 					tileMin[deh] = p[deh] == min[deh] ? minOffset[deh] : 0;
 					tileMax[deh] = p[deh] == max[deh] ? maxOffset[deh] : fullTileMax[deh];
+					requestInternal(tileFlatIndex, tileMin, tileMax);
 				}
 			} else {
 				requestAll(min, max, minOffset, maxOffset, d + 1, p);
@@ -134,6 +139,7 @@ public class TilingBulkRequestable<I, O> {
 	}
 
 	// TODO inefficient. avoid object creation
+	// local
 	private void requestInternal(final long index, final long[] min, final long[] max) {
 		Tile t;
 		if ((t = queue.get(index)) == null) {
@@ -147,7 +153,11 @@ public class TilingBulkRequestable<I, O> {
 		}
 	}
 
+	// local
 	private void enqueue(final long index, final long[] min, final long[] max) {
+		if (index < 0) {
+			System.out.println("WATAFAK");
+		}
 		queue.put(index, new DefaultTile(index, min, max));
 	}
 }

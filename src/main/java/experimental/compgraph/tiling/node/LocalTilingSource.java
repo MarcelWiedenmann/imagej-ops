@@ -11,6 +11,7 @@ import net.imglib2.view.Views;
 import experimental.compgraph.AbstractCompgraphSourceNode;
 import experimental.compgraph.channel.collection.img.DefaultOpsTiling;
 import experimental.compgraph.channel.collection.img.OpsTile;
+import experimental.compgraph.channel.collection.img.OpsTiling;
 import experimental.compgraph.tiling.LazyTile;
 import experimental.compgraph.tiling.SourceLazyTile;
 import experimental.compgraph.tiling.Tile;
@@ -23,6 +24,7 @@ public class LocalTilingSource<IO> extends AbstractCompgraphSourceNode<OpsTile<I
 
 	private int[] tileDims;
 	private long[] gridDims;
+	private OpsTiling<IO> out;
 
 	public LocalTilingSource(final RandomAccessibleInterval<IO> inData, int[] tileDims) {
 		super(createDataHandle(inData, tileDims));
@@ -64,7 +66,15 @@ public class LocalTilingSource<IO> extends AbstractCompgraphSourceNode<OpsTile<I
 		}, gridDims, tileDims);
 	}
 
-	public DefaultOpsTiling<IO> create() {
+	@Override
+	public OpsTiling<IO> out() {
+		if (out == null) {
+			out = create();
+		}
+		return out;
+	}
+
+	private DefaultOpsTiling<IO> create() {
 		return new DefaultOpsTiling<>(this, gridDims, tileDims);
 
 	}

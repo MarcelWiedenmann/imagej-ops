@@ -46,7 +46,7 @@ public class DefaultCompGraphFloatArrayLoader<T extends NativeType<T> & RealType
 			this.tileDims[d] = bulk.getTileDims()[d];
 		}
 
-		theEmptyArray = new VolatileFloatArray(32 * 32 * 32, false);
+		theEmptyArray = new VolatileFloatArray(32 * 32 * 1, false);
 	}
 
 	@Override

@@ -11,6 +11,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import net.imagej.ops.OpEnvironment;
+import net.imagej.ops.special.function.AbstractUnaryFunctionOp;
 import net.imglib2.AbstractInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
@@ -28,6 +30,9 @@ import experimental.compgraph.channel.collection.OpsGrid;
 import experimental.compgraph.channel.collection.OpsOrderedCollection;
 import experimental.compgraph.channel.stream.OpsBoundedStream;
 import experimental.compgraph.node.Map;
+import experimental.compgraph.request.UnaryInvertibleIntervalFunction;
+import experimental.compgraph.tiling.Tile;
+import experimental.compgraph.tiling.request.TilingActivator;
 
 public class DefaultOpsTiling<I> extends AbstractInterval implements OpsTiling<I> {
 
@@ -168,12 +173,41 @@ public class DefaultOpsTiling<I> extends AbstractInterval implements OpsTiling<I
 	@Override
 	public <O> OpsTiling<O> mapTile(final Function<? super OpsTile<I>, ? extends RandomAccessibleInterval<O>> f) {
 		// FIXME: hierarchical Ops* vs. DataHandle
-		final Function<? super OpsTile<I>, OpsTile<O>> fToTile = f.andThen((rai) -> new DefaultOpsTile<>(rai));
+		Function<? super OpsTile<I>, OpsTile<O>> fToTile;
+		if (f instanceof UnaryInvertibleIntervalFunction) {
+			UnaryInvertibleIntervalFunction<? super OpsTile<I>, ? extends RandomAccessibleInterval<O>> tmp =
+					(UnaryInvertibleIntervalFunction<? super OpsTile<I>, ? extends RandomAccessibleInterval<O>>) f;
+			fToTile = new MyInvertibleFunction<>(tmp);
+		} else {
+			fToTile = f.andThen((rai) -> new DefaultOpsTile<>(rai));
+		}
+
 		final Map<OpsTile<I>, ? extends DataHandle<OpsTile<I>, ?>, OpsTile<O>, ? extends DataHandle<OpsTile<O>, ?>> map = parent
 				.cgs().factory().mapTile(this, fToTile);
 		final long[] gridDims = new long[n];
 		dimensions(gridDims);
 		return new DefaultOpsTiling<>(map, gridDims, tileDims);
+	}
+
+	public static class MyInvertibleFunction<I, O> extends AbstractUnaryFunctionOp<OpsTile<I>, OpsTile<O>>
+			implements UnaryInvertibleIntervalFunction<OpsTile<I>, OpsTile<O>> {
+
+		private UnaryInvertibleIntervalFunction<? super OpsTile<I>, ? extends RandomAccessibleInterval<O>> delegate;
+
+		public MyInvertibleFunction(
+				UnaryInvertibleIntervalFunction<? super OpsTile<I>, ? extends RandomAccessibleInterval<O>> delegate) {
+			this.delegate = delegate;
+		}
+
+		@Override
+		public OpsTile<O> compute1(OpsTile<I> input) {
+			return new DefaultOpsTile<>(delegate.compute1(input));
+		}
+
+		@Override
+		public Interval invert(Tile t, TilingActivator activator) {
+			return delegate.invert(t, activator);
+		}
 	}
 
 	@Override
