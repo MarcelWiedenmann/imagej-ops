@@ -55,7 +55,7 @@ import org.scijava.util.GenericUtils;
 
 /**
  * Creates {@link CachedFunctionOp}s which know how to cache their outputs.
- * 
+ *
  * @author Christian Dietz (University of Konstanz)
  */
 public class CachedOpEnvironment extends CustomOpEnvironment {

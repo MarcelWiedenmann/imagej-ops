@@ -49,6 +49,10 @@ import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.thread.ThreadService;
 
+import experimental.compgraph.request.UnaryInvertibleIntervalFunction;
+import experimental.compgraph.tiling.Tile;
+import experimental.compgraph.tiling.request.TilingActivator;
+
 /**
  * Gaussian filter, wrapping {@link Gauss3} of imglib2-algorithms.
  *
@@ -100,4 +104,11 @@ public class DefaultGaussRAI<T extends NumericType<T> & NativeType<T>> extends
 		return ops().create().img(input);
 	}
 
+	// -- UnaryInvertibleIntervalMapper --
+
+	@Override
+	public Interval invert(final Tile t, final TilingActivator a) {
+		// this maps local to "relative local" coords
+		return a.request(t, Gauss3.halfkernelsizes(sigmas));
+	}
 }

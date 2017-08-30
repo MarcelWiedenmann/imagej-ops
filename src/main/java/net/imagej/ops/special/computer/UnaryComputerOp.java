@@ -30,6 +30,8 @@
 
 package net.imagej.ops.special.computer;
 
+import java.util.function.BiConsumer;
+
 import net.imagej.ops.special.UnaryOp;
 import net.imagej.ops.special.function.UnaryFunctionOp;
 import net.imagej.ops.special.inplace.UnaryInplaceOp;
@@ -52,9 +54,13 @@ import net.imagej.ops.special.inplace.UnaryInplaceOp;
  * @see UnaryInplaceOp
  */
 public interface UnaryComputerOp<I, O> extends UnaryOp<I, O>,
-	NullaryComputerOp<O>
+	NullaryComputerOp<O>, BiConsumer<I, O>
 {
 
+	@Override
+	default void accept(I t, O u) {
+		compute1(t, u);
+	}
 	/**
 	 * Computes the output given some input.
 	 * 

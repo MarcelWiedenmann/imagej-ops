@@ -49,9 +49,12 @@ import net.imagej.ops.special.inplace.UnaryInplaceOp;
  * @see UnaryComputerOp
  * @see UnaryInplaceOp
  */
-public interface UnaryFunctionOp<I, O> extends UnaryOp<I, O>,
-	NullaryFunctionOp<O>
-{
+public interface UnaryFunctionOp<I, O> extends UnaryOp<I, O>, NullaryFunctionOp<O>, Function<I, O> {
+
+	@Override
+	default O apply(final I t) {
+		return compute1(t);
+	}
 
 	/**
 	 * Calculates the output given some input.

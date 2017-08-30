@@ -54,6 +54,13 @@ public interface BinaryFunctionOp<I1, I2, O> extends BinaryOp<I1, I2, O>,
 	UnaryFunctionOp<I1, O>
 {
 
+	/*
+	@Override
+	default O apply(final I1 t, final I2 u) {
+		return compute2(t, u);
+	}
+	*/
+
 	/**
 	 * Calculates the output given two inputs.
 	 * 
