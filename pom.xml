@@ -11,7 +11,7 @@
 
 	<groupId>net.imagej</groupId>
 	<artifactId>imagej-ops</artifactId>
-	<version>0.38.1-SNAPSHOT</version>
+	<version>0.38.1-TILING-SNAPSHOT</version>
 
 	<name>ImageJ Ops</name>
 	<description>ImageJ Operations: a framework for reusable algorithms.</description>
@@ -192,7 +192,7 @@
 		<license.copyrightOwners>Board of Regents of the University of
 Wisconsin-Madison, University of Konstanz and Brian Northan.</license.copyrightOwners>
 		<license.projectName>ImageJ software for multidimensional image processing and analysis.</license.projectName>
-		<imglib2.version>4.2.1</imglib2.version>
+		<imglib2.version>4.3.1-TILED-SNAPSHOT</imglib2.version>
 		<scifio.version>0.32.0</scifio.version>
 	</properties>
 
@@ -283,12 +283,14 @@ Wisconsin-Madison, University of Konstanz and Brian Northan.</license.copyrightO
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-core</artifactId>
-			<version>3.0.4-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-vistools</artifactId>
-			<version>1.0.0-beta-5-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-cache</artifactId>
 		</dependency>
 	</dependencies>
 </project>
