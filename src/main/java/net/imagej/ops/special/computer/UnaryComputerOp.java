@@ -59,7 +59,7 @@ public interface UnaryComputerOp<I, O> extends UnaryOp<I, O>,
 
 	@Override
 	default void accept(I t, O u) {
-		compute1(t, u);
+		compute(t, u);
 	}
 	/**
 	 * Computes the output given some input.

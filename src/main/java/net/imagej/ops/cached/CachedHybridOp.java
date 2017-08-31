@@ -17,7 +17,7 @@ public class CachedHybridOp<I, O, OP extends UnaryHybridCF<I, O>> extends Cached
 {
 
 	public CachedHybridOp(final OP delegate) {
-		this(delegate, CachedHybridOp.otherArgs(delegate, 2));
+		this(delegate, CachedFunctionOp.otherArgs(delegate, 2));
 	}
 
 	protected CachedHybridOp(final OP delegate, final Object[] args) {
@@ -25,7 +25,7 @@ public class CachedHybridOp<I, O, OP extends UnaryHybridCF<I, O>> extends Cached
 	}
 
 	@Override
-	public O compute1(final I input) {
+	public O calculate(final I input) {
 		final Hash hash = new Hash(input, delegate, args);
 
 		@SuppressWarnings("unchecked")
@@ -33,7 +33,7 @@ public class CachedHybridOp<I, O, OP extends UnaryHybridCF<I, O>> extends Cached
 
 		if (output == null) {
 			output = createOutput(input);
-			compute1(input, output);
+			compute(input, output);
 			cache.put(hash, output);
 		}
 		return output;
@@ -45,8 +45,8 @@ public class CachedHybridOp<I, O, OP extends UnaryHybridCF<I, O>> extends Cached
 	}
 
 	@Override
-	public void compute1(final I input, final O output) {
-		delegate.compute1(input, output);
+	public void compute(final I input, final O output) {
+		delegate.compute(input, output);
 	}
 
 	@Override

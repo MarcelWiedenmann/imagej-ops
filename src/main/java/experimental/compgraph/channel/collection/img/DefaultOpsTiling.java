@@ -11,7 +11,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import net.imagej.ops.OpEnvironment;
 import net.imagej.ops.special.function.AbstractUnaryFunctionOp;
 import net.imglib2.AbstractInterval;
 import net.imglib2.Interval;
@@ -200,8 +199,8 @@ public class DefaultOpsTiling<I> extends AbstractInterval implements OpsTiling<I
 		}
 
 		@Override
-		public OpsTile<O> compute1(OpsTile<I> input) {
-			return new DefaultOpsTile<>(delegate.compute1(input));
+		public OpsTile<O> calculate(OpsTile<I> input) {
+			return new DefaultOpsTile<>(delegate.calculate(input));
 		}
 
 		@Override

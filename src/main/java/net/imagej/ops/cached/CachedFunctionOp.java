@@ -41,7 +41,7 @@ public class CachedFunctionOp<I, O, OP extends UnaryFunctionOp<I, O>> extends Ab
 	}
 
 	@Override
-	public O compute1(final I input) {
+	public O calculate(final I input) {
 
 		final Hash hash = new Hash(input, delegate, args);
 
@@ -49,7 +49,7 @@ public class CachedFunctionOp<I, O, OP extends UnaryFunctionOp<I, O>> extends Ab
 		O output = (O) cache.get(hash);
 
 		if (output == null) {
-			output = delegate.compute1(input);
+			output = delegate.calculate(input);
 			cache.put(hash, output);
 		}
 		return output;

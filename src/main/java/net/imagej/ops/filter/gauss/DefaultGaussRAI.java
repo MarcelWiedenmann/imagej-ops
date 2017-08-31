@@ -32,6 +32,7 @@ package net.imagej.ops.filter.gauss;
 
 import net.imagej.ops.Ops;
 import net.imagej.ops.special.hybrid.AbstractUnaryHybridCF;
+import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.gauss3.Gauss3;
@@ -49,7 +50,6 @@ import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.thread.ThreadService;
 
-import experimental.compgraph.request.UnaryInvertibleIntervalFunction;
 import experimental.compgraph.tiling.Tile;
 import experimental.compgraph.tiling.request.TilingActivator;
 
@@ -106,9 +106,9 @@ public class DefaultGaussRAI<T extends NumericType<T> & NativeType<T>> extends
 
 	// -- UnaryInvertibleIntervalMapper --
 
-	@Override
-	public Interval invert(final Tile t, final TilingActivator a) {
-		// this maps local to "relative local" coords
-		return a.request(t, Gauss3.halfkernelsizes(sigmas));
-	}
+//	@Override
+//	public Interval invert(final Tile t, final TilingActivator a) {
+//		// this maps local to "relative local" coords
+//		return a.request(t, Gauss3.halfkernelsizes(sigmas));
+//	}
 }
